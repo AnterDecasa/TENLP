@@ -1,0 +1,15 @@
+#Java classes#
+bin/
+
+#Java libraries#
+
+#Java Packages#
+src/Sample/
+*.jar
+
+#Folders#
+StanfordCoreNLP/
+
+.classpath
+.project
+xmlOutput.xml

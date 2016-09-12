@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
+import java.util.ArrayList;
 
 import TextProcess.TextFileProcess;
 
@@ -13,6 +14,8 @@ public class MainFrame extends JPanel implements ActionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	String teacherName = "";
+	ArrayList<String> subjects = new ArrayList<String>();
 
 	static JFrame loadingTextWindow = new JFrame("");
     
@@ -79,7 +82,7 @@ public class MainFrame extends JPanel implements ActionListener{
     		public void actionPerformed(ActionEvent e) { 
             int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
             String cleanedText = null;
-            String teacherName = "";
+            String subject = "";
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
@@ -88,8 +91,8 @@ public class MainFrame extends JPanel implements ActionListener{
                 System.out.print("Opening: " + file.getName() + "." + NEWLINE);
                 System.out.print("" + file.getAbsolutePath() + "" + NEWLINE);
               
-                textArea.setText("");
-                String lineBefore = "";
+                
+                textArea.setText(""); //Empty text field
                 try{
                     evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
                     String line = "";
@@ -99,17 +102,27 @@ public class MainFrame extends JPanel implements ActionListener{
                     cleanedText = teacherName + "\n";
                     textArea.append(teacherName + "\n");
                     
-                    //Get Subject
-                    while(!line.equalsIgnoreCase("As a teacher, what are his/her strengths?")){
-                    	lineBefore = line;
-                    	line = evaluationText.readLine();
-                    }
-                    lineBefore = lineBefore.trim();
-                    textArea.append(lineBefore + "\n");
-                    textArea.append(line + "\n");
+                    //Remove other info
+                    while("" == (subject = TextFileProcess.checkIfNewSubject(evaluationText))){}
+
+                    //Add First subject
+                    subjects.add(subject);
                     
-                    while((line = evaluationText.readLine()) != null){
+                    evaluationText.reset();
+                    
+                    /*while(!line.equalsIgnoreCase("As a teacher, what are his/her strengths?")){
+                    	line = evaluationText.readLine();
+                    	System.out.println("yyy\n");
+                    }*/
+                    /*while("" == (subject = TextFileProcess.checkIfNewSubject(evaluationText))){
+                    	line = evaluationText.readLine();
+                    	System.out.print("zzz\n");
+                    }*/
+                    line = evaluationText.readLine();
+                    System.out.print(line);
+                    while(line != null){
                         textArea.append(line + "\n");
+                        line = evaluationText.readLine();
                     }
                     textArea.setCaretPosition(0);
                 }

@@ -1,18 +1,11 @@
 package TextProcess;
 
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.IOException;
 
 public class TextFileProcess {
-
-	public static ArrayList<String> getSubjects(BufferedReader text){
-		
-		ArrayList<String> subjects = new ArrayList<String>();
-		
-		return subjects;
-		
-	}
+	
+	static private String subject = "";
 	
 	public static String getTeacherName(BufferedReader text){
 		
@@ -28,12 +21,38 @@ public class TextFileProcess {
 				line = text.readLine();
 			}
 			name = line.trim();
+			write("Teacher name identified.\n");
 		}
 		catch(IOException e){
-			write("No text read");
+			write("No text read" + "\n");
+			e.printStackTrace();
 		}
 		
 		return name;
+		
+	}
+	
+	public static String checkIfNewSubject(BufferedReader text){
+		
+		String newSubject = "";
+		String line = "";
+		
+		try{
+			line = text.readLine();
+			if(!line.equalsIgnoreCase("As a teacher, what are his/her strengths?")){
+				subject = line.trim();
+				text.mark(20);
+			}
+			else{
+				newSubject = subject;
+			}
+		}
+		catch(IOException e){
+			write("No text read" + "\n");
+			e.printStackTrace();
+		}
+		
+		return newSubject;
 		
 	}
 	

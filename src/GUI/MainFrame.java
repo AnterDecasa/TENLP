@@ -18,7 +18,7 @@ static JFrame loadingTextWindow = new JFrame("");
     private JFileChooser fileChooser;
     
     public MainFrame(){
-        fileChooser = new JFileChooser();
+        fileChooser = new JFileChooser(new File("C:\\Users\\anter_000\\Google Drive\\Current Thesis\\Resources\\Text Files"));
         
         FlowLayout layout = new FlowLayout();
         layout.setAlignment(FlowLayout.LEADING);
@@ -72,20 +72,26 @@ static JFrame loadingTextWindow = new JFrame("");
         @Override
         public void actionPerformed(ActionEvent e) { 
             int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
-
+            String filename = "";
+            
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
+                
                 //This is where a real application would open the file.
                 System.out.print("Opening: " + file.getName() + "." + NEWLINE);
                 System.out.print("" + file.getAbsolutePath() + "");
+              
+                textArea.setText("");
                 try{
                     evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
                     String line = null;
-                    String textBefore = null;
+                    /*while((line = evaluationText.readLine()) != "Faculty Evaluation Report Tool"){
+                  
+                    }*/
                     while((line = evaluationText.readLine()) != null){
                         textArea.append(line + "\n");
-                        textBefore = line;
                     }
+                    filename = file.getName();
                 }
                 catch(IOException f){
                     

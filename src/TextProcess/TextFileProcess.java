@@ -32,6 +32,40 @@ public class TextFileProcess {
 		return name;
 		
 	}
+        
+        public static String getTeacherName(String string){
+            
+            return string.split("\r?\n|\n")[0];
+            
+        }
+        
+        public static String removeRedundantSubject(String string){
+            
+            String retVal = "";
+            String[] array = string.split("\r?\n|\n");
+            String currSubject = array[1];
+            
+            retVal += getTeacherName(string) + "\n";
+            retVal += currSubject.trim() + "\n";
+            for(int i = 2; i < array.length; i++){
+                if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
+                    if(checkIfNewSubject(array[i])){
+                        currSubject = array[i-1].trim();
+                    }
+                    retVal += array[i].trim() + "\n";
+                }
+                
+            }
+            
+            return retVal;
+            
+        }
+        
+        public static boolean checkIfNewSubject(String string){
+            
+            return string.equalsIgnoreCase("As a teacher, what are his/her strengths?");
+            
+        }
 	
 	public static String checkIfNewSubject(BufferedReader text){
 		
@@ -120,6 +154,7 @@ public class TextFileProcess {
                 }
                 retVal = removeDate(retVal);
                 retVal = removePageNumber(retVal);
+                retVal = removeRedundantSubject(retVal);
             }
             catch(IOException e){
                 write("No file read");

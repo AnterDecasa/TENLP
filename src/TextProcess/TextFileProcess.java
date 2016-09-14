@@ -27,7 +27,6 @@ public class TextFileProcess {
 		}
 		catch(IOException e){
 			write("No text read" + "\n");
-			e.printStackTrace();
 		}
 		
 		return name;
@@ -51,12 +50,49 @@ public class TextFileProcess {
 		}
 		catch(IOException e){
 			write("No text read" + "\n");
-			e.printStackTrace();
 		}
 		
 		return newSubject;
 		
 	}
+        
+        public static String removeDate(String string){
+            
+            String[] array = string.split("\\r?\\n|\\r");
+            String retVal = "";
+            
+            for (String line : array) {
+                if (!isDate(line)) {
+                    retVal += line + "\r\n";
+                }
+            }
+            
+            return retVal;
+            
+        }
+        
+        public static String removePageNumber(String string){
+            
+            String[] array = string.split("\\r?\\n|\\r");
+            String retVal = "";
+            
+            for (String line : array) {
+                if (!isNumber(line)) {
+                    retVal += line + "\r\n";
+                }
+            }
+            
+            return retVal;
+            
+        }
+        
+        public static boolean isNumber(String string){
+            return string.matches("(1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20)");
+        }
+        
+        private static boolean isDate(String string){
+            return string.matches("(.*)(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)(.*)");
+        }
         
         public static String getImportantText(File file){
             
@@ -72,7 +108,7 @@ public class TextFileProcess {
                 retVal += getTeacherName(evaluationText) + "\n";
                     
                 //Remove other info
-                while("" == (subject = checkIfNewSubject(evaluationText)));
+                while((subject = checkIfNewSubject(evaluationText)).equalsIgnoreCase("")){}
                 retVal += subject + "\n";
                     
                 evaluationText.reset();
@@ -82,9 +118,11 @@ public class TextFileProcess {
                     retVal += line + "\n";
                     line = evaluationText.readLine();
                 }
+                retVal = removeDate(retVal);
+                retVal = removePageNumber(retVal);
             }
             catch(IOException e){
-                
+                write("No file read");
             }
             
             return retVal;

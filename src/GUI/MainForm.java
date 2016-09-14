@@ -6,10 +6,7 @@
 package GUI;
 
 import TextProcess.TextFileProcess;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import javax.swing.JFileChooser;
 
 /**
@@ -92,31 +89,10 @@ public class MainForm extends javax.swing.JFrame {
                  
             evalText.setText(""); //Empty text field
             
-                /*evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
-                String line = "";
-                    
-                //Get Teacher name
-                teacherName = TextFileProcess.getTeacherName(evaluationText);
-                cleanedText = teacherName + "\n";
-                textArea.append(teacherName + "\n");
-                    
-                //Remove other info
-                while("" == (subject = TextFileProcess.checkIfNewSubject(evaluationText))){}
-
-                //Add First subject
-                subjects.add(subject);
-                    
-                evaluationText.reset();
-                    
-                line = evaluationText.readLine();
-                System.out.print(line);
-                while(line != null){
-                    evalText.append(line + "\n");
-                    line = evaluationText.readLine();
-                }*/
-                cleanedText += TextFileProcess.getImportantText(file);
-                evalText.append(cleanedText);
-                evalText.setCaretPosition(0);
+            //Fill with first clean up of text
+            cleanedText += TextFileProcess.getImportantText(file);
+            evalText.append(cleanedText);
+            evalText.setCaretPosition(0);
            
         } else {
             System.out.print("Open command cancelled by user." + "\n");

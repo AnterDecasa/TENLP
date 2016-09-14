@@ -1,6 +1,8 @@
 package TextProcess;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 public class TextFileProcess {
@@ -55,6 +57,39 @@ public class TextFileProcess {
 		return newSubject;
 		
 	}
+        
+        public static String getImportantText(File file){
+            
+            String retVal = "";
+            BufferedReader evaluationText;
+            String subject = "";
+            
+            try{
+                evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
+                String line = "";
+                    
+                //Get Teacher name
+                retVal += getTeacherName(evaluationText) + "\n";
+                    
+                //Remove other info
+                while("" == (subject = checkIfNewSubject(evaluationText)));
+                retVal += subject + "\n";
+                    
+                evaluationText.reset();
+                    
+                line = evaluationText.readLine();
+                while(line != null){
+                    retVal += line + "\n";
+                    line = evaluationText.readLine();
+                }
+            }
+            catch(IOException e){
+                
+            }
+            
+            return retVal;
+            
+        }
 	
 	private static void write(String string){
 		

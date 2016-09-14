@@ -61,6 +61,21 @@ public class TextFileProcess {
             
         }
         
+        public static String removeExtraCarriageReturn(String string){
+            
+            String retVal = "";
+            String[] array = string.split("\\r?\\n|\\n|\\n?\\f");
+            
+            for(int i = 0; i < array.length; i++){
+                if(!array[i].trim().equalsIgnoreCase("")){
+                    retVal += array[i].trim()+ "\n";
+                }
+            }
+            
+            return retVal;
+            
+        }
+        
         public static boolean checkIfNewSubject(String string){
             
             return string.equalsIgnoreCase("As a teacher, what are his/her strengths?");
@@ -155,6 +170,7 @@ public class TextFileProcess {
                 retVal = removeDate(retVal);
                 retVal = removePageNumber(retVal);
                 retVal = removeRedundantSubject(retVal);
+                retVal = removeExtraCarriageReturn(retVal);
             }
             catch(IOException e){
                 write("No file read");
@@ -164,6 +180,10 @@ public class TextFileProcess {
             
         }
 	
+        private static void writeNoR(String string){
+            System.out.print(string);
+        }
+        
 	private static void write(String string){
 		
 		System.out.println(string);

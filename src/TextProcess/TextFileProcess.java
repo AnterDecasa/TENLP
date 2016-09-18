@@ -4,15 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TextFileProcess {
 	
-	static private String subject = "";
+	static private String currSubject = "";
+        static private String[] subjects;
 	
 	public static String getTeacherName(BufferedReader text){
 		
 		String name = "";
-		String line = "";
+		String line;
 		try{
 			line = text.readLine();
          
@@ -39,7 +41,7 @@ public class TextFileProcess {
             
         }
         
-        public static String removeRedundantSubject(String string){
+        public static String removeRedundantSubjectLabel(String string){
             
             String retVal = "";
             String[] array = string.split("\r?\n|\n");
@@ -49,7 +51,7 @@ public class TextFileProcess {
             retVal += currSubject.trim() + "\n";
             for(int i = 2; i < array.length; i++){
                 if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
-                    if(checkIfNewSubject(array[i])){
+                    if(TextFileProcess.newSubject(array[i])){
                         currSubject = array[i-1].trim();
                     }
                     retVal += array[i].trim() + "\n";
@@ -61,14 +63,34 @@ public class TextFileProcess {
             
         }
         
-        public static String removeExtraCarriageReturn(String string){
+        public static String[] getSubjects(){
+            return subjects;
+        }
+        
+        private static String[] getSubjects(String string){
             
-            String retVal = "";
-            String[] array = string.split("\\r?\\n|\\n|\\n?\\f");
+            ArrayList<String> retVal = new ArrayList<>();
+        
+            String[] stringArray = string.split("\\r?\\n|\\n|\\n?\\f");
             
-            for(int i = 0; i < array.length; i++){
-                if(!array[i].trim().equalsIgnoreCase("")){
-                    retVal += array[i].trim()+ "\n";
+            for(int i = 1; i < stringArray.length; i++){
+                if(i < stringArray.length-1 && newSubject(stringArray[i+1])){
+                    retVal.add(stringArray[i].trim());
+                }
+            }
+            
+            return retVal.toArray(new String[0]);
+        
+        }
+        
+        public static boolean isSubject(String string){
+            
+            boolean retVal = false;
+            
+            for(String subject : subjects){
+                if(string.equalsIgnoreCase(subject)){
+                    retVal = true;
+                    break;
                 }
             }
             
@@ -76,25 +98,69 @@ public class TextFileProcess {
             
         }
         
-        public static boolean checkIfNewSubject(String string){
+        public static String putTogetherOneCommment(String string){
+            
+            String[] stringArray = string.split("\\r?\\n|\\n|\\n?\\f");
+            String retVal = stringArray[0] ;
+            
+            for(int i = 1; i < stringArray.length; i++){
+                if (stringArray[i].charAt(0) != '>'){
+                    if(!ifQuestion(stringArray[i]) && !isSubject(stringArray[i])){
+                        retVal +=  " " + stringArray[i];
+                    }
+                    else{
+                        retVal +=  "\n" + stringArray[i];
+                    }
+                }
+                else{
+                    retVal +=  "\n" + stringArray[i];
+                }
+            }
+            
+            return retVal;
+                    
+        }
+        
+        public static boolean ifQuestion(String string){
+            
+            return string.matches("(.*\\?)|Comment");
+        
+        }
+        
+        public static String removeExtraCarriageReturn(String string){
+            
+            String retVal = "";
+            String[] array = string.split("\\r?\\n|\\n|\\n?\\f");
+            
+            for (String line : array) {
+                if (!line.trim().equalsIgnoreCase("")) {
+                    retVal += line.trim() + "\n";
+                }
+            }
+            
+            return retVal;
+            
+        }
+        
+        public static boolean newSubject(String string){
             
             return string.equalsIgnoreCase("As a teacher, what are his/her strengths?");
             
         }
 	
-	public static String checkIfNewSubject(BufferedReader text){
+	public static String newSubject(BufferedReader text){
 		
 		String newSubject = "";
-		String line = "";
+		String line;
 		
 		try{
 			line = text.readLine();
 			if(!line.equalsIgnoreCase("As a teacher, what are his/her strengths?")){
-				subject = line.trim();
+				currSubject = line.trim();
 				text.mark(20);
 			}
 			else{
-				newSubject = subject;
+				newSubject = currSubject;
 			}
 		}
 		catch(IOException e){
@@ -136,7 +202,7 @@ public class TextFileProcess {
         }
         
         public static boolean isNumber(String string){
-            return string.matches("(1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20)");
+            return string.matches("(1|..|50)");
         }
         
         private static boolean isDate(String string){
@@ -147,18 +213,18 @@ public class TextFileProcess {
             
             String retVal = "";
             BufferedReader evaluationText;
-            String subject = "";
+            String newSubject = "";
             
             try{
                 evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
-                String line = "";
+                String line;
                     
                 //Get Teacher name
                 retVal += getTeacherName(evaluationText) + "\n";
                     
                 //Remove other info
-                while((subject = checkIfNewSubject(evaluationText)).equalsIgnoreCase("")){}
-                retVal += subject + "\n";
+                while((newSubject = newSubject(evaluationText)).equalsIgnoreCase("")){}
+                retVal += newSubject + "\n";
                     
                 evaluationText.reset();
                     
@@ -169,8 +235,10 @@ public class TextFileProcess {
                 }
                 retVal = removeDate(retVal);
                 retVal = removePageNumber(retVal);
-                retVal = removeRedundantSubject(retVal);
+                retVal = removeRedundantSubjectLabel(retVal);
                 retVal = removeExtraCarriageReturn(retVal);
+                subjects = getSubjects(retVal);
+                retVal = putTogetherOneCommment(retVal);
             }
             catch(IOException e){
                 write("No file read");

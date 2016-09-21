@@ -6,12 +6,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class TextFileProcess {
+public class TextFilePreProcess {
 	
 	static private String currSubject = "";
         static private String[] subjects;
 	
-	public static String getTeacherName(BufferedReader text){
+	private static String getTeacherName(BufferedReader text){
 		
 		String name = "";
 		String line;
@@ -41,7 +41,7 @@ public class TextFileProcess {
             
         }
         
-        public static String removeRedundantSubjectLabel(String string){
+        private static String removeRedundantSubjectLabel(String string){
             
             String retVal = "";
             String[] array = string.split("\r?\n|\n");
@@ -51,7 +51,7 @@ public class TextFileProcess {
             retVal += currSubject.trim() + "\n";
             for(int i = 2; i < array.length; i++){
                 if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
-                    if(TextFileProcess.newSubject(array[i])){
+                    if(TextFilePreProcess.newSubject(array[i])){
                         currSubject = array[i-1].trim();
                     }
                     retVal += array[i].trim() + "\n";
@@ -98,7 +98,7 @@ public class TextFileProcess {
             
         }
         
-        public static String putTogetherOneCommment(String string){
+        private static String putTogetherOneCommment(String string){
             
             String[] stringArray = string.split("\\r?\\n|\\n|\\n?\\f");
             String retVal = stringArray[0] ;
@@ -127,7 +127,7 @@ public class TextFileProcess {
         
         }
         
-        public static String removeExtraCarriageReturn(String string){
+        private static String removeExtraCarriageReturn(String string){
             
             String retVal = "";
             String[] array = string.split("\\r?\\n|\\n|\\n?\\f");
@@ -171,7 +171,7 @@ public class TextFileProcess {
 		
 	}
         
-        public static String removeDate(String string){
+        private static String removeDate(String string){
             
             String[] array = string.split("\\r?\\n|\\r");
             String retVal = "";
@@ -186,7 +186,7 @@ public class TextFileProcess {
             
         }
         
-        public static String removePageNumber(String string){
+        private static String removePageNumber(String string){
             
             String[] array = string.split("\\r?\\n|\\r");
             String retVal = "";
@@ -201,12 +201,39 @@ public class TextFileProcess {
             
         }
         
-        public static boolean isNumber(String string){
+        private static boolean isNumber(String string){
             return string.matches("(1|..|50)");
         }
         
         private static boolean isDate(String string){
             return string.matches("(.*)(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)(.*)");
+        }
+        
+        public static String removeNoComment(String string){
+            
+            String retVal = "";
+            String[] stringArray = string.split("\\r?\\n|\\r");
+            
+            for(String lineArray : stringArray){
+                if(!isNoComment(lineArray) && !isEmptyComment(lineArray)){
+                    retVal += lineArray + "\n";
+                }
+            }
+            
+            return retVal;
+            
+        }
+        
+        public static boolean isEmptyComment(String string){
+            
+            return string.matches(">*\\ *>*\\-*>*\\.*");
+            
+        }
+        
+        public static boolean isNoComment(String string){
+            
+            return string.matches(">\\ ?\\-?((n|N)(o|O)(n|N)(e|E)|(n|N)\\/?(a|A)|(n|N)o (c|C)omment|(n|N)othing|NC)?\\.*");
+            
         }
         
         public static String getImportantText(File file){
@@ -239,6 +266,9 @@ public class TextFileProcess {
                 retVal = removeExtraCarriageReturn(retVal);
                 subjects = getSubjects(retVal);
                 retVal = putTogetherOneCommment(retVal);
+                retVal = removeNoComment(retVal);
+                String[] array = retVal.split("\\r?\\n");
+                LanguageProcess.getWords(array[4].replace('>', ' '));
             }
             catch(IOException e){
                 write("No file read");

@@ -5,7 +5,7 @@
  */
 package GUI;
 
-import TextProcess.TextFileProcess;
+import TextProcess.*;
 import java.io.File;
 import javax.swing.JFileChooser;
 
@@ -92,7 +92,7 @@ public class MainForm extends javax.swing.JFrame {
             evalText.setText(""); //Empty text field
             
             //Fill with first clean up of text
-            cleanedText += TextFileProcess.getImportantText(file);
+            cleanedText += TextFilePreProcess.getImportantText(file);
             evalText.append(cleanedText);
             evalText.setCaretPosition(0);
            

@@ -278,7 +278,7 @@ public class TextFilePreProcess {
             
         }
 	
-        private static void writeNoR(String string){
+        private static void write(String string, boolean newLine){
             System.out.print(string);
         }
         

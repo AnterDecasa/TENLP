@@ -9,7 +9,3 @@ src/Sample/
 
 #Folders#
 StanfordCoreNLP/
-
-.classpath
-.project
-xmlOutput.xml

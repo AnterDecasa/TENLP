@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/ejml-0.23.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://nlp.stanford.edu/nlp/javadoc/javanlp/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="StanfordCoreNLP/javax.json-api-1.0-sources.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/javax.json.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/joda-time-2.9-sources.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/joda-time.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/jollyday-0.4.7-sources.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/jollyday.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/protobuf.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/slf4j-simple.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/stanford-corenlp-3.6.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/stanford-corenlp-3.6.0-models.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/stanford-corenlp-3.6.0-sources.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/stanford-corenlp-3.6.0.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/xom-1.2.10-src.jar"/>
+	<classpathentry kind="lib" path="StanfordCoreNLP/xom.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

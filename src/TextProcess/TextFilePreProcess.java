@@ -279,7 +279,12 @@ public class TextFilePreProcess {
         }
 	
         private static void write(String string, boolean newLine){
-            System.out.print(string);
+            if(newLine){
+                System.out.print(string);
+            }
+            else{
+                System.out.println(string);
+            }
         }
         
 	private static void write(String string){

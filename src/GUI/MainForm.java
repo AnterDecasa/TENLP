@@ -34,6 +34,14 @@ public class MainForm extends javax.swing.JFrame {
         chooseFileBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         evalText = new javax.swing.JTextArea();
+        teacherNameText = new javax.swing.JTextField();
+        teacherNameLabel = new javax.swing.JLabel();
+        subjectComboBox = new javax.swing.JComboBox<>();
+        subjectLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        resultsTextArea = new javax.swing.JTextArea();
+        resultsLabel = new javax.swing.JLabel();
+        analyzeBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,6 +59,20 @@ public class MainForm extends javax.swing.JFrame {
         evalText.setWrapStyleWord(true);
         jScrollPane1.setViewportView(evalText);
 
+        teacherNameLabel.setText("Teacher Name: ");
+
+        subjectComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        subjectLabel.setText("Subject:");
+
+        resultsTextArea.setColumns(20);
+        resultsTextArea.setRows(5);
+        jScrollPane2.setViewportView(resultsTextArea);
+
+        resultsLabel.setText("Results:");
+
+        analyzeBtn.setText("Analyze");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -59,8 +81,26 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chooseFileBtn)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(835, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(resultsLabel)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(teacherNameLabel)
+                                    .addComponent(subjectLabel))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(subjectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 424, Short.MAX_VALUE)
+                                        .addComponent(analyzeBtn))
+                                    .addComponent(teacherNameText))))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -68,7 +108,22 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(chooseFileBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(teacherNameLabel)
+                            .addComponent(teacherNameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(subjectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(subjectLabel)
+                            .addComponent(analyzeBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(resultsLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -137,8 +192,16 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton analyzeBtn;
     private javax.swing.JButton chooseFileBtn;
     private javax.swing.JTextArea evalText;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel resultsLabel;
+    private javax.swing.JTextArea resultsTextArea;
+    private javax.swing.JComboBox<String> subjectComboBox;
+    private javax.swing.JLabel subjectLabel;
+    private javax.swing.JLabel teacherNameLabel;
+    private javax.swing.JTextField teacherNameText;
     // End of variables declaration//GEN-END:variables
 }

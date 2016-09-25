@@ -67,6 +67,7 @@ public class MainForm extends javax.swing.JFrame {
 
         resultsTextArea.setColumns(20);
         resultsTextArea.setRows(5);
+        resultsTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(resultsTextArea);
 
         resultsLabel.setText("Results:");
@@ -171,7 +172,9 @@ public class MainForm extends javax.swing.JFrame {
     private void analyzeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeBtnActionPerformed
         // TODO add your handling code here:
         if(!teacherNameText.getText().isEmpty() && subjectComboBox.getItemCount() != 0){
-            System.out.println("Analyzing");
+            String subjectEval = TextFilePreProcess.getSubjectEvaluation(evalText.getText(), subjectComboBox.getSelectedItem().toString());
+            resultsTextArea.setText("");
+            resultsTextArea.setText(subjectEval);
         }
     }//GEN-LAST:event_analyzeBtnActionPerformed
 

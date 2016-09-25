@@ -279,6 +279,26 @@ public class TextFilePreProcess {
             return retVal;
             
         }
+        
+        public static String getSubjectEvaluation(String string, String subject){
+            
+            String retVal = "";
+            String[] stringArray = string.split("\\r?\\n");
+            
+            for(int i = 0; i < stringArray.length;){
+                if(stringArray[i].equalsIgnoreCase(subject)){
+                    i++;
+                    while(!isSubject(stringArray[i])){
+                        retVal += stringArray[i] + "\n";
+                        i++;
+                    }
+                    break;
+                }
+                i++;
+            }
+            return retVal;
+            
+        }
 	
         private static void write(String string, boolean newLine){
             if(newLine){

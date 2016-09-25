@@ -22,7 +22,46 @@ public class LanguageProcess {
         
         Document doc = new Document(string);
          for (Sentence sent : doc.sentences()) {
-            retVal = sent.lemmas();
+            retVal = sent.words();
+        }
+         
+        return retVal;
+        
+    }
+    
+    public static List<String> getLemma(String string){
+        
+        List<String> retVal = new ArrayList<>();
+        
+        Document doc = new Document(string);
+         for (Sentence sent : doc.sentences()) {
+            retVal = sent.words();
+        }
+         
+        return retVal;
+        
+    }
+    
+    public static List<String> getPOS(String string){
+        
+        List<String> retVal = new ArrayList<>();
+        
+        Document doc = new Document(string);
+         for (Sentence sent : doc.sentences()) {
+            retVal = sent.words();
+        }
+         
+        return retVal;
+        
+    }
+    
+    public static List<String> getNER(String string){
+        
+        List<String> retVal = new ArrayList<>();
+        
+        Document doc = new Document(string);
+         for (Sentence sent : doc.sentences()) {
+            retVal = sent.words();
         }
          
         return retVal;

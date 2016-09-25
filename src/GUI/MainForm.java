@@ -59,9 +59,9 @@ public class MainForm extends javax.swing.JFrame {
         evalText.setWrapStyleWord(true);
         jScrollPane1.setViewportView(evalText);
 
-        teacherNameLabel.setText("Teacher Name: ");
+        teacherNameText.setEditable(false);
 
-        subjectComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        teacherNameLabel.setText("Teacher Name: ");
 
         subjectLabel.setText("Subject:");
 
@@ -72,6 +72,12 @@ public class MainForm extends javax.swing.JFrame {
         resultsLabel.setText("Results:");
 
         analyzeBtn.setText("Analyze");
+        analyzeBtn.setEnabled(false);
+        analyzeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analyzeBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -150,11 +156,24 @@ public class MainForm extends javax.swing.JFrame {
             cleanedText += TextFilePreProcess.getImportantText(file);
             evalText.append(cleanedText);
             evalText.setCaretPosition(0);
-           
+            teacherNameText.setText(TextFilePreProcess.getTeacherName(cleanedText));
+            subjectComboBox.removeAllItems();
+            String[] subjects = TextFilePreProcess.getSubjects();
+            for(String subject : subjects){
+                subjectComboBox.addItem(subject);
+            }
+            analyzeBtn.setEnabled(true);
         } else {
             System.out.print("Open command cancelled by user." + "\n");
         }
     }//GEN-LAST:event_chooseFileBtnActionPerformed
+
+    private void analyzeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeBtnActionPerformed
+        // TODO add your handling code here:
+        if(!teacherNameText.getText().isEmpty() && subjectComboBox.getItemCount() != 0){
+            System.out.println("Analyzing");
+        }
+    }//GEN-LAST:event_analyzeBtnActionPerformed
 
     /**
      * @param args the command line arguments

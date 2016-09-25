@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 public class TextFilePreProcess {
 	
@@ -268,7 +270,7 @@ public class TextFilePreProcess {
                 retVal = putTogetherOneCommment(retVal);
                 retVal = removeNoComment(retVal);
                 String[] array = retVal.split("\\r?\\n");
-                LanguageProcess.getWords(array[4].replace('>', ' '));
+                //LanguageProcess.getWords(array[4].replace('>', ' '));
             }
             catch(IOException e){
                 write("No file read");

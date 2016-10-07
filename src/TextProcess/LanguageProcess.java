@@ -21,7 +21,7 @@ public class LanguageProcess {
         List<String> retVal = new ArrayList<>();
         
         Document doc = new Document(string);
-         for (Sentence sent : doc.sentences()) {
+        for (Sentence sent : doc.sentences()) {
             retVal = sent.words();
         }
          
@@ -34,7 +34,7 @@ public class LanguageProcess {
         List<String> retVal = new ArrayList<>();
         
         Document doc = new Document(string);
-         for (Sentence sent : doc.sentences()) {
+        for (Sentence sent : doc.sentences()) {
             retVal = sent.words();
         }
          
@@ -47,8 +47,8 @@ public class LanguageProcess {
         List<String> retVal = new ArrayList<>();
         
         Document doc = new Document(string);
-         for (Sentence sent : doc.sentences()) {
-            retVal = sent.words();
+        for (Sentence sent : doc.sentences()) {
+            retVal = sent.posTags();
         }
          
         return retVal;
@@ -60,7 +60,7 @@ public class LanguageProcess {
         List<String> retVal = new ArrayList<>();
         
         Document doc = new Document(string);
-         for (Sentence sent : doc.sentences()) {
+        for (Sentence sent : doc.sentences()) {
             retVal = sent.words();
         }
          

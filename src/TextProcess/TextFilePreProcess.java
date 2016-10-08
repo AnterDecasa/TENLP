@@ -1,12 +1,23 @@
 package TextProcess;
 
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
+import edu.stanford.nlp.naturalli.Polarity;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import edu.stanford.nlp.semgraph.SemanticGraph;
+import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import static junit.framework.Assert.assertTrue;
 
 public class TextFilePreProcess {
 	
@@ -261,6 +272,11 @@ public class TextFilePreProcess {
                 while(line != null){
                     retVal += line + "\n";
                     line = evaluationText.readLine();
+//                    Polarity[] p = annotate(line);
+//                    for(int ctr = 0; ctr < line.length(); ctr++){
+//                        assertTrue(p[ctr].isUpwards());
+//                    	assertTrue(p[ctr].isDownwards());
+//                    }
                 }
                 retVal = removeDate(retVal);
                 retVal = removePageNumber(retVal);
@@ -270,7 +286,7 @@ public class TextFilePreProcess {
                 retVal = putTogetherOneCommment(retVal);
                 retVal = removeNoComment(retVal);
                 String[] array = retVal.split("\\r?\\n");
-                //LanguageProcess.getWords(array[4].replace('>', ' '));
+                LanguageProcess.getWords(array[4].replace('>', ' '));
             }
             catch(IOException e){
                 write("No file read");

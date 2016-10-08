@@ -1,5 +1,6 @@
 package TextProcess;
 
+import edu.stanford.nlp.trees.Tree;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -349,18 +350,29 @@ public class TextFilePreProcess {
             
         }
 	
-        public static void tagging(String string){
+        public static List<Tree> tagging(String string){
             
             String[] stringArray = string.split("\\r?\\n");
+            List<Tree> retVal = new ArrayList<Tree>();
             
             write("POS tagging text");
             
             for(String line : stringArray){
-                List<String> taggedLines = LanguageProcess.getPOS(line);
-                for(String taggedLine : taggedLines){
-                    write(taggedLine,false);
+                if(ifQuestion(line)){
+                    write(line);
+                }
+                else{
+                    List<Tree> taggedLines = LanguageProcess.getPOS(line);
+                    for(Tree taggedLine : taggedLines){
+                       retVal.add(taggedLine); 
+                       write(taggedLine);
+                    }
                 }
             }
+            
+            write("POS tagging done.");
+            
+            return retVal;
             
         }
         
@@ -375,8 +387,14 @@ public class TextFilePreProcess {
         
 	private static void write(String string){
 		
-		System.out.println(string);
+            System.out.println(string);
 		
 	}
+        
+        private static void write(Tree tree){
+            
+            System.out.println(tree);
+            
+        }
 	
 }

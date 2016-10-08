@@ -7,6 +7,7 @@ package TextProcess;
 
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
+import edu.stanford.nlp.trees.Tree;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,16 +43,16 @@ public class LanguageProcess {
         
     }
     
-    public static List<String> getPOS(String string){
+    public static List<Tree> getPOS(String string){
         
-        List<String> retVal = new ArrayList<>();
+        List<Tree> taggedSent = new ArrayList<Tree>();
         
         Document doc = new Document(string);
         for (Sentence sent : doc.sentences()) {
-            retVal = sent.posTags();
+            taggedSent.add(sent.parse());
         }
-         
-        return retVal;
+        
+        return taggedSent;
         
     }
     
@@ -71,6 +72,12 @@ public class LanguageProcess {
     private static void write(String string){
         
         System.out.println(string);
+        
+    }
+    
+    private static void write(Tree tree){
+        
+        System.out.println(tree);
         
     }
     

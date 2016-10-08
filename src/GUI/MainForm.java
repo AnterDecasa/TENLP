@@ -6,7 +6,10 @@
 package GUI;
 
 import TextProcess.*;
+import edu.stanford.nlp.trees.Tree;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 
 /**
@@ -212,11 +215,47 @@ public class MainForm extends javax.swing.JFrame {
 
     private void analyzeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeBtnActionPerformed
         
-        String analyzedText = evalForOneSubjTextArea.getText(); 
-        //analyzedText = TextFilePreProcess.removeQuestions(analyzedText);
+        String analyzedText = evalForOneSubjTextArea.getText();
+        String temp = "";
         analyzedText = TextFilePreProcess.removeCarets(analyzedText);
-        TextFilePreProcess.tagging(analyzedText);
+        String[] stringArray = analyzedText.split("\\r?\\n");
         
+        List<Tree> teachStrength = new ArrayList<Tree>();
+        List<Tree> teachWeak = new ArrayList<Tree>();
+        List<Tree> subjLike = new ArrayList<Tree>();
+        List<Tree> subjHate = new ArrayList<Tree>();
+        List<Tree> comments = new ArrayList<Tree>();
+        
+        int cntQuestion = 0;
+        
+        for(int i = 0; i < stringArray.length; i++){
+            if(TextFilePreProcess.ifQuestion(stringArray[i])){
+                i++;
+                cntQuestion++;
+                while(i < stringArray.length && !TextFilePreProcess.ifQuestion(stringArray[i])){
+                    temp += stringArray[i] + "\n";
+                    i++;
+                }
+                switch(cntQuestion){
+                    case 1:
+                        teachStrength = TextFilePreProcess.tagging(temp);
+                        break;
+                    case 2:
+                        teachWeak = TextFilePreProcess.tagging(temp);
+                        break;
+                    case 3:
+                        subjLike = TextFilePreProcess.tagging(temp);
+                        break;
+                    case 4:
+                        subjHate = TextFilePreProcess.tagging(temp);
+                        break;
+                    case 5:
+                        comments = TextFilePreProcess.tagging(temp);
+                        break;
+                }
+                temp = "";
+            }
+        }
         analyzedTextArea.setText(analyzedText);
         
     }//GEN-LAST:event_analyzeBtnActionPerformed

@@ -58,14 +58,22 @@ public class LanguageProcess {
     
     public static List<String> getNER(String string){
         
-        List<String> retVal = new ArrayList<>();
+        List<String> retVal = new ArrayList<String>();
         
         Document doc = new Document(string);
         for (Sentence sent : doc.sentences()) {
-            retVal = sent.words();
+            retVal = sent.nerTags();
         }
          
         return retVal;
+        
+    }
+    
+    public static void traverseTree(Tree tree){
+        
+        for (Tree subtree : tree){
+            
+        }
         
     }
     

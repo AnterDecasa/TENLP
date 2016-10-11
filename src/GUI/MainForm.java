@@ -6,8 +6,11 @@
 package GUI;
 
 import TextProcess.*;
+import edu.mit.jwi.IDictionary;
+import edu.mit.jwi.IRAMDictionary;
 import edu.stanford.nlp.trees.Tree;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
@@ -175,7 +178,7 @@ public class MainForm extends javax.swing.JFrame {
     private void chooseFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileBtnActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser;
-        fileChooser = new JFileChooser(new File("C:\\Users\\anter_000\\Google Drive\\Current Thesis\\Resources\\Text Files"));
+        fileChooser = new JFileChooser(new File("C:\\Users\\AnnTherese\\Google Drive\\Current Thesis\\Resources\\Text Files"));
         int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
         String cleanedText = "";
             
@@ -238,25 +241,75 @@ public class MainForm extends javax.swing.JFrame {
                 }
                 switch(cntQuestion){
                     case 1:
-                        teachStrength = TextFilePreProcess.tagging(temp);
+                        teachStrength = TextFilePreProcess.POStagging(temp);
                         break;
                     case 2:
-                        teachWeak = TextFilePreProcess.tagging(temp);
+                        teachWeak = TextFilePreProcess.POStagging(temp);
                         break;
                     case 3:
-                        subjLike = TextFilePreProcess.tagging(temp);
+                        subjLike = TextFilePreProcess.POStagging(temp);
                         break;
                     case 4:
-                        subjHate = TextFilePreProcess.tagging(temp);
+                        subjHate = TextFilePreProcess.POStagging(temp);
                         break;
                     case 5:
-                        comments = TextFilePreProcess.tagging(temp);
+                        comments = TextFilePreProcess.POStagging(temp);
                         break;
                 }
                 temp = "";
             }
         }
-        analyzedTextArea.setText(analyzedText);
+        
+        /*List<String> teachStrengthNER = new ArrayList<String>();
+        List<String> teachWeakNER = new ArrayList<String>();
+        List<String> subjLikeNER = new ArrayList<String>();
+        List<String> subjHateNER = new ArrayList<String>();
+        List<String> commentsNER = new ArrayList<String>();
+        
+        for(int i = 0; i < stringArray.length; i++){
+            if(TextFilePreProcess.ifQuestion(stringArray[i])){
+                i++;
+                cntQuestion++;
+                while(i < stringArray.length && !TextFilePreProcess.ifQuestion(stringArray[i])){
+                    temp += stringArray[i] + "\n";
+                    i++;
+                }
+                switch(cntQuestion){
+                    case 1:
+                        teachStrengthNER = TextFilePreProcess.NERtagging(temp);
+                        break;
+                    case 2:
+                        teachWeakNER = TextFilePreProcess.NERtagging(temp);
+                        break;
+                    case 3:
+                        subjLikeNER = TextFilePreProcess.NERtagging(temp);
+                        break;
+                    case 4:
+                        subjHateNER = TextFilePreProcess.NERtagging(temp);
+                        break;
+                    case 5:
+                        commentsNER = TextFilePreProcess.NERtagging(temp);
+                        break;
+                }
+                temp = "";
+            }
+        }
+        */
+        
+        
+        IRAMDictionary dict = WordNetAccess.loadDic();
+        try{
+            write("Loading dictionary");
+            dict.open();
+            analyzedTextArea.setText(analyzedText);
+            dict.close();
+            write("Dictionary loaded");
+        }
+        catch(IOException e){   
+           e.getStackTrace();
+        }
+            
+        
         
     }//GEN-LAST:event_analyzeBtnActionPerformed
 
@@ -293,6 +346,12 @@ public class MainForm extends javax.swing.JFrame {
                 new MainForm().setVisible(true);
             }
         });
+    }
+    
+    private void write(String string){
+        
+        System.out.println(string);
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -7,8 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 public class TextFilePreProcess {
 	
@@ -350,7 +348,7 @@ public class TextFilePreProcess {
             
         }
 	
-        public static List<Tree> tagging(String string){
+        public static List<Tree> POStagging(String string){
             
             String[] stringArray = string.split("\\r?\\n");
             List<Tree> retVal = new ArrayList<Tree>();
@@ -373,6 +371,32 @@ public class TextFilePreProcess {
             write("POS tagging done.");
             
             return retVal;
+            
+        }
+        
+        public static List<String> NERtagging(String string){
+            
+            String[] stringArray = string.split("\\r?\\n");
+            List<String> retVal = new ArrayList<String>();
+            
+            write("NER tagging");
+            
+            for(String line : stringArray){
+                if(ifQuestion(line)){
+                    write(line);
+                }
+                else{
+                    List<String> NERLines = LanguageProcess.getNER(line);
+                    for(String NERLine : NERLines){
+                       retVal.add(NERLine);
+                       write("NER tag of '" + line + "'" + NERLine);
+                    }
+                }
+            }
+            
+            write("NER tagging done");
+            
+            return retVal; 
             
         }
         

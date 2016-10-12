@@ -221,97 +221,10 @@ public class MainForm extends javax.swing.JFrame {
     private void analyzeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeBtnActionPerformed
         
         String analyzedText = evalForOneSubjTextArea.getText();
-        String temp = "";
-        analyzedText = TextFilePreProcess.removeCarets(analyzedText);
-        String[] stringArray = analyzedText.split("\\r?\\n");
         
-        List<Tree> teachStrength = new ArrayList<Tree>();
-        List<Tree> teachWeak = new ArrayList<Tree>();
-        List<Tree> subjLike = new ArrayList<Tree>();
-        List<Tree> subjHate = new ArrayList<Tree>();
-        List<Tree> comments = new ArrayList<Tree>();
+        SummarizeText.summarize(analyzedText);    
         
-        int cntQuestion = 0;
-        
-        for(int i = 0; i < stringArray.length; i++){
-            if(TextFilePreProcess.ifQuestion(stringArray[i])){
-                i++;
-                cntQuestion++;
-                while(i < stringArray.length && !TextFilePreProcess.ifQuestion(stringArray[i])){
-                    temp += stringArray[i] + "\n";
-                    i++;
-                }
-                switch(cntQuestion){
-                    case 1:
-                        teachStrength = TextFilePreProcess.POStagging(temp);
-                        break;
-                    case 2:
-                        teachWeak = TextFilePreProcess.POStagging(temp);
-                        break;
-                    case 3:
-                        subjLike = TextFilePreProcess.POStagging(temp);
-                        break;
-                    case 4:
-                        subjHate = TextFilePreProcess.POStagging(temp);
-                        break;
-                    case 5:
-                        comments = TextFilePreProcess.POStagging(temp);
-                        break;
-                }
-                temp = "";
-            }
-        }
-        
-        /*List<String> teachStrengthNER = new ArrayList<String>();
-        List<String> teachWeakNER = new ArrayList<String>();
-        List<String> subjLikeNER = new ArrayList<String>();
-        List<String> subjHateNER = new ArrayList<String>();
-        List<String> commentsNER = new ArrayList<String>();
-        
-        for(int i = 0; i < stringArray.length; i++){
-            if(TextFilePreProcess.ifQuestion(stringArray[i])){
-                i++;
-                cntQuestion++;
-                while(i < stringArray.length && !TextFilePreProcess.ifQuestion(stringArray[i])){
-                    temp += stringArray[i] + "\n";
-                    i++;
-                }
-                switch(cntQuestion){
-                    case 1:
-                        teachStrengthNER = TextFilePreProcess.NERtagging(temp);
-                        break;
-                    case 2:
-                        teachWeakNER = TextFilePreProcess.NERtagging(temp);
-                        break;
-                    case 3:
-                        subjLikeNER = TextFilePreProcess.NERtagging(temp);
-                        break;
-                    case 4:
-                        subjHateNER = TextFilePreProcess.NERtagging(temp);
-                        break;
-                    case 5:
-                        commentsNER = TextFilePreProcess.NERtagging(temp);
-                        break;
-                }
-                temp = "";
-            }
-        }
-        */
-        
-        
-        IRAMDictionary dict = WordNetAccess.loadDic();
-        try{
-            write("Loading dictionary");
-            dict.open();
-            analyzedTextArea.setText(analyzedText);
-            dict.close();
-            write("Dictionary loaded");
-        }
-        catch(IOException e){   
-           e.getStackTrace();
-        }
-            
-        
+        analyzedTextArea.setText(analyzedText);
         
     }//GEN-LAST:event_analyzeBtnActionPerformed
 

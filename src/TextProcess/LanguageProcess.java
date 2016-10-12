@@ -5,6 +5,10 @@
  */
 package TextProcess;
 
+import ContainerClasses.SentenceAndTag;
+import static TextProcess.TextFilePreProcess.ifQuestion;
+import edu.mit.jwi.IRAMDictionary;
+import edu.mit.jwi.item.IWordID;
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
 import edu.stanford.nlp.trees.Tree;
@@ -43,16 +47,11 @@ public class LanguageProcess {
         
     }
     
-    public static List<Tree> getPOS(String string){
+    public static Tree getPOS(String sent){
         
-        List<Tree> taggedSent = new ArrayList<Tree>();
+        Sentence sentence = new Sentence(sent);
         
-        Document doc = new Document(string);
-        for (Sentence sent : doc.sentences()) {
-            taggedSent.add(sent.parse());
-        }
-        
-        return taggedSent;
+        return sentence.parse();
         
     }
     
@@ -69,9 +68,11 @@ public class LanguageProcess {
         
     }
     
-    public static void getWordInfo(String word, String POStag){
+    public static List<Sentence> getSentences(String string){
         
+        Document doc = new Document(string);
         
+        return doc.sentences();
         
     }
     

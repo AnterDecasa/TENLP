@@ -26,16 +26,16 @@ import java.util.List;
  */
 public class WordNetAccess {
     
-    public static  IRAMDictionary loadDic(){
+    private static IRAMDictionary dict;
+    
+    public static void loadDic(){
         
         String WNHome = "C:\\Users\\AnnTherese\\Google Drive\\Current Thesis\\tools";
         String path = WNHome + File.separator + "dict";
-        IRAMDictionary dict = null;
         
         try{
             URL url = new URL("file", null, path);
-            dict = new RAMDictionary(url, ILoadPolicy.NO_LOAD);
-            dict.open();    
+            dict = new RAMDictionary(url, ILoadPolicy.NO_LOAD);   
         }
         catch(MalformedURLException eURL){
             eURL.getStackTrace();
@@ -44,11 +44,9 @@ public class WordNetAccess {
             eIO.getStackTrace();
         }
         
-        return dict;
-        
     }
     
-    public static List<IWordID> getSenses(String findWord, String POSSense, IRAMDictionary dict){
+    public static List<IWordID> getSenses(String findWord, String POSSense){
         
         List<IWordID> wordID = new ArrayList<IWordID>(0);
         POS pos = null;
@@ -65,28 +63,33 @@ public class WordNetAccess {
         if(POSSense.matches("VB(D|G|N|P|Z)?")){
             pos = POS.VERB;
         }
+        try{
+            dict.open(); 
+            IIndexWord idxWord = dict.getIndexWord(findWord, pos);
+            wordID = idxWord.getWordIDs();
+            if(idxWord.getWordIDs().size() > 1){
+                //disambiguate
+                //IWordID wordID = idxWord.getWordIDs().get(0);
+                //IWord word = dict.getWord(wordID);
+                //synset = word.getSynset();
+            }
         
-        IIndexWord idxWord = dict.getIndexWord(findWord, pos);
-        wordID = idxWord.getWordIDs();
-        if(idxWord.getWordIDs().size() > 1){
-            //disambiguate
-            //IWordID wordID = idxWord.getWordIDs().get(0);
-            //IWord word = dict.getWord(wordID);
-            //synset = word.getSynset();
-        }
-        
-        /*ISynset synset = word.getSynset();
-        write(word.getLemma());
-        write(word.getPOS().name());
-            
-        for(IWord w : synset.getWords()){
-            write(w.getLemma());
-        }
-        for(IWordID w: word.getRelatedWords()){
-            word = dict.getWord(w);
+            /*ISynset synset = word.getSynset();
             write(word.getLemma());
-        }*/
-        
+            write(word.getPOS().name());
+            
+            for(IWord w : synset.getWords()){
+                write(w.getLemma());
+            }
+            for(IWordID w: word.getRelatedWords()){
+                word = dict.getWord(w);
+                write(word.getLemma());
+            }*/
+            dict.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
         return wordID;
         
     }

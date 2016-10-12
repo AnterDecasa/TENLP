@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import ContainerClasses.SentenceAndTag;
 
 public class TextFilePreProcess {
 	
@@ -350,32 +351,6 @@ public class TextFilePreProcess {
                 retVal += line.replaceAll("> ", "") + "\n";
                 
             }
-            
-            return retVal;
-            
-        }
-	
-        public static List<Tree> POStagging(String string){
-            
-            String[] stringArray = string.split("\\r?\\n");
-            List<Tree> retVal = new ArrayList<Tree>();
-            
-            write("POS tagging text");
-            
-            for(String line : stringArray){
-                if(ifQuestion(line)){
-                    write(line);
-                }
-                else{
-                    List<Tree> taggedLines = LanguageProcess.getPOS(line);
-                    for(Tree taggedLine : taggedLines){
-                       retVal.add(taggedLine); 
-                       write(taggedLine);
-                    }
-                }
-            }
-            
-            write("POS tagging done.");
             
             return retVal;
             

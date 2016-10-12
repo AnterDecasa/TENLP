@@ -12,9 +12,11 @@ public class TextFilePreProcess {
 	
 	static private String currSubject = "";
         static private String[] subjects;
+        
+        static public List<String> questions = new ArrayList<String>();
 	
 	private static String getTeacherName(BufferedReader text){
-		
+            
 		String name = "";
 		String line;
 		try{
@@ -283,6 +285,11 @@ public class TextFilePreProcess {
                 retVal = putTogetherOneCommment(retVal);
                 retVal = removeNoComment(retVal);
                 String[] array = retVal.split("\\r?\\n");
+                questions.add("As a teacher, what are his/her strengths?");
+                questions.add("As a teacher, what areas should s/he improve?");
+                questions.add("What do you like best about this course?");
+                questions.add("What do you like least about this course?");
+                questions.add("Comment");
                 //LanguageProcess.getWords(array[4].replace('>', ' '));
             }
             catch(IOException e){

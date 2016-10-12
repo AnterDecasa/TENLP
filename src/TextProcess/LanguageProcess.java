@@ -69,11 +69,9 @@ public class LanguageProcess {
         
     }
     
-    public static void traverseTree(Tree tree){
+    public static void getWordInfo(String word, String POStag){
         
-        for (Tree subtree : tree){
-            
-        }
+        
         
     }
     

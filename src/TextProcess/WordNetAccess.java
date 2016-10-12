@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -34,22 +36,6 @@ public class WordNetAccess {
             URL url = new URL("file", null, path);
             dict = new RAMDictionary(url, ILoadPolicy.NO_LOAD);
             dict.open();    
-            
-            IIndexWord idxWord = dict.getIndexWord("approachable", POS.ADJECTIVE);
-            IWordID wordID = idxWord.getWordIDs().get(0);
-            IWord word = dict.getWord(wordID);
-            ISynset synset = word.getSynset();
-            
-            for(IWord w : synset.getWords()){
-                ISynset synset2 = w.getSynset();
-                for(IWord w2 : synset2.getWords()){
-                    write(w2.getLemma());
-                }
-            }
-            for(IWordID w: word.getRelatedWords()){
-                word = dict.getWord(w);
-                write(word.getLemma());
-            }
         }
         catch(MalformedURLException eURL){
             eURL.getStackTrace();
@@ -59,6 +45,49 @@ public class WordNetAccess {
         }
         
         return dict;
+        
+    }
+    
+    public static List<IWordID> getSenses(String findWord, String POSSense, IRAMDictionary dict){
+        
+        List<IWordID> wordID = new ArrayList<IWordID>(0);
+        POS pos = null;
+        
+        if(POSSense.matches("JJ(R|S)?")){
+            pos = POS.ADJECTIVE;
+        }
+        if(POSSense.matches("NNS?")){
+            pos = POS.NOUN;
+        }
+        if(POSSense.matches("RB(S|R)?")){
+            pos = POS.ADVERB;
+        }
+        if(POSSense.matches("VB(D|G|N|P|Z)?")){
+            pos = POS.VERB;
+        }
+        
+        IIndexWord idxWord = dict.getIndexWord(findWord, pos);
+        wordID = idxWord.getWordIDs();
+        if(idxWord.getWordIDs().size() > 1){
+            //disambiguate
+            //IWordID wordID = idxWord.getWordIDs().get(0);
+            //IWord word = dict.getWord(wordID);
+            //synset = word.getSynset();
+        }
+        
+        /*ISynset synset = word.getSynset();
+        write(word.getLemma());
+        write(word.getPOS().name());
+            
+        for(IWord w : synset.getWords()){
+            write(w.getLemma());
+        }
+        for(IWordID w: word.getRelatedWords()){
+            word = dict.getWord(w);
+            write(word.getLemma());
+        }*/
+        
+        return wordID;
         
     }
     

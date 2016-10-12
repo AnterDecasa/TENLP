@@ -77,6 +77,7 @@ public class MainForm extends javax.swing.JFrame {
 
         evalForOneSubjTextArea.setEditable(false);
         evalForOneSubjTextArea.setColumns(20);
+        evalForOneSubjTextArea.setLineWrap(true);
         evalForOneSubjTextArea.setRows(5);
         evalForOneSubjTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(evalForOneSubjTextArea);
@@ -93,6 +94,7 @@ public class MainForm extends javax.swing.JFrame {
 
         analyzedTextArea.setEditable(false);
         analyzedTextArea.setColumns(20);
+        analyzedTextArea.setLineWrap(true);
         analyzedTextArea.setRows(5);
         jScrollPane3.setViewportView(analyzedTextArea);
 

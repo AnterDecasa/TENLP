@@ -1,5 +1,6 @@
 #Java classes#
 bin/
+*.class
 
 #Java libraries#
 
@@ -9,3 +10,18 @@ src/Sample/
 
 #Folders#
 StanfordCoreNLP/
+
+#NetBeans specific#
+/nbproject/private/
+nbproject/build-impl.xml
+nbproject/genfiles.properties
+nbproject/project.properties
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb.configuration.xml
+
+#eclipse #
+.settings/

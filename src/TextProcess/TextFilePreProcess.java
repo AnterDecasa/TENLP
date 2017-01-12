@@ -1,5 +1,6 @@
 package TextProcess;
 
+<<<<<<< HEAD
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
@@ -8,24 +9,33 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
+=======
+import edu.stanford.nlp.trees.Tree;
+>>>>>>> refs/remotes/origin/master
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+<<<<<<< HEAD
 import java.util.Properties;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import static junit.framework.Assert.assertTrue;
+=======
+import ContainerClasses.LemmaSentenceWithPOStag;
+>>>>>>> refs/remotes/origin/master
 
 public class TextFilePreProcess {
 	
 	static private String currSubject = "";
         static private String[] subjects;
+        
+        static public List<String> questions = new ArrayList<String>();
 	
 	private static String getTeacherName(BufferedReader text){
-		
+            
 		String name = "";
 		String line;
 		try{
@@ -38,10 +48,10 @@ public class TextFilePreProcess {
 				line = text.readLine();
 			}
 			name = line.trim();
-			write("Teacher name identified.\n");
+			write("Teacher name identified.");
 		}
 		catch(IOException e){
-			write("No text read" + "\n");
+			write("No text read");
 		}
 		
 		return name;
@@ -62,6 +72,9 @@ public class TextFilePreProcess {
             
             retVal += getTeacherName(string) + "\n";
             retVal += currSubject.trim() + "\n";
+            
+            write("Removing redundant subject labels");
+                    
             for(int i = 2; i < array.length; i++){
                 if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
                     if(TextFilePreProcess.newSubject(array[i])){
@@ -115,6 +128,8 @@ public class TextFilePreProcess {
             
             String[] stringArray = string.split("\\r?\\n|\\n|\\n?\\f");
             String retVal = stringArray[0] ;
+            
+            write("Combining separate comments");
             
             for(int i = 1; i < stringArray.length; i++){
                 if (stringArray[i].charAt(0) != '>'){
@@ -189,6 +204,8 @@ public class TextFilePreProcess {
             String[] array = string.split("\\r?\\n|\\r");
             String retVal = "";
             
+            write("Removing dates");
+            
             for (String line : array) {
                 if (!isDate(line)) {
                     retVal += line + "\r\n";
@@ -203,6 +220,8 @@ public class TextFilePreProcess {
             
             String[] array = string.split("\\r?\\n|\\r");
             String retVal = "";
+            
+            write("Removing page numbers");
             
             for (String line : array) {
                 if (!isNumber(line)) {
@@ -226,6 +245,8 @@ public class TextFilePreProcess {
             
             String retVal = "";
             String[] stringArray = string.split("\\r?\\n|\\r");
+            
+            write("Removing no comments");
             
             for(String lineArray : stringArray){
                 if(!isNoComment(lineArray) && !isEmptyComment(lineArray)){
@@ -254,6 +275,8 @@ public class TextFilePreProcess {
             String retVal = "";
             BufferedReader evaluationText;
             String newSubject = "";
+            
+            write("Getting evaluation");
             
             try{
                 evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
@@ -286,7 +309,16 @@ public class TextFilePreProcess {
                 retVal = putTogetherOneCommment(retVal);
                 retVal = removeNoComment(retVal);
                 String[] array = retVal.split("\\r?\\n");
+<<<<<<< HEAD
                 LanguageProcess.getWords(array[4].replace('>', ' '));
+=======
+                questions.add("As a teacher, what are his/her strengths?");
+                questions.add("As a teacher, what areas should s/he improve?");
+                questions.add("What do you like best about this course?");
+                questions.add("What do you like least about this course?");
+                questions.add("Comment");
+                //LanguageProcess.getWords(array[4].replace('>', ' '));
+>>>>>>> refs/remotes/origin/master
             }
             catch(IOException e){
                 write("No file read");
@@ -301,10 +333,12 @@ public class TextFilePreProcess {
             String retVal = "";
             String[] stringArray = string.split("\\r?\\n");
             
+            write("Getting evaluation for " + subject);
+            
             for(int i = 0; i < stringArray.length;){
                 if(stringArray[i].equalsIgnoreCase(subject)){
                     i++;
-                    while(!isSubject(stringArray[i])){
+                    while(i < stringArray.length && !isSubject(stringArray[i])){
                         retVal += stringArray[i] + "\n";
                         i++;
                     }
@@ -315,7 +349,66 @@ public class TextFilePreProcess {
             return retVal;
             
         }
-	
+        
+        public static String removeQuestions(String string){
+            
+            String retVal = "";
+            String[] stringArray = string.split("\\r?\\n");
+            
+            write("Removing questions");
+            
+            for(String line : stringArray){
+                if(!ifQuestion(line)){
+                    retVal += line + "\n";
+                }
+            }
+            
+            return retVal;
+            
+        }
+        
+        public static String removeCarets(String string){
+            
+            String retVal = "";
+            String[] stringArray = string.split("\\r?\\n");
+            
+            write("Removing carets");
+            for(String line : stringArray){
+                
+                retVal += line.replaceAll("> ", "") + "\n";
+                
+            }
+            
+            return retVal;
+            
+        }
+        
+        public static List<String> NERtagging(String string){
+            
+            String[] stringArray = string.split("\\r?\\n");
+            List<String> retVal = new ArrayList<String>();
+            
+            write("NER tagging");
+            
+            for(String line : stringArray){
+                if(ifQuestion(line)){
+                    write(line);
+                }
+                else{
+                    List<String> NERLines = LanguageProcess.getNER(line);
+                    for(String NERLine : NERLines){
+                       retVal.add(NERLine);
+                       write("NER tag of '" + line + "'" + NERLine);
+                    }
+                }
+            }
+            
+            write("NER tagging done");
+            
+            return retVal; 
+            
+        }
+        
         private static void write(String string, boolean newLine){
             if(newLine){
                 System.out.print(string);
@@ -327,8 +420,14 @@ public class TextFilePreProcess {
         
 	private static void write(String string){
 		
-		System.out.println(string);
+            System.out.println(string);
 		
 	}
+        
+        private static void write(Tree tree){
+            
+            System.out.println(tree);
+            
+        }
 	
 }

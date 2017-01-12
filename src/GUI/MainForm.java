@@ -224,7 +224,9 @@ public class MainForm extends javax.swing.JFrame {
         
         SummarizeText.summarize(analyzedText);    
         
-        analyzedTextArea.setText(analyzedText);
+        //SummarizeText.StoreImportantSentences();
+        
+        //analyzedTextArea.setText(analyzedText);
         
     }//GEN-LAST:event_analyzeBtnActionPerformed
 

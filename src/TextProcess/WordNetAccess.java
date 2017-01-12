@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class WordNetAccess {
     
-    private static IRAMDictionary dict;
+    public static IRAMDictionary dict;
     
     public static void loadDic(){
         
@@ -46,15 +46,15 @@ public class WordNetAccess {
         
     }
     
-    public static List<IWordID> getSenses(String findWord, String POSSense){
+    public static List<IWordID> getSense(String findWord, String POSSense){
         
-        List<IWordID> wordID = new ArrayList<IWordID>(0);
+        List<IWordID> wordIDs = new ArrayList<IWordID>();
         POS pos = null;
         
         if(POSSense.matches("JJ(R|S)?")){
             pos = POS.ADJECTIVE;
         }
-        if(POSSense.matches("NNS?")){
+        if(POSSense.matches("(NN)S?")){
             pos = POS.NOUN;
         }
         if(POSSense.matches("RB(S|R)?")){
@@ -64,36 +64,43 @@ public class WordNetAccess {
             pos = POS.VERB;
         }
         try{
-            dict.open(); 
+            loadDic();
+            dict.open();
+            if(findWord != null){
+                write("findWord");
+            }
+            if(pos != null){
+                write("pos");
+            }
             IIndexWord idxWord = dict.getIndexWord(findWord, pos);
-            wordID = idxWord.getWordIDs();
-            if(idxWord.getWordIDs().size() > 1){
-                //disambiguate
-                //IWordID wordID = idxWord.getWordIDs().get(0);
-                //IWord word = dict.getWord(wordID);
-                //synset = word.getSynset();
-            }
-        
-            /*ISynset synset = word.getSynset();
-            write(word.getLemma());
-            write(word.getPOS().name());
+            if(idxWord != null){
+                wordIDs = idxWord.getWordIDs();
             
-            for(IWord w : synset.getWords()){
-                write(w.getLemma());
-            }
-            for(IWordID w: word.getRelatedWords()){
-                word = dict.getWord(w);
+                IWord word = dict.getWord(wordIDs.get(0));
+            
+                ISynset synset = word.getSynset();
                 write(word.getLemma());
-            }*/
+                write(word.getPOS().name());
+            
+                for(IWord w : synset.getWords()){
+                    write(w.getLemma());
+                }
+                for(IWordID w: word.getRelatedWords()){
+                    word = dict.getWord(w);
+                    write(word.getLemma());
+                }
+            }
             dict.close();
         }
+    
         catch(IOException e){
             e.printStackTrace();
         }
-        return wordID;
+        
+        return wordIDs;
         
     }
-    
+
     private static void write(String string){
         System.out.println(string);
     }

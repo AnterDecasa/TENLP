@@ -5,6 +5,8 @@
  */
 package ContainerClasses;
 
+import edu.stanford.nlp.simple.Document;
+import edu.stanford.nlp.simple.Sentence;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,43 +16,51 @@ import java.util.List;
  */
 public class AnswerGroups {
     
-    private List<SentenceAndTag> teachStrength = new ArrayList<>();
-    private List<SentenceAndTag> teachWeak = new ArrayList<>();
-    private List<SentenceAndTag> subjLike = new ArrayList<>();
-    private List<SentenceAndTag> subjHate = new ArrayList<>();
-    private List<SentenceAndTag> comments = new ArrayList<>();
+    public static String[] questions = {
+        "As a teacher, what are his/her strengths?",
+        "As a teacher, what areas should s/he improve?",
+        "What do you like best about this course?",
+        "What do you like least about this course?",
+        "Comment"
+    };
     
-    public List<SentenceAndTag> getTeachStrength(){
+    private List<Document> teachStrength = new ArrayList<>();
+    private List<Document> teachWeak = new ArrayList<>();
+    private List<Document> subjLike = new ArrayList<>();
+    private List<Document> subjHate = new ArrayList<>();
+    private List<Document> comments = new ArrayList<>();
+    
+    public List<Document> getTeachStrength(){
         
         return this.teachStrength;
         
     }
     
-    public List<SentenceAndTag> getTeachWeak(){
+    public List<Document> getTeachWeak(){
         
         return this.teachWeak;
         
     }
     
-    public List<SentenceAndTag> getSubjLike(){
+    public List<Document> getSubjLike(){
         
         return this.subjLike;
         
     }
     
-    public List<SentenceAndTag> getSubjHate(){
+    public List<Document> getSubjHate(){
         
         return this.subjHate;
         
     }
     
-    public List<SentenceAndTag> getComments(){
+    public List<Document> getComments(){
         
         return this.comments;
         
     }
     
-    public void setList(int questionIndxNum, List<SentenceAndTag> list){
+    public void setList(int questionIndxNum, List<Document> list){
         
         switch(questionIndxNum){
             case 1:
@@ -72,7 +82,7 @@ public class AnswerGroups {
         
     }
     
-    public void setList(int questionIndxNum, SentenceAndTag sentandTag){
+    public void asssignToGroup(int questionIndxNum, Document sentandTag){
         
         switch(questionIndxNum){
             case 1:

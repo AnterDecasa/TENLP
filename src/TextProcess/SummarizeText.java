@@ -58,16 +58,33 @@ public class SummarizeText {
         //Get sense for each word
         WordNetAccess.loadDic();
         int index = 0;
+//        int directionOfSentencesToCompare = 1; // 1 for left and right. 2 for right. 3 for left.
+//        int[] indexesOfSentencesToCompare;
+        
         for(String cleanedSentence : cleanedLemmaAnswerWithPOSTag.cleanedLemmaAnswers){
             IIndexWord indexWord = WordNetAccess.dict.getIndexWord(cleanedSentence, LanguageProcess.GetPOSTag(cleanedLemmaAnswerWithPOSTag.cleanedLemmaAnswersPOSTag.get(index)));
             List<IWordID> wordIDs = indexWord.getWordIDs();
             if(wordIDs.size() > 1){
                 //Disambiguate
                 //getCompareToWords
+                write("Multiple Word");
                 LemmaSentenceWithPOStag cleanedAnswerWithTag = cleanedLemmaCompareToAnswerWithPOSTag.get(answerIndex);
-                if(index < 5){
-                    
-                }
+                int indexOfWordToBeUsed = Disambiguate(indexWord, answer, compareToGroupedAnswers, answerIndex, questionIndex);
+//                if(index < 5){
+//                    directionOfSentencesToCompare = 2;
+//                }
+//                if(index == cleanedLemmaAnswerWithPOSTag.cleanedLemmaAnswers.size()-1){
+//                    directionOfSentencesToCompare = 3;
+//                }
+//                if(directionOfSentencesToCompare == 1){
+//                    
+//                }
+//                if(directionOfSentencesToCompare == 2){
+//                    
+//                }
+//                if(directionOfSentencesToCompare == 3){
+//                    
+//                }
                 //checkIfWord has enough words before it.
                 
             }
@@ -128,13 +145,22 @@ public class SummarizeText {
         return retVal;
     }
     
-    public static void Disambiguate(List<IWordID> senses, String[] compareToWords){
+    public static int Disambiguate(IIndexWord indexWord, Document answer, List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
         
-        
+         int[] wordScores = new int[indexWord.getWordIDs().size()];
+         int indexOfWordToBeUsed = 0;
+         
+         
+         
+         return indexOfWordToBeUsed;
         
     }
     
     public static void Lesk(String word, String[] compareTo){ 
+        
+    }
+    
+    public static void GetCompareToWords(){
         
     }
     

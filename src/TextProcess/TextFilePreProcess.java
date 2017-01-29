@@ -42,7 +42,7 @@ public class TextFilePreProcess {
         
         public static String getTeacherName(String string){
             
-            return string.split("\r?\n|\n")[0];
+            return string.split("\r?\n|\n")[0]; 
             
         }
         

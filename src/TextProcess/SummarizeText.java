@@ -69,7 +69,6 @@ public class SummarizeText {
                     List<IWordID> wordIDs = indexWord.getWordIDs();
                     if(wordIDs.size() > 1){
                         //Disambiguate
-                        //getCompareToWords
                         int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
         
                     }
@@ -152,32 +151,58 @@ public class SummarizeText {
         WordNetAccess.loadDic();
         
         int wordSensesSize = indexWord.getWordIDs().size();
-        int[] wordScores = new int[wordSensesSize];
+        int[] wordSenseScores = new int[wordSensesSize];
         List<IWordID> wordSenses = indexWord.getWordIDs();
         int indexOfWordToBeUsed = 0;
                
         //get word with most similar words in gloss
         
         //access each answer
-        for(int wordSenseCtr = 0; wordSenseCtr < wordSensesSize; wordSenseCtr++){
+        for(int wordSenseTraverseCtr = 0; wordSenseTraverseCtr < wordSensesSize; wordSenseTraverseCtr++){
             
             //get gloss for current wordSense from wordNet
-            IWord word = WordNetAccess.dict.getWord(wordSenses.get(wordSenseCtr));
-            String wordSenseGloss = word.getSynset().getGloss();
+            IWord word = WordNetAccess.dict.getWord(wordSenses.get(wordSenseTraverseCtr));
+            String glossOfWordSense = word.getSynset().getGloss();
             
             List<StringAndTag> compareToWords = GetCompareToWords(compareToGroupedAnswers, answerIndex, sentenceIndex, lemmaIndex, questionIndex);
-        
-            for(IWordID wordSense : wordSenses){
-            
-                for(StringAndTag wordWithTag : compareToWords){
+  
+            for(StringAndTag wordWithTag : compareToWords){
                     
+                IIndexWord indexWordOfNeighborWord = WordNetAccess.dict.getIndexWord(wordWithTag.word, wordWithTag.tag);
+                List<IWordID> iWordIDsOfNeighborWord = indexWordOfNeighborWord.getWordIDs();
+                
+                int sameWordsCtr = 0;
+                
+                for(IWordID iWordIDOfNeighborWord : iWordIDsOfNeighborWord){
+                    String oneGlossOfNeighborWord = WordNetAccess.dict.getWord(iWordIDOfNeighborWord).getSynset().getGloss();
                     
+                    String[] glossOfWordSenseStringArray = glossOfWordSense.split(" ");
+                    String[] oneGlossOfNeighborWordStringArray = oneGlossOfNeighborWord.split(" ");
+                    for(String wordContainer1 : glossOfWordSenseStringArray){
+                        for(String wordContainer2 : oneGlossOfNeighborWordStringArray){
+                            wordContainer1 = wordContainer1.replaceAll("(|)|\"|;", "");
+                            wordContainer2 = wordContainer2.replaceAll("(|)|\"|;", "");
+                            if(wordContainer1.equalsIgnoreCase(wordContainer2) == true){
+                                sameWordsCtr++;
+                                break;
+                            }
+                        }
+                        
+                    }
                     
                 }
-                
-            }    
+                    
+                wordSenseScores[wordSenseTraverseCtr] = sameWordsCtr;
+            }
             
-            
+        }
+        
+        int largestCnt = wordSenseScores[0];
+        for(int travCntr = 1; travCntr < wordSensesSize; travCntr++){
+            if(largestCnt > wordSenseScores[travCntr]){
+                indexOfWordToBeUsed = travCntr;
+                largestCnt = wordSenseScores[travCntr];
+            }
         }
          
         return indexOfWordToBeUsed;
@@ -386,7 +411,7 @@ public class SummarizeText {
         
         int cntQuestion = 0;
         
-        for(int i = 0; i < answers.length; i++){
+        for(int i = 0; i < answers.length;){
             if(TextFilePreProcess.ifQuestion(answers[i])){
                 i++;
                 cntQuestion++;
@@ -396,6 +421,7 @@ public class SummarizeText {
                     
                     i++;
                 }
+                
             }
         }
         

@@ -60,34 +60,36 @@ public class TextFilePreProcess {
         
         public static String getTeacherName(String string){
             
-            return string.split("\r?\n|\n")[0];
+            return string.split("\r?\n|\n")[0]; 
             
         }
         
-        private static String removeRedundantSubjectLabel(String string){
-            
-            String retVal = "";
-            String[] array = string.split("\r?\n|\n");
-            String currSubject = array[1];
-            
-            retVal += getTeacherName(string) + "\n";
-            retVal += currSubject.trim() + "\n";
-            
-            write("Removing redundant subject labels");
-                    
-            for(int i = 2; i < array.length; i++){
-                if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
-                    if(TextFilePreProcess.newSubject(array[i])){
-                        currSubject = array[i-1].trim();
-                    }
-                    retVal += array[i].trim() + "\n";
-                }
-                
-            }
-            
-            return retVal;
-            
-        }
+        //Removed for errors
+        
+//        private static String removeRedundantSubjectLabel(String string){
+//            
+//            String retVal = "";
+//            String[] array = string.split("\r?\n|\n");
+//            String currSubject = array[1];
+//            
+//            retVal += getTeacherName(string) + "\n";
+//            retVal += currSubject.trim() + "\n";
+//            
+//            write("Removing redundant subject labels");
+//                    
+//            for(int i = 2; i < array.length; i++){
+//                if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
+//                    if(TextFilePreProcess.newSubject(array[i])){
+//                        currSubject = array[i-1].trim();
+//                    }
+//                    retVal += array[i].trim() + "\n";
+//                }
+//                
+//            }
+//            
+//            return retVal;
+//            
+//        }
         
         public static String[] getSubjects(){
             return subjects;
@@ -303,7 +305,7 @@ public class TextFilePreProcess {
                 }
                 retVal = removeDate(retVal);
                 retVal = removePageNumber(retVal);
-                retVal = removeRedundantSubjectLabel(retVal);
+//                retVal = removeRedundantSubjectLabel(retVal);
                 retVal = removeExtraCarriageReturn(retVal);
                 subjects = getSubjects(retVal);
                 retVal = putTogetherOneCommment(retVal);

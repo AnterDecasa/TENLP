@@ -1,6 +1,5 @@
 package TextProcess;
 
-<<<<<<< HEAD
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
@@ -9,23 +8,17 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
-=======
 import edu.stanford.nlp.trees.Tree;
->>>>>>> refs/remotes/origin/master
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
 import java.util.Properties;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
-import static junit.framework.Assert.assertTrue;
-=======
 import ContainerClasses.LemmaSentenceWithPOStag;
->>>>>>> refs/remotes/origin/master
 
 public class TextFilePreProcess {
 	
@@ -311,16 +304,13 @@ public class TextFilePreProcess {
                 retVal = putTogetherOneCommment(retVal);
                 retVal = removeNoComment(retVal);
                 String[] array = retVal.split("\\r?\\n");
-<<<<<<< HEAD
                 LanguageProcess.getWords(array[4].replace('>', ' '));
-=======
                 questions.add("As a teacher, what are his/her strengths?");
                 questions.add("As a teacher, what areas should s/he improve?");
                 questions.add("What do you like best about this course?");
                 questions.add("What do you like least about this course?");
                 questions.add("Comment");
                 //LanguageProcess.getWords(array[4].replace('>', ' '));
->>>>>>> refs/remotes/origin/master
             }
             catch(IOException e){
                 write("No file read");

@@ -5,7 +5,6 @@
  */
 package TextProcess;
 
-<<<<<<< HEAD
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
@@ -14,13 +13,11 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
-=======
 import ContainerClasses.LemmaSentenceWithPOStag;
 import static TextProcess.TextFilePreProcess.ifQuestion;
 import edu.mit.jwi.IRAMDictionary;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
->>>>>>> refs/remotes/origin/master
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
 import edu.stanford.nlp.trees.Tree;
@@ -81,7 +78,6 @@ public class LanguageProcess {
         
     }
     
-<<<<<<< HEAD
     public static List<Polarity[]> annotate(String text){
     
             StanfordCoreNLP pipeline = new StanfordCoreNLP(new Properties(){{
@@ -104,12 +100,11 @@ public class LanguageProcess {
 //            }
             Document doc = new Document(text);
             for(Sentence sent : doc.sentences()) {
-                polarities = sent.words();
+//                polarities = sent.words();
             }
     
             return polarities; 
             }
-=======
     public static List<Sentence> getSentences(String string){
         
         Document doc = new Document(string);
@@ -138,7 +133,6 @@ public class LanguageProcess {
         return pos;
         
     }
->>>>>>> refs/remotes/origin/master
     
     private static void write(String string){
         

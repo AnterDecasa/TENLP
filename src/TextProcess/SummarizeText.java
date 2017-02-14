@@ -10,6 +10,8 @@ import edu.stanford.nlp.trees.Tree;
 import java.util.Iterator;
 import ContainerClasses.LemmaSentenceWithPOStag;
 import ContainerClasses.StringAndTag;
+import edu.mit.jwi.IDictionary;
+import edu.mit.jwi.IRAMDictionary;
 import edu.mit.jwi.item.IIndexWord;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
@@ -49,34 +51,43 @@ public class SummarizeText {
     
      public static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
         
+        write("Inside GetSentiment");
+        
         double sentimentScore = 0;
         
         //Get sense for each word
         List<Sentence> answerSentences = compareToGroupedAnswers.get(answerIndex).sentences();
         int answerSentencesSize = answerSentences.size();
-        WordNetAccess.loadDic();
-        for(int sentenceCtr = 0; sentenceCtr < answerSentencesSize; sentenceCtr++){
+        try{
+            IDictionary dictionary = WordNetAccess.loadDic();
+            dictionary.open();
+            for(int sentenceCtr = 0; sentenceCtr < answerSentencesSize; sentenceCtr++){
             
-            Sentence currentSentence = answerSentences.get(sentenceCtr);
-            int lemmaSize = currentSentence.lemmas().size();
+                Sentence currentSentence = answerSentences.get(sentenceCtr);
+                int lemmaSize = currentSentence.lemmas().size();
             
-            for(int lemmaCtr = 0; lemmaCtr < lemmaSize; lemmaCtr++){
+                for(int lemmaCtr = 0; lemmaCtr < lemmaSize; lemmaCtr++){
                 
-                String currentPOSTag = currentSentence.posTag(lemmaCtr);
-                if(currentPOSTag.matches("JJ|NN|VB|RB")){
+                    String currentPOSTag = currentSentence.posTag(lemmaCtr);
+                    if(currentPOSTag.matches("JJ|NN|VB|RB")){
                     
-                    IIndexWord indexWord = WordNetAccess.dict.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
-                    List<IWordID> wordIDs = indexWord.getWordIDs();
-                    if(wordIDs.size() > 1){
-                        //Disambiguate
-                        int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
+                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
+                        List<IWordID> wordIDs = indexWord.getWordIDs();
+                        if(wordIDs.size() > 1){
+                            //Disambiguate
+                            int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
         
-                    }
+                        }
                     
-                }
+                    }
                 
+                }
             }
         }
+        catch(Exception exc){
+            
+        }
+        
         
         return sentimentScore;
         
@@ -117,6 +128,8 @@ public class SummarizeText {
     
     public static boolean IfUniqueWord(List<String> words,List<String> POS, String word, String POSofWord){
         
+        write("Inside of IfUniqueWord");
+        
         boolean retVal = true;
         
         int index = 0;
@@ -126,6 +139,8 @@ public class SummarizeText {
                 break;
             }
         }
+        
+        write("Exiting IfUniqueWord");
         
         return retVal;
     }
@@ -147,6 +162,8 @@ public class SummarizeText {
     }
     
     public static int Disambiguate(IIndexWord indexWord, List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
+        
+        write("Inside Disambiguate");
         
         WordNetAccess.loadDic();
         
@@ -204,7 +221,9 @@ public class SummarizeText {
                 largestCnt = wordSenseScores[travCntr];
             }
         }
-         
+        
+        write("Exiting Disambiguate");
+        
         return indexOfWordToBeUsed;
         
     }
@@ -275,6 +294,8 @@ public class SummarizeText {
 //    }
     
     public static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
+        
+        write("Inside of GetCompareToWords");
         
         List<StringAndTag> compareToWords = new ArrayList<StringAndTag>();
         int compareToWordsSize = 10;
@@ -390,6 +411,8 @@ public class SummarizeText {
             }
             
         }
+        
+        write("GetCompareToWords");
         
         return compareToWords;
         

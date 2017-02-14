@@ -5,6 +5,8 @@
  */
 package TextProcess;
 
+import edu.mit.jwi.Dictionary;
+import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.IRAMDictionary;
 import edu.mit.jwi.RAMDictionary;
 import edu.mit.jwi.data.ILoadPolicy;
@@ -28,13 +30,16 @@ public class WordNetAccess {
     
     public static IRAMDictionary dict;
     
-    public static void loadDic(){
+    public static IDictionary loadDic(){
+        
+        IDictionary retDictionary = null;
         
         String WNHome = "C:\\Users\\AnnTherese\\Google Drive\\Current Thesis\\tools";
         String path = WNHome + File.separator + "dict";
         
         try{
             URL url = new URL("file", null, path);
+            retDictionary = new Dictionary(url);
             dict = new RAMDictionary(url, ILoadPolicy.NO_LOAD);   
         }
         catch(MalformedURLException eURL){
@@ -43,6 +48,8 @@ public class WordNetAccess {
         catch(IOException eIO){
             eIO.getStackTrace();
         }
+        
+        return retDictionary;
         
     }
     

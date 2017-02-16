@@ -9,8 +9,11 @@ import ContainerClasses.AnswerGroups;
 import ContainerClasses.LemmaSentenceWithPOStag;
 import ContainerClasses.StringAndTag;
 import TextProcess.LanguageProcess;
+import static TextProcess.SummarizeText.Disambiguate;
+import static TextProcess.SummarizeText.GetCompareToWords;
 import TextProcess.TextFilePreProcess;
 import TextProcess.WordNetAccess;
+import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.IIndexWord;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
@@ -123,40 +126,48 @@ public class TestSummarizeText {
             //Comments
     }
     
-     public static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
+    public static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
+        
+        write("Inside GetSentiment");
         
         double sentimentScore = 0;
         
         //Get sense for each word
         List<Sentence> answerSentences = compareToGroupedAnswers.get(answerIndex).sentences();
         int answerSentencesSize = answerSentences.size();
-        WordNetAccess.loadDic();
-        for(int sentenceCtr = 0; sentenceCtr < answerSentencesSize; sentenceCtr++){
+        try{
+            IDictionary dictionary = WordNetAccess.loadDic();
+            dictionary.open();
+            for(int sentenceCtr = 0; sentenceCtr < answerSentencesSize; sentenceCtr++){
             
-            Sentence currentSentence = answerSentences.get(sentenceCtr);
-            int lemmaSize = currentSentence.lemmas().size();
-            
-            for(int lemmaCtr = 0; lemmaCtr < lemmaSize; lemmaCtr++){
+                Sentence currentSentence = answerSentences.get(sentenceCtr);
+                int lemmaSize = currentSentence.lemmas().size();
+                System.out.println(currentSentence);
+                for(int lemmaCtr = 0; lemmaCtr < lemmaSize; lemmaCtr++){
                 
-                String currentPOSTag = currentSentence.posTag(lemmaCtr);
-                if(currentPOSTag.matches("JJ|NN|VB|RB")){
-                    //added
-                    System.out.println(currentPOSTag);
-                    System.out.println(currentSentence.lemma(lemmaCtr));
-                    System.out.println(LanguageProcess.GetPOSTag(currentPOSTag));
-                    IIndexWord indexWord = WordNetAccess.dict.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
-                    List<IWordID> wordIDs = indexWord.getWordIDs();
-                    if(wordIDs.size() > 1){
-                        //Disambiguate
-                        int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
-                        //added
-                        System.out.println(indexOfWordToBeUsed);
-                    }
+                    String currentPOSTag = currentSentence.posTag(lemmaCtr);
+                    if(currentPOSTag.matches("JJ|NN|VB|RB")){
                     
-                }
+                        System.out.println(currentPOSTag);
+                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
+                        List<IWordID> wordIDs = indexWord.getWordIDs();
+                        if(wordIDs.size() > 1){
+                            //Disambiguate
+                            write("Disambiguate");
+                            int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
+//                            System.out.println(indexOfWordToBeUsed);
+                            write("after disambiguate");
+                        }
+                    
+                    }
                 
+                }
             }
         }
+        catch(Exception exc){
+            
+        }
+        
         
         return sentimentScore;
         
@@ -228,6 +239,8 @@ public class TestSummarizeText {
     
     public static int Disambiguate(IIndexWord indexWord, List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
+        write("Inside Disambiguate");
+        
         WordNetAccess.loadDic();
         
         int wordSensesSize = indexWord.getWordIDs().size();
@@ -241,9 +254,11 @@ public class TestSummarizeText {
         for(int wordSenseTraverseCtr = 0; wordSenseTraverseCtr < wordSensesSize; wordSenseTraverseCtr++){
             
             //get gloss for current wordSense from wordNet
+            write("hi");
             IWord word = WordNetAccess.dict.getWord(wordSenses.get(wordSenseTraverseCtr));
+            write("Present");
             String glossOfWordSense = word.getSynset().getGloss();
-            
+            write("hello");
             List<StringAndTag> compareToWords = GetCompareToWords(compareToGroupedAnswers, answerIndex, sentenceIndex, lemmaIndex, questionIndex);
   
             for(StringAndTag wordWithTag : compareToWords){
@@ -284,7 +299,9 @@ public class TestSummarizeText {
                 largestCnt = wordSenseScores[travCntr];
             }
         }
-         
+        
+        write("Exiting Disambiguate");
+        
         return indexOfWordToBeUsed;
         
     }

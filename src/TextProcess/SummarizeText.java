@@ -76,7 +76,7 @@ public class SummarizeText {
                         if(wordIDs.size() > 1){
                             //Disambiguate
                             int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
-        
+                            wordIDs.get(indexOfWordToBeUsed);
                         }
                     
                     }   

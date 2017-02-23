@@ -88,6 +88,7 @@ public class SummarizeText {
             
         }
         
+        write("Exiting GetSentiment");
         
         return sentimentScore;
         

@@ -169,6 +169,8 @@ public class SummarizeText {
         IDictionary dictionary = WordNetAccess.loadDic();
         
         int wordSensesSize = indexWord.getWordIDs().size();
+        write("Word Sense Size: " + wordSensesSize + "\n");
+                
         int[] wordSenseScores = new int[wordSensesSize];
         List<IWordID> wordSenses = indexWord.getWordIDs();
         int indexOfWordToBeUsed = 0;
@@ -176,14 +178,18 @@ public class SummarizeText {
         //get word with most similar words in gloss
         
         //access each answer
-        for(int wordSenseTraverseCtr = 0; wordSenseTraverseCtr < wordSensesSize; wordSenseTraverseCtr++){
+        for(int wordSenseTraverseCtr = 0; wordSenseTraverseCtr == wordSensesSize; wordSenseTraverseCtr++){
             
+            
+            write("Word Sense Traverse Ctr: " + wordSenseTraverseCtr + "\n");
             //get gloss for current wordSense from wordNet
             IWord word = WordNetAccess.dict.getWord(wordSenses.get(wordSenseTraverseCtr));
             String glossOfWordSense = word.getSynset().getGloss();
             
             List<StringAndTag> compareToWords = GetCompareToWords(compareToGroupedAnswers, answerIndex, sentenceIndex, lemmaIndex, questionIndex);
-  
+            
+            write("Compare To Words Size: " + compareToWords.size() + "\n");
+            
             for(StringAndTag wordWithTag : compareToWords){
                     
                 IIndexWord indexWordOfNeighborWord = dictionary.getIndexWord(wordWithTag.word, wordWithTag.tag);
@@ -541,6 +547,12 @@ public class SummarizeText {
     private static void write(String string){
         
         System.out.println(string);
+        
+    }
+    
+    private static void write(int integer){
+        
+        System.out.print(integer + "");
         
     }
     

@@ -241,7 +241,7 @@ public class TestSummarizeText {
         
         write("Inside Disambiguate");
         
-        WordNetAccess.loadDic();
+        IDictionary dictionary = WordNetAccess.loadDic();
         
         int wordSensesSize = indexWord.getWordIDs().size();
         int[] wordSenseScores = new int[wordSensesSize];
@@ -254,22 +254,21 @@ public class TestSummarizeText {
         for(int wordSenseTraverseCtr = 0; wordSenseTraverseCtr < wordSensesSize; wordSenseTraverseCtr++){
             
             //get gloss for current wordSense from wordNet
-            write("hi");
             IWord word = WordNetAccess.dict.getWord(wordSenses.get(wordSenseTraverseCtr));
-            write("Present");
+//            write("this is here");
             String glossOfWordSense = word.getSynset().getGloss();
-            write("hello");
+            
             List<StringAndTag> compareToWords = GetCompareToWords(compareToGroupedAnswers, answerIndex, sentenceIndex, lemmaIndex, questionIndex);
   
             for(StringAndTag wordWithTag : compareToWords){
                     
-                IIndexWord indexWordOfNeighborWord = WordNetAccess.dict.getIndexWord(wordWithTag.word, wordWithTag.tag);
+                IIndexWord indexWordOfNeighborWord = dictionary.getIndexWord(wordWithTag.word, wordWithTag.tag);
                 List<IWordID> iWordIDsOfNeighborWord = indexWordOfNeighborWord.getWordIDs();
                 
                 int sameWordsCtr = 0;
                 
                 for(IWordID iWordIDOfNeighborWord : iWordIDsOfNeighborWord){
-                    String oneGlossOfNeighborWord = WordNetAccess.dict.getWord(iWordIDOfNeighborWord).getSynset().getGloss();
+                    String oneGlossOfNeighborWord = dictionary.getWord(iWordIDOfNeighborWord).getSynset().getGloss();
                     
                     String[] glossOfWordSenseStringArray = glossOfWordSense.split(" ");
                     String[] oneGlossOfNeighborWordStringArray = oneGlossOfNeighborWord.split(" ");

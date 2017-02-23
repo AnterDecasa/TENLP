@@ -156,6 +156,7 @@ public class TestSummarizeText {
                             write("Disambiguate");
                             int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
 //                            System.out.println(indexOfWordToBeUsed);
+                            System.out.println("INDEXXXXX:"+indexOfWordToBeUsed);
                             write("after disambiguate");
                         }
                     
@@ -254,10 +255,12 @@ public class TestSummarizeText {
         for(int wordSenseTraverseCtr = 0; wordSenseTraverseCtr < wordSensesSize; wordSenseTraverseCtr++){
             
             //get gloss for current wordSense from wordNet
-            IWord word = WordNetAccess.dict.getWord(wordSenses.get(wordSenseTraverseCtr));
-//            write("this is here");
-            String glossOfWordSense = word.getSynset().getGloss();
             
+            IWord word = dictionary.getWord(wordSenses.get(wordSenseTraverseCtr));
+//            IWord word = WordNetAccess.dict.getWord(wordSenses.get(wordSenseTraverseCtr));
+            write("this is here");
+            String glossOfWordSense = word.getSynset().getGloss();
+            write(glossOfWordSense);
             List<StringAndTag> compareToWords = GetCompareToWords(compareToGroupedAnswers, answerIndex, sentenceIndex, lemmaIndex, questionIndex);
   
             for(StringAndTag wordWithTag : compareToWords){

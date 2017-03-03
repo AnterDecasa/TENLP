@@ -51,6 +51,7 @@ public class SummarizeText {
     
      public static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
         
+        write("----------------------------------------");
         write("Inside GetSentiment");
         
         double sentimentScore = 0;

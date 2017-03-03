@@ -22,6 +22,7 @@ import edu.stanford.nlp.simple.Sentence;
 import java.util.ArrayList;
 import java.util.List;
 import edu.mit.jwi.item.POS;
+import java.sql.*;
 
 /**
  *
@@ -31,6 +32,9 @@ public class SummarizeText {
     
     static AnswerGroups groupedAnswers;
     static String[] compareWords;
+    private static String host = "localhost";
+    private static String user = "root";
+    private static String password = "";
     
     public static void summarize(String string){
         
@@ -77,13 +81,18 @@ public class SummarizeText {
                             //Disambiguate
                             int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
                             //write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
-                            //wordIDs.get(indexOfWordToBeUsed);
+                            Connection connect = DriverManager.getConnection(host,user,password);
+                            Statement stmt = connect.createStatement();
+                            
                         }
                     
                     }   
                 
                 }
             }
+        }
+        catch(SQLException sqlError){
+            write(sqlError.getMessage());
         }
         catch(Exception exc){
             

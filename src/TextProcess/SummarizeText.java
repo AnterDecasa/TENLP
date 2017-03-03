@@ -76,7 +76,7 @@ public class SummarizeText {
                         if(wordIDs.size() > 1){
                             //Disambiguate
                             int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
-                            write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
+                            //write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
                             //wordIDs.get(indexOfWordToBeUsed);
                         }
                     
@@ -130,7 +130,7 @@ public class SummarizeText {
     
     public static boolean IfUniqueWord(List<String> words,List<String> POS, String word, String POSofWord){
         
-        write("Inside of IfUniqueWord");
+        //write("Inside of IfUniqueWord");
         
         boolean retVal = true;
         
@@ -142,7 +142,7 @@ public class SummarizeText {
             }
         }
         
-        write("Exiting IfUniqueWord");
+        //write("Exiting IfUniqueWord");
         
         return retVal;
     }
@@ -174,221 +174,381 @@ public class SummarizeText {
         
         IDictionary dictionary = WordNetAccess.loadDic();
         int indexOfWordToBeUsed = 0;
-        try{
-        dictionary.open();
-        
-        int wordSensesSize = indexWord.getWordIDs().size();
-        write("Word Sense Size: " + wordSensesSize + "\n");
-                
-        int[] wordSenseScores = new int[wordSensesSize];
-        List<IWordID> wordSenses = indexWord.getWordIDs();
-        
-               
-        //get word with most similar words in gloss
-        
-        //access each answer
-        int wordSenseTraverseCtr = 0;
-        while(wordSenseTraverseCtr != wordSensesSize){
-            
-            //write("Disambiguate 1st loop");
-            write("Word Sense Traverse Ctr: " + wordSenseTraverseCtr + "\n");
-            //get gloss for current wordSense from wordNet
-            
-            IWord word = dictionary.getWord(wordSenses.get(wordSenseTraverseCtr));
-            
-            String glossOfWordSense = word.getSynset().getGloss();
-            
-            List<StringAndTag> compareToWords = GetCompareToWords(compareToGroupedAnswers, answerIndex, sentenceIndex, lemmaIndex, questionIndex);
-            
-            //write("Disambiguate Compare To Words Size: " + compareToWords.size() + "\n");
-            
-            for(StringAndTag wordWithTag : compareToWords){
-                //write("Disambiguate 2nd loop" + "\n");
-                IIndexWord indexWordOfNeighborWord = dictionary.getIndexWord(wordWithTag.word, wordWithTag.tag);
-                List<IWordID> iWordIDsOfNeighborWord = indexWordOfNeighborWord.getWordIDs();
-                
-                int sameWordsCtr = 0;
-                
-                for(IWordID iWordIDOfNeighborWord : iWordIDsOfNeighborWord){
-                    String oneGlossOfNeighborWord = dictionary.getWord(iWordIDOfNeighborWord).getSynset().getGloss();
-                    
-                    String[] glossOfWordSenseStringArray = glossOfWordSense.split(" ");
-                    String[] oneGlossOfNeighborWordStringArray = oneGlossOfNeighborWord.split(" ");
-                    for(String wordContainer1 : glossOfWordSenseStringArray){
-                        for(String wordContainer2 : oneGlossOfNeighborWordStringArray){
-                            wordContainer1 = wordContainer1.replaceAll("(|)|\"|;", "");
-                            wordContainer2 = wordContainer2.replaceAll("(|)|\"|;", "");
-                            if(wordContainer1.equalsIgnoreCase(wordContainer2) == true){
-                                sameWordsCtr++;
-                                break;
+        try
+        {
+            dictionary.open();
+
+            int wordSensesSize = indexWord.getWordIDs().size();
+            //write("Word Sense Size: " + wordSensesSize + "\n");
+
+            int[] wordSenseScores = new int[wordSensesSize];
+            List<IWordID> wordSenses = indexWord.getWordIDs();
+
+
+            //get word with most similar words in gloss
+
+            //access each answer
+            int wordSenseTraverseCtr = 0;
+            while(wordSenseTraverseCtr != wordSensesSize){
+
+                //write("Disambiguate 1st loop");
+                //write("Word Sense Traverse Ctr: " + wordSenseTraverseCtr + "\n");
+                //get gloss for current wordSense from wordNet
+
+                IWord word = dictionary.getWord(wordSenses.get(wordSenseTraverseCtr));
+
+                String glossOfWordSense = word.getSynset().getGloss();
+
+                List<StringAndTag> compareToWords = GetCompareToWords(compareToGroupedAnswers, answerIndex, sentenceIndex, lemmaIndex, questionIndex);
+//                if(compareToWords != null){
+//                    write("not null");
+//                }
+                //write("Disambiguate Compare To Words Size: " + compareToWords.size() + "\n");
+
+                for(StringAndTag wordWithTag : compareToWords){
+                    //write("Disambiguate 2nd loop" + "\n");
+                    IIndexWord indexWordOfNeighborWord = dictionary.getIndexWord(wordWithTag.word, wordWithTag.tag);
+                    List<IWordID> iWordIDsOfNeighborWord = indexWordOfNeighborWord.getWordIDs();
+
+                    int sameWordsCtr = 0;
+
+                    for(IWordID iWordIDOfNeighborWord : iWordIDsOfNeighborWord){
+                        String oneGlossOfNeighborWord = dictionary.getWord(iWordIDOfNeighborWord).getSynset().getGloss();
+
+                        String[] glossOfWordSenseStringArray = glossOfWordSense.split(" ");
+                        String[] oneGlossOfNeighborWordStringArray = oneGlossOfNeighborWord.split(" ");
+                        for(String wordContainer1 : glossOfWordSenseStringArray){
+                            for(String wordContainer2 : oneGlossOfNeighborWordStringArray){
+                                wordContainer1 = wordContainer1.replaceAll("(|)|\"|;", "");
+                                wordContainer2 = wordContainer2.replaceAll("(|)|\"|;", "");
+                                if(wordContainer1.equalsIgnoreCase(wordContainer2) == true){
+                                    sameWordsCtr++;
+                                    break;
+                                }
                             }
+
                         }
-                        
+
                     }
-                    
+
+                    wordSenseScores[wordSenseTraverseCtr] = sameWordsCtr;
+                    //write("Score : " + wordSenseScores[wordSenseTraverseCtr] + "\n");
                 }
-                    
-                wordSenseScores[wordSenseTraverseCtr] = sameWordsCtr;
-                write("Score : " + wordSenseScores[wordSenseTraverseCtr] + "\n");
+                wordSenseTraverseCtr++;
             }
-            wordSenseTraverseCtr++;
-        }
-        
-        int largestCnt = wordSenseScores[0];
-        write("Largest Count: " + largestCnt + "\n");
-        for(int travCntr = 1; travCntr < wordSensesSize; travCntr++){
-            //write("Disambiguate 3rd loop" + "\n");
-            if(largestCnt > wordSenseScores[travCntr]){
-                indexOfWordToBeUsed = travCntr;
-                largestCnt = wordSenseScores[travCntr];
+
+            int largestCnt = wordSenseScores[0];
+            //write("Largest Count: " + largestCnt + "\n");
+            for(int travCntr = 1; travCntr < wordSensesSize; travCntr++){
+                //write("Disambiguate 3rd loop" + "\n");
+                if(largestCnt > wordSenseScores[travCntr]){
+                    indexOfWordToBeUsed = travCntr;
+                    largestCnt = wordSenseScores[travCntr];
+                }
             }
-        }
-        
-        write("Exiting Disambiguate");
+
         }
         catch(Exception exc){
             write(exc.getMessage());
         }
+        write("Exiting Disambiguate");
         return indexOfWordToBeUsed;
         
     }
     
+//    public static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
+//        
+//        write("Inside of GetCompareToWords");
+//        
+//        List<StringAndTag> compareToWords = new ArrayList<StringAndTag>();
+//        int compareToWordsSize = 10;
+//        boolean compareToWordListFull = false;
+//        boolean firstSetDone = false;
+//        int firstSetCount = 0;
+//        int secondSetCount = 0; 
+//        int answerIndexCurrent = answerIndex;
+//        int sentenceIndexCurrent = sentenceIndex;
+//        int lemmaIndexCurrent = lemmaIndex;
+//        
+//        while(answerIndexCurrent >= 0){
+//            Document currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
+//            List<Sentence> currentSentences = currentAnswer.sentences();
+//            while(sentenceIndexCurrent >= 0){
+//                while((lemmaIndexCurrent--) >= 0){
+//                  
+//                    lemmaIndexCurrent--;
+//                    if(lemmaIndexCurrent >= 0){
+//                           
+//                        firstSetCount++;
+//                        if(firstSetCount == compareToWordsSize/2){
+//                            firstSetDone = true;
+//                            break;
+//                        }
+//
+//                    }
+//                    
+//                }
+//                if(firstSetDone){
+//                    break;
+//                }
+//                else{
+//                    sentenceIndexCurrent--;
+//                    Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
+//                    Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
+//                    lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
+//                }
+//            }
+//            if(firstSetDone){
+//                break;
+//            }
+//            else{
+//                sentenceIndexCurrent--;
+//                Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
+//                Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
+//                lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
+//            }
+//        }
+//        
+//        answerIndexCurrent = answerIndex;
+//        sentenceIndexCurrent = sentenceIndex;
+//        lemmaIndexCurrent = lemmaIndex;
+//        
+//        Document currentAnswer;
+//        List<Sentence> currentSentences;
+//        Sentence currentSentence;
+//        List<String> lemmas;
+//        while(answerIndexCurrent < compareToGroupedAnswers.size()){
+//            currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
+//            currentSentences = currentAnswer.sentences();
+//            while(sentenceIndexCurrent < currentSentences.size()){
+//                currentSentence = currentSentences.get(sentenceIndexCurrent);
+//                lemmas = currentSentence.lemmas();
+//                while((lemmaIndexCurrent++) < lemmas.size() && secondSetCount < compareToWordsSize){
+//                    secondSetCount++;
+//                }
+//            }
+//        }
+//        if(secondSetCount < compareToWordsSize/2){
+//            firstSetCount = firstSetCount + ((compareToWordsSize/2) - secondSetCount);
+//        }
+//        secondSetCount = compareToWordsSize - firstSetCount;
+//        
+//        //traverse answers
+//        while(answerIndexCurrent >= 0){
+//            //write("Compare to 1st loop" + "\n");
+//            currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
+//            currentSentences = currentAnswer.sentences();
+//
+//            //traversing sentences in answer
+//            while(sentenceIndexCurrent >= 0){
+//                //write("Compare to 2nd loop");
+//                currentSentence = currentSentences.get(sentenceIndexCurrent);
+//
+//                //traversing words in sentence
+//                while((lemmaIndexCurrent--) >= 0){
+//                    //write("Comparet to 3rd loop");
+//                    //get lemma to be added here
+//                    lemmas = currentSentence.lemmas();
+//
+//                    if(currentSentence.posTag(lemmaIndexCurrent).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                        //write("Compare to 1st if");
+////                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
+////                            //write("Compare to 2nd if");
+////                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+////                            //compareToWords.add(new StringAndTag());
+////                            write("Compare to words size: " + compareToWords.size() + "\n");
+////                        }
+//                          compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+//                    }
+//
+//                    if(compareToWords.size() == firstSetCount){
+//                        firstSetDone = true;
+//                        //write("first half done");
+//                        break;
+//                    }
+//
+//                }
+//
+//                if(firstSetDone){
+//                   break; 
+//                }
+//                else{
+//                    sentenceIndexCurrent--;
+//                    Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
+//                    Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
+//                    lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
+//                }
+//
+//            }
+//
+//            if(firstSetDone){
+//                break;
+//            }
+//            else{
+//                answerIndexCurrent--;
+//                Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
+//                sentenceIndexCurrent = currentAnswerTemp.sentences().size()-1;
+//                Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
+//                lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
+//            }
+//        }
+//        
+//        answerIndexCurrent = answerIndex;
+//        sentenceIndexCurrent = sentenceIndex;
+//        lemmaIndexCurrent = lemmaIndex;
+//        
+//        //traverse answers
+//        while((answerIndexCurrent < compareToGroupedAnswers.size())){
+//
+//        compareToGroupedAnswers.get(answerIndexCurrent);
+//        currentSentences = currentAnswer.sentences();
+//
+//            //traverse sentences
+//            while((sentenceIndexCurrent < currentSentences.size())){
+//
+//                Sentence currentSentence = currentSentences.get(sentenceIndexCurrent);
+//
+//                while((lemmaIndexCurrent++) < currentSentence.lemmas().size()){
+//
+//                    //get lemma to be added here
+//                    List<String> lemmas = currentSentence.lemmas();
+//
+//                    if(currentSentence.posTag(lemmaIndexCurrent).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+////                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
+////                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+////                            write("Compare to words size: " + compareToWords.size() + "\n");
+////                        }
+//                        compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+//                    }
+//
+//                    if(compareToWords.size() == compareToWordsSize){
+//                        compareToWordListFull = true;
+//                        break;
+//                    }
+//                }
+//
+//                if(compareToWordListFull){
+//                    break;
+//                }
+//                else{
+//                    sentenceIndexCurrent++;
+//                    lemmaIndexCurrent = 0;
+//                }
+//
+//
+//            }
+//
+//            if(compareToWordListFull){
+//                break;
+//            }
+//            else{
+//                answerIndexCurrent++;
+//                sentenceIndexCurrent = 0;
+//                lemmaIndexCurrent = 0;
+//            }
+//
+//        }
+//        
+//        write("Exiting GetCompareToWords");
+//        
+//        return compareToWords;
+//        
+//    }
+    
     public static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
         write("Inside of GetCompareToWords");
-        
         List<StringAndTag> compareToWords = new ArrayList<StringAndTag>();
-        int compareToWordsSize = 10;
-        boolean compareToWordListFull = false;
-       
-        
-        boolean firstSetDone = false;
-        int answerIndexCurrent = answerIndex;
-        //write("Answer Index: " + answerIndexCurrent + "\n");
-        int sentenceIndexCurrent = sentenceIndex;
-        int lemmaIndexCurrent = lemmaIndex-1;
-        
-        //traverse answers
-        while((answerIndexCurrent >= 0)){
-            //write("Compare to 1st loop" + "\n");
-            Document currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
-            List<Sentence> currentSentences = currentAnswer.sentences();
-            
-            //traversing sentences in answer
-            while((sentenceIndexCurrent >= 0)){
-                //write("Compare to 2nd loop");
-                Sentence currentSentence = currentSentences.get(sentenceIndexCurrent);
-                
-                //traversing words in sentence
-                while((lemmaIndexCurrent >= 0)){
-                    //write("Comparet to 3rd loop");
-                    //get lemma to be added here
-                    List<String> lemmas = currentSentence.lemmas();
-                    
-                    if(currentSentence.posTag(lemmaIndexCurrent).matches("JJ|NN|VB|RB")){
-                        //write("Compare to 1st if");
-//                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-//                            //write("Compare to 2nd if");
-//                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-//                            //compareToWords.add(new StringAndTag());
-//                            write("Compare to words size: " + compareToWords.size() + "\n");
-//                        }
-                          compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-                    }
-                    
-                    if(compareToWords.size() == compareToWordsSize/2){
-                        firstSetDone = true;
-                        write("first half done");
-                        break;
-                    }
-                    
-                    lemmaIndexCurrent--;
-                    
-                }
-                
-                if(firstSetDone){
-                   break; 
-                }
-                else{
-                    sentenceIndexCurrent--;
-                    Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
-                    Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
-                    lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
-                }
-            
-            }
-            
-            if(firstSetDone){
-                break;
-            }
-            else{
-                answerIndexCurrent--;
-                Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
-                lemmaIndexCurrent = currentAnswerTemp.sentences().size()-1;
-            }
-        }
-        
-        answerIndexCurrent = answerIndex;
-        sentenceIndexCurrent = sentenceIndex;
-        lemmaIndexCurrent = lemmaIndex + 1;
-        
-        //traverse answers
-        while((answerIndexCurrent < compareToGroupedAnswers.size())){
-            
-            Document currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
-            List<Sentence> currentSentences = currentAnswer.sentences();
-            
-            //traverse sentences
-            while((sentenceIndexCurrent < currentSentences.size())){
-                
-                Sentence currentSentence = currentSentences.get(sentenceIndexCurrent);
-                
-                while((lemmaIndexCurrent < currentSentence.lemmas().size())){
-                    
-                    //get lemma to be added here
-                    List<String> lemmas = currentSentence.lemmas();
-                    
-                    if(currentSentence.posTag(lemmaIndexCurrent).matches("JJ|NN|VB|RB")){
-//                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-//                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-//                            write("Compare to words size: " + compareToWords.size() + "\n");
-//                        }
-                        compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-                    }
-                    
-                    if(compareToWords.size() == compareToWordsSize){
-                        compareToWordListFull = true;
-                        break;
+        try{
+
+            int compareToWordsFullSize = 10;
+            boolean full = false;
+            int answerIndexPrev = answerIndex;
+            int sentenceIndexPrev = sentenceIndex;
+            int lemmaIndexPrev = lemmaIndex;
+            int answerIndexPrec = answerIndex;
+            int sentenceIndexPrec = sentenceIndex;
+            int lemmaIndexPrec = lemmaIndex;
+
+            Document currentAnswer;
+            List<Sentence> currentSentences;
+            Sentence currentSentence;
+            List<String> lemmas;
+            while(!full){
+                if(answerIndexPrev >= 0){
+                    currentAnswer = compareToGroupedAnswers.get(answerIndexPrev);
+                    currentSentences = currentAnswer.sentences();
+                    if(sentenceIndexPrev >= 0){
+                        currentSentence = currentSentences.get(sentenceIndexPrev);
+                        lemmas = currentSentence.lemmas();
+                        if((--lemmaIndexPrev) >= 0){
+                            write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prev Index: " + lemmaIndexPrev + "\n");
+                            if(currentSentence.posTag(lemmaIndexPrev).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+    //                            if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
+    //                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+    //                                write("Compare to words size: " + compareToWords.size() + "\n");
+    //                            }
+                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrev),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexPrev))));
+                                if(compareToWords.size() == compareToWordsFullSize){
+                                    full = true;
+                                }
+                            }
+                        }
+                        else{
+                            if((--sentenceIndexPrev) >= 0){
+                                Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexPrev);
+                                Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexPrev);
+                                lemmaIndexPrev = currentSentenceTemp.lemmas().size()-1;
+                            }
+                        }
                     }
                     else{
-                        lemmaIndexCurrent++;
+                        if((--answerIndexPrev) >=0 ){
+                            Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexPrev);
+                            sentenceIndexPrev = currentAnswerTemp.sentences().size()-1;
+                            Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexPrev);
+                            lemmaIndexPrev = currentSentenceTemp.lemmas().size()-1;
+                    
+                        }
                     }
                 }
-                
-                if(compareToWordListFull){
-                    break;
+                if(answerIndexPrec < compareToGroupedAnswers.size()){
+                    currentAnswer = compareToGroupedAnswers.get(answerIndexPrec);
+                    currentSentences = currentAnswer.sentences();
+                    if(sentenceIndexPrec < currentSentences.size()){
+                        currentSentence = currentSentences.get(sentenceIndexPrec);
+                        lemmas = currentSentence.lemmas();
+                        if((++lemmaIndexPrec) < lemmas.size()){
+                            write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prec Index: " + lemmaIndexPrec + "\n");
+                            if(currentSentence.posTag(lemmaIndexPrec).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+    //                            if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
+    //                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+    //                                write("Compare to words size: " + compareToWords.size() + "\n");
+    //                            }
+                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrec),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexPrec))));
+                                if(compareToWords.size() == compareToWordsFullSize){
+                                    full = true;
+                                }
+                            }
+                        }
+                        else{
+                            sentenceIndexPrec++;
+                            lemmaIndexPrec = 0;
+                        }
+                    }
+                    else{
+                        answerIndexPrec++;
+                        sentenceIndexPrec = 0;
+                        lemmaIndexPrec = 0;
+                    }
                 }
-                else{
-                    sentenceIndexCurrent++;
-                    lemmaIndexCurrent = 0;
-                }
-                
-                
-            }
-            
-            if(compareToWordListFull){
-                break;
-            }
-            else{
-                answerIndexCurrent++;
-                sentenceIndexCurrent = 0;
-                lemmaIndexCurrent = 0;
-            }
-            
+            }   
+        }
+        catch(Exception exc){
+            exc.printStackTrace();
         }
         
         write("Exiting GetCompareToWords");
-        
         return compareToWords;
         
     }

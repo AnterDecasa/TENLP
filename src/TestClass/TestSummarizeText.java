@@ -317,6 +317,8 @@ public class TestSummarizeText {
     
     public static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
+        write("Inside of GetCompareToWords");
+        
         List<StringAndTag> compareToWords = new ArrayList<StringAndTag>();
         int compareToWordsSize = 10;
         boolean compareToWordListFull = false;
@@ -324,36 +326,41 @@ public class TestSummarizeText {
         
         boolean firstSetDone = false;
         int answerIndexCurrent = answerIndex;
+        //write("Answer Index: " + answerIndexCurrent + "\n");
         int sentenceIndexCurrent = sentenceIndex;
-        int lemmaIndexCurrent = lemmaIndex;
+        int lemmaIndexCurrent = lemmaIndex-1;
         
         //traverse answers
-        while(!(answerIndexCurrent < 0)){
-            
+        while((answerIndexCurrent >= 0)){
+            //write("Compare to 1st loop" + "\n");
             Document currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
             List<Sentence> currentSentences = currentAnswer.sentences();
             
             //traversing sentences in answer
-            while(!(sentenceIndexCurrent < 0)){
-                
+            while((sentenceIndexCurrent >= 0)){
+                //write("Compare to 2nd loop");
                 Sentence currentSentence = currentSentences.get(sentenceIndexCurrent);
                 
                 //traversing words in sentence
-                while(!(lemmaIndexCurrent < 0)){
-                    
+                while((lemmaIndexCurrent >= 0)){
+                    //write("Comparet to 3rd loop");
                     //get lemma to be added here
                     List<String> lemmas = currentSentence.lemmas();
                     
                     if(currentSentence.posTag(lemmaIndexCurrent).matches("JJ|NN|VB|RB")){
-                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-                            
-                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-                            //compareToWords.add(new StringAndTag());
-                        }
+                        //write("Compare to 1st if");
+//                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
+//                            //write("Compare to 2nd if");
+//                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+//                            //compareToWords.add(new StringAndTag());
+//                            write("Compare to words size: " + compareToWords.size() + "\n");
+//                        }
+                          compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
                     }
                     
                     if(compareToWords.size() == compareToWordsSize/2){
                         firstSetDone = true;
+                        write("first half done");
                         break;
                     }
                     
@@ -369,7 +376,6 @@ public class TestSummarizeText {
                     Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
                     Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
                     lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
-                    continue;
                 }
             
             }
@@ -381,56 +387,69 @@ public class TestSummarizeText {
                 answerIndexCurrent--;
                 Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
                 lemmaIndexCurrent = currentAnswerTemp.sentences().size()-1;
-                continue;
             }
         }
         
         answerIndexCurrent = answerIndex;
         sentenceIndexCurrent = sentenceIndex;
-        lemmaIndexCurrent = lemmaIndex;
+        lemmaIndexCurrent = lemmaIndex + 1;
         
         //traverse answers
-        while(!(answerIndexCurrent < compareToGroupedAnswers.size())){
+        while((answerIndexCurrent < compareToGroupedAnswers.size())){
             
             Document currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
             List<Sentence> currentSentences = currentAnswer.sentences();
             
             //traverse sentences
-            while(!(sentenceIndexCurrent < currentSentences.size())){
+            while((sentenceIndexCurrent < currentSentences.size())){
                 
                 Sentence currentSentence = currentSentences.get(sentenceIndexCurrent);
                 
-                while(!(lemmaIndexCurrent < currentSentence.lemmas().size())){
+                while((lemmaIndexCurrent < currentSentence.lemmas().size())){
                     
                     //get lemma to be added here
                     List<String> lemmas = currentSentence.lemmas();
                     
                     if(currentSentence.posTag(lemmaIndexCurrent).matches("JJ|NN|VB|RB")){
-                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-                        }
+//                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
+//                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+//                            write("Compare to words size: " + compareToWords.size() + "\n");
+//                        }
+                        compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
                     }
                     
                     if(compareToWords.size() == compareToWordsSize){
                         compareToWordListFull = true;
                         break;
                     }
-                    
-                    lemmaIndexCurrent++;
-                    
+                    else{
+                        lemmaIndexCurrent++;
+                    }
                 }
                 
                 if(compareToWordListFull){
                     break;
                 }
+                else{
+                    sentenceIndexCurrent++;
+                    lemmaIndexCurrent = 0;
+                }
+                
                 
             }
             
             if(compareToWordListFull){
                 break;
             }
+            else{
+                answerIndexCurrent++;
+                sentenceIndexCurrent = 0;
+                lemmaIndexCurrent = 0;
+            }
             
         }
+        
+        write("Exiting GetCompareToWords");
         
         return compareToWords;
         

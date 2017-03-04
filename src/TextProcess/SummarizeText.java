@@ -78,13 +78,14 @@ public class SummarizeText {
                     
                         IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
                         List<IWordID> wordIDs = indexWord.getWordIDs();
+                        System.out.println("IDDDDDDDDDDDDDDDDD: ");
                         if(wordIDs.size() > 1){
                             //Disambiguate
                             int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
                             //write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
                             Connection connect = DriverManager.getConnection(host,user,password);
                             Statement stmt = connect.createStatement();
-                            
+                            System.out.println(stmt);
                         }
                     
                     }   

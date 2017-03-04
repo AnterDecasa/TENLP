@@ -88,27 +88,22 @@ public class SummarizeText {
                             
                             IWord word = dictionary.getWord(wordIDs.get(indexOfWordToBeUsed));
                             ISynset synset = word.getSynset();
-<<<<<<< HEAD
                             write("ISynset: "+synset);
                             List<ISynsetID> synsetID = synset.getRelatedSynsets();
                             String[] synsetIDdissected = synsetID.get(0).toString().split("-");
-                            
+//                            
                             Connection connect = DriverManager.getConnection(host,user,password);
                             Statement stmt = connect.createStatement();
                             write("Synset ID: " + synsetID.get(0));
-=======
                             List<ISynsetID> synsetIDs = synset.getRelatedSynsets();
-                            String[] synsetIDdissected = synsetIDs.get(0).toString().split("-");
                             
-                            Connection connect = DriverManager.getConnection(host,user,password);
-                            Statement stmt = connect.createStatement();
-                            
-                            write("Synset ID: " + synsetIDs.get(0));
-                            write("Synset ID: ");
+//                            String[] synsetIDdissected = synsetIDs.get(0).toString().split("-");
+//                            Connection connect = DriverManager.getConnection(host,user,password);
+//                            Statement stmt = connect.createStatement();
+//                            write("Synset ID: " + synsetIDs.get(0));
                             for(ISynsetID synsetID : synsetIDs){
                                 write(synsetID.toString() + " ");
                             }
->>>>>>> refs/remotes/origin/master
                             String sqlStmtsynsetID =  "SELECT * FROM dict WHERE ID = " + synsetIDdissected[1]; 
                             
                             write(sqlStmtsynsetID);
@@ -118,8 +113,6 @@ public class SummarizeText {
                                 String[] wordIDDisected = wordIDeach.toString().split("-");
                                 write("ID of word: " + wordIDDisected[1]);
                             }
-<<<<<<< HEAD
-=======
 //                            String[] wordIDDisected = wordIDs.get(indexOfWordToBeUsed.toString().split("-");
 //                                write("ID of word: " + wordIDDisected[1]);
                             
@@ -129,8 +122,6 @@ public class SummarizeText {
 //                            if(results.next()){
 //                                write("Result: " + results.getInt("ID") + "|" + results.getInt("POS") + "|" + results.getInt("Gloss"));
 //                            }
-                            
->>>>>>> refs/remotes/origin/master
                         }
                     }   
                 

@@ -78,7 +78,7 @@ public class SummarizeText {
                     
                         IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
                         List<IWordID> wordIDs = indexWord.getWordIDs();
-                        System.out.println("IDDDDDDDDDDDDDDDDD: ");
+                        System.out.println("IDDDDDDDDDDDDDDDDD: "+wordIDs.get(0).getSynsetID());
                         if(wordIDs.size() > 1){
                             //Disambiguate
                             int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);

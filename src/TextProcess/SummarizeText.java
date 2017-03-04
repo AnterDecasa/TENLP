@@ -13,6 +13,8 @@ import ContainerClasses.StringAndTag;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.IRAMDictionary;
 import edu.mit.jwi.item.IIndexWord;
+import edu.mit.jwi.item.ISynset;
+import edu.mit.jwi.item.ISynsetID;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
@@ -32,7 +34,7 @@ public class SummarizeText {
     
     static AnswerGroups groupedAnswers;
     static String[] compareWords;
-    private static String host = "localhost";
+    private static String host = "jdbc:mysql://localhost:3306/tenlp";
     private static String user = "root";
     private static String password = "";
     
@@ -82,12 +84,38 @@ public class SummarizeText {
                         if(wordIDs.size() > 1){
                             //Disambiguate
                             int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
-                            //write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
+                            write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
+                            write("IWordID of word: " + wordIDs.get(indexOfWordToBeUsed).toString());
+                            String[] wordIDDisected = wordIDs.get(indexOfWordToBeUsed).toString().split("-");
+                            
+                            IWord word = dictionary.getWord(wordIDs.get(indexOfWordToBeUsed));
+                            ISynset synset = word.getSynset();
+                            List<ISynsetID> synsetID = synset.getRelatedSynsets();
+                            String[] synsetIDdissected = synsetID.get(0).toString().split("-");
+                            
                             Connection connect = DriverManager.getConnection(host,user,password);
                             Statement stmt = connect.createStatement();
+<<<<<<< HEAD
                             System.out.println(stmt);
+=======
+                            
+                            write("Synset ID: " + synsetID.get(0));
+                            String sqlStmtsynsetID =  "SELECT * FROM dict WHERE ID = " + synsetIDdissected[1]; 
+                            
+                            write(sqlStmtsynsetID);
+                            ResultSet results = stmt.executeQuery(sqlStmtsynsetID);        
+                            
+                            write("ID of word: " + wordIDDisected[1]);
+                            
+                            String sqlStmtwordID = "SELECT * FROM dict WHERE ID = " + wordIDDisected[1];
+                            write(sqlStmtwordID);
+                            results = stmt.executeQuery(sqlStmtwordID);
+                            if(results.next()){
+                                write("Result: " + results.getInt("ID") + "|" + results.getInt("POS") + "|" + results.getInt("Gloss"));
+                            }
+                            
+>>>>>>> refs/remotes/origin/master
                         }
-                    
                     }   
                 
                 }
@@ -493,7 +521,7 @@ public class SummarizeText {
                         currentSentence = currentSentences.get(sentenceIndexPrev);
                         lemmas = currentSentence.lemmas();
                         if((--lemmaIndexPrev) >= 0){
-                            write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prev Index: " + lemmaIndexPrev + "\n");
+                            //write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prev Index: " + lemmaIndexPrev + "\n");
                             if(currentSentence.posTag(lemmaIndexPrev).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
     //                            if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
     //                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
@@ -530,7 +558,7 @@ public class SummarizeText {
                         currentSentence = currentSentences.get(sentenceIndexPrec);
                         lemmas = currentSentence.lemmas();
                         if((++lemmaIndexPrec) < lemmas.size()){
-                            write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prec Index: " + lemmaIndexPrec + "\n");
+                            //write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prec Index: " + lemmaIndexPrec + "\n");
                             if(currentSentence.posTag(lemmaIndexPrec).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
     //                            if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
     //                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));

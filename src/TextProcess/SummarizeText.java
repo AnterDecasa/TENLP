@@ -80,7 +80,6 @@ public class SummarizeText {
                     
                         IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
                         List<IWordID> wordIDs = indexWord.getWordIDs();
-                        System.out.println("IDDDDDDDDDDDDDDDDD: "+wordIDs.get(0).getSynsetID());
                         if(wordIDs.size() > 1){
                             //Disambiguate
                             int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
@@ -90,15 +89,12 @@ public class SummarizeText {
                             
                             IWord word = dictionary.getWord(wordIDs.get(indexOfWordToBeUsed));
                             ISynset synset = word.getSynset();
+                            write("ISynset: "+synset);
                             List<ISynsetID> synsetID = synset.getRelatedSynsets();
                             String[] synsetIDdissected = synsetID.get(0).toString().split("-");
                             
                             Connection connect = DriverManager.getConnection(host,user,password);
                             Statement stmt = connect.createStatement();
-<<<<<<< HEAD
-                            System.out.println(stmt);
-=======
-                            
                             write("Synset ID: " + synsetID.get(0));
                             String sqlStmtsynsetID =  "SELECT * FROM dict WHERE ID = " + synsetIDdissected[1]; 
                             
@@ -113,8 +109,6 @@ public class SummarizeText {
                             if(results.next()){
                                 write("Result: " + results.getInt("ID") + "|" + results.getInt("POS") + "|" + results.getInt("Gloss"));
                             }
-                            
->>>>>>> refs/remotes/origin/master
                         }
                     }   
                 

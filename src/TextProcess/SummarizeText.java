@@ -40,31 +40,55 @@ public class SummarizeText {
     
     public static void summarize(String string){
         
-        string = TextFilePreProcess.removeCarets(string);
-        String[] stringArray = string.split("\\r?\\n");
+        try{
         
-        groupedAnswers = groupAnswers(stringArray);
+            string = TextFilePreProcess.removeCarets(string);
+            String[] stringArray = string.split("\\r?\\n");
+        
+            groupedAnswers = groupAnswers(stringArray);
         
             //Get sentimentScore for each answer
+            write("Teacher Strength");
             int answerIndex = 0;
-            for(Document answer : groupedAnswers.getTeachStrength()){ 
+            for(; answerIndex < groupedAnswers.getTeachStrength().size();answerIndex++){ 
                 double sentimentScore = GetSentiment(groupedAnswers.getTeachStrength(),answerIndex, 0);
-                answerIndex++;
+                write("Score:" + sentimentScore);
             }
             //TeachWeakness
+            write("Teacher Weakness");
+            answerIndex = 0;
+            for(; answerIndex < groupedAnswers.getTeachWeak().size(); answerIndex++){ 
+                double sentimentScore = GetSentiment(groupedAnswers.getTeachWeak(),answerIndex, 0);
+                write("Score:" + sentimentScore);
+            }
+            
             //Comments
+            write("Comment");
+            answerIndex = 0;
+            for(; answerIndex < groupedAnswers.getComments().size(); answerIndex++){ 
+                double sentimentScore = GetSentiment(groupedAnswers.getComments(),answerIndex, 0);
+                write("Score:" + sentimentScore);
+            }
+            
+            write("Done");
+            
+        }
+        
+        catch(Exception exc){
+            exc.printStackTrace();
+        }
     }
     
      public static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
         
-        write("Inside GetSentiment");
-        
+//        write("Inside GetSentiment");
         double sentimentScore = 0;
-        
-        //Get sense for each word
-        List<Sentence> answerSentences = compareToGroupedAnswers.get(answerIndex).sentences();
-        int answerSentencesSize = answerSentences.size();
         try{
+        
+            //Get sense for each word
+            List<Sentence> answerSentences = compareToGroupedAnswers.get(answerIndex).sentences();
+            int answerSentencesSize = answerSentences.size();
+        
             IDictionary dictionary = WordNetAccess.loadDic();
             dictionary.open();
             for(int sentenceCtr = 0; sentenceCtr < answerSentencesSize; sentenceCtr++){
@@ -75,49 +99,72 @@ public class SummarizeText {
                 for(int lemmaCtr = 0; lemmaCtr < lemmaSize; lemmaCtr++){
                 
                     String currentPOSTag = currentSentence.posTag(lemmaCtr);
-                    if(currentPOSTag.matches("JJ|NN|VB|RB")){
-                    
+                    if(currentPOSTag.matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+                        Connection connect = DriverManager.getConnection(host,user,password);
+                        Statement stmt = connect.createStatement();
+                        ResultSet results;
+                            
+//                        write(currentSentence.lemma(lemmaCtr));
+//                        write("Tag: " + LanguageProcess.GetPOSTag(currentPOSTag));
                         IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
-                        List<IWordID> wordIDs = indexWord.getWordIDs();
-                        if(wordIDs.size() > 1){
-                            //Disambiguate
-                            int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
-                            write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
-                            write("IWordID of word: " + wordIDs.get(indexOfWordToBeUsed).toString());
-                            
-                            IWord word = dictionary.getWord(wordIDs.get(indexOfWordToBeUsed));
-                            ISynset synset = word.getSynset();
-                            List<ISynsetID> synsetIDs = synset.getRelatedSynsets();
-                            String[] synsetIDdissected = synsetIDs.get(0).toString().split("-");
-                            
-                            Connection connect = DriverManager.getConnection(host,user,password);
-                            Statement stmt = connect.createStatement();
-                            
-                            write("Synset ID: " + synsetIDs.get(0));
-                            write("Synset ID: ");
-                            for(ISynsetID synsetID : synsetIDs){
-                                write(synsetID.toString() + " ");
+                        if(indexWord != null){
+                            List<IWordID> wordIDs = indexWord.getWordIDs();
+                            if(wordIDs.size() > 1){
+                                //Disambiguate
+                                int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
+    //                            write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
+    //                            write("IWordID of word: " + wordIDs.get(indexOfWordToBeUsed).toString());
+
+                                IWord word = dictionary.getWord(wordIDs.get(indexOfWordToBeUsed));
+    //                            ISynset synset = word.getSynset();
+    //                            List<ISynsetID> synsetIDs = synset.getRelatedSynsets();
+    //                            String[] synsetIDdissected = synsetIDs.get(0).toString().split("-");
+
+    //                            write("Synset ID: " + synsetIDs.get(0));
+    //                            write("Synset ID: ");
+    //                            for(ISynsetID synsetID : synsetIDs){
+    //                                write(synsetID.toString() + " ");
+    //                            }
+    //                            String sqlStmtsynsetID =  "SELECT * FROM dict WHERE ID = " + synsetIDdissected[1]; 
+
+    //                            write(sqlStmtsynsetID);     
+
+    //                            for(IWordID wordIDeach : wordIDs){
+    //                                String[] wordIDDisected = wordIDeach.toString().split("-");
+    //                                write("ID of word: " + wordIDDisected[1]);
+    //                            }
+                                String[] wordIDDisected = wordIDs.get(indexOfWordToBeUsed).toString().split("-");
+    //                            write("ID of word: " + wordIDDisected[1]);
+
+                                String sqlStmtwordID = "SELECT * FROM dict WHERE ID = " + wordIDDisected[1];
+    //                            write(sqlStmtwordID);
+                                results = stmt.executeQuery(sqlStmtwordID);
+    //                            write("\t\t" + "ID" + "\t|" + "PosScore" + "\t|" + "NegScore");
+                                if(results.next()){
+    //                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getInt("PosScore") + "\t|" + results.getInt("NegScore"));
+                                    sentimentScore += results.getFloat("PosScore") - results.getFloat("NegScore");
+                                }
+                                else{
+                                    write("not result");
+                                }
+
                             }
-                            String sqlStmtsynsetID =  "SELECT * FROM dict WHERE ID = " + synsetIDdissected[1]; 
-                            
-                            write(sqlStmtsynsetID);
-                            ResultSet results = stmt.executeQuery(sqlStmtsynsetID);        
-                            
-                            for(IWordID wordIDeach : wordIDs){
-                                String[] wordIDDisected = wordIDeach.toString().split("-");
-                                write("ID of word: " + wordIDDisected[1]);
+                            else{
+                                IWord word = dictionary.getWord(wordIDs.get(0));
+                                String[] wordIDDisected = wordIDs.get(0).toString().split("-");
+    //                            write("ID of word: " + wordIDDisected[1]);
+
+                                String sqlStmtwordID = "SELECT * FROM dict WHERE ID = " + wordIDDisected[1];
+    //                            write(sqlStmtwordID);
+                                results = stmt.executeQuery(sqlStmtwordID);
+    //                            write("\t\t" + "ID" + "\t|" + "PosScore" + "\t|" + "NegScore");
+                                if(results.next()){
+    //                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getInt("PosScore") + "\t|" + results.getInt("NegScore"));
+                                    sentimentScore += results.getFloat("PosScore") - results.getFloat("NegScore");
+                                }
                             }
-//                            String[] wordIDDisected = wordIDs.get(indexOfWordToBeUsed.toString().split("-");
-//                                write("ID of word: " + wordIDDisected[1]);
-                            
-//                            String sqlStmtwordID = "SELECT * FROM dict WHERE ID = " + wordIDDisected[1];
-//                            write(sqlStmtwordID);
-//                            results = stmt.executeQuery(sqlStmtwordID);
-//                            if(results.next()){
-//                                write("Result: " + results.getInt("ID") + "|" + results.getInt("POS") + "|" + results.getInt("Gloss"));
-//                            }
-                            
                         }
+                        
                     }   
                 
                 }
@@ -125,12 +172,14 @@ public class SummarizeText {
         }
         catch(SQLException sqlError){
             write(sqlError.getMessage());
+            sqlError.printStackTrace();
         }
         catch(Exception exc){
-            
+            write(exc.getMessage());
+            exc.printStackTrace();
         }
         
-        write("Exiting GetSentiment");
+//        write("Exiting GetSentiment");
         
         return sentimentScore;
         
@@ -211,12 +260,12 @@ public class SummarizeText {
     
     public static int Disambiguate(IIndexWord indexWord, List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
-        write("Inside Disambiguate");
+//        write("Inside Disambiguate");
         
-        IDictionary dictionary = WordNetAccess.loadDic();
         int indexOfWordToBeUsed = 0;
         try
         {
+            IDictionary dictionary = WordNetAccess.loadDic();
             dictionary.open();
 
             int wordSensesSize = indexWord.getWordIDs().size();
@@ -249,31 +298,37 @@ public class SummarizeText {
                 for(StringAndTag wordWithTag : compareToWords){
                     //write("Disambiguate 2nd loop" + "\n");
                     IIndexWord indexWordOfNeighborWord = dictionary.getIndexWord(wordWithTag.word, wordWithTag.tag);
-                    List<IWordID> iWordIDsOfNeighborWord = indexWordOfNeighborWord.getWordIDs();
+                    
+                    if(indexWordOfNeighborWord != null){
+                        List<IWordID> iWordIDsOfNeighborWord = indexWordOfNeighborWord.getWordIDs();
 
-                    int sameWordsCtr = 0;
+                        int sameWordsCtr = 0;
 
-                    for(IWordID iWordIDOfNeighborWord : iWordIDsOfNeighborWord){
-                        String oneGlossOfNeighborWord = dictionary.getWord(iWordIDOfNeighborWord).getSynset().getGloss();
-
-                        String[] glossOfWordSenseStringArray = glossOfWordSense.split(" ");
-                        String[] oneGlossOfNeighborWordStringArray = oneGlossOfNeighborWord.split(" ");
-                        for(String wordContainer1 : glossOfWordSenseStringArray){
-                            for(String wordContainer2 : oneGlossOfNeighborWordStringArray){
-                                wordContainer1 = wordContainer1.replaceAll("(|)|\"|;", "");
-                                wordContainer2 = wordContainer2.replaceAll("(|)|\"|;", "");
-                                if(wordContainer1.equalsIgnoreCase(wordContainer2) == true){
-                                    sameWordsCtr++;
-                                    break;
+                        for(IWordID iWordIDOfNeighborWord : iWordIDsOfNeighborWord){
+                            String oneGlossOfNeighborWord = dictionary.getWord(iWordIDOfNeighborWord).getSynset().getGloss();
+//                            write(oneGlossOfNeighborWord.replaceAll("\"|;", " "));
+//                            String[] glossOfWordSenseStringArray = glossOfWordSense.split("| |\"|;");
+//                            String[] oneGlossOfNeighborWordStringArray = oneGlossOfNeighborWord.split("| |\"|;");
+                            String[] glossOfWordSenseStringArray = glossOfWordSense.split(" ");
+                            String[] oneGlossOfNeighborWordStringArray = oneGlossOfNeighborWord.split(" ");
+                            for(String wordContainer1 : glossOfWordSenseStringArray){
+                                for(String wordContainer2 : oneGlossOfNeighborWordStringArray){
+                                    wordContainer1 = wordContainer1.replaceAll("(|)|\"|;", "");
+                                    wordContainer2 = wordContainer2.replaceAll("(|)|\"|;", "");
+                                    if(wordContainer1.equalsIgnoreCase(wordContainer2) == true){
+                                        sameWordsCtr++;
+                                        break;
+                                    }
                                 }
+
                             }
 
                         }
 
+                        wordSenseScores[wordSenseTraverseCtr] = sameWordsCtr;
+                        //write("Score : " + wordSenseScores[wordSenseTraverseCtr] + "\n");
                     }
-
-                    wordSenseScores[wordSenseTraverseCtr] = sameWordsCtr;
-                    //write("Score : " + wordSenseScores[wordSenseTraverseCtr] + "\n");
+                    
                 }
                 wordSenseTraverseCtr++;
             }
@@ -290,215 +345,16 @@ public class SummarizeText {
 
         }
         catch(Exception exc){
-            write(exc.getMessage());
+            exc.printStackTrace();
         }
-        write("Exiting Disambiguate");
+//        write("Exiting Disambiguate");
         return indexOfWordToBeUsed;
         
     }
     
-//    public static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
-//        
-//        write("Inside of GetCompareToWords");
-//        
-//        List<StringAndTag> compareToWords = new ArrayList<StringAndTag>();
-//        int compareToWordsSize = 10;
-//        boolean compareToWordListFull = false;
-//        boolean firstSetDone = false;
-//        int firstSetCount = 0;
-//        int secondSetCount = 0; 
-//        int answerIndexCurrent = answerIndex;
-//        int sentenceIndexCurrent = sentenceIndex;
-//        int lemmaIndexCurrent = lemmaIndex;
-//        
-//        while(answerIndexCurrent >= 0){
-//            Document currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
-//            List<Sentence> currentSentences = currentAnswer.sentences();
-//            while(sentenceIndexCurrent >= 0){
-//                while((lemmaIndexCurrent--) >= 0){
-//                  
-//                    lemmaIndexCurrent--;
-//                    if(lemmaIndexCurrent >= 0){
-//                           
-//                        firstSetCount++;
-//                        if(firstSetCount == compareToWordsSize/2){
-//                            firstSetDone = true;
-//                            break;
-//                        }
-//
-//                    }
-//                    
-//                }
-//                if(firstSetDone){
-//                    break;
-//                }
-//                else{
-//                    sentenceIndexCurrent--;
-//                    Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
-//                    Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
-//                    lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
-//                }
-//            }
-//            if(firstSetDone){
-//                break;
-//            }
-//            else{
-//                sentenceIndexCurrent--;
-//                Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
-//                Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
-//                lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
-//            }
-//        }
-//        
-//        answerIndexCurrent = answerIndex;
-//        sentenceIndexCurrent = sentenceIndex;
-//        lemmaIndexCurrent = lemmaIndex;
-//        
-//        Document currentAnswer;
-//        List<Sentence> currentSentences;
-//        Sentence currentSentence;
-//        List<String> lemmas;
-//        while(answerIndexCurrent < compareToGroupedAnswers.size()){
-//            currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
-//            currentSentences = currentAnswer.sentences();
-//            while(sentenceIndexCurrent < currentSentences.size()){
-//                currentSentence = currentSentences.get(sentenceIndexCurrent);
-//                lemmas = currentSentence.lemmas();
-//                while((lemmaIndexCurrent++) < lemmas.size() && secondSetCount < compareToWordsSize){
-//                    secondSetCount++;
-//                }
-//            }
-//        }
-//        if(secondSetCount < compareToWordsSize/2){
-//            firstSetCount = firstSetCount + ((compareToWordsSize/2) - secondSetCount);
-//        }
-//        secondSetCount = compareToWordsSize - firstSetCount;
-//        
-//        //traverse answers
-//        while(answerIndexCurrent >= 0){
-//            //write("Compare to 1st loop" + "\n");
-//            currentAnswer = compareToGroupedAnswers.get(answerIndexCurrent);
-//            currentSentences = currentAnswer.sentences();
-//
-//            //traversing sentences in answer
-//            while(sentenceIndexCurrent >= 0){
-//                //write("Compare to 2nd loop");
-//                currentSentence = currentSentences.get(sentenceIndexCurrent);
-//
-//                //traversing words in sentence
-//                while((lemmaIndexCurrent--) >= 0){
-//                    //write("Comparet to 3rd loop");
-//                    //get lemma to be added here
-//                    lemmas = currentSentence.lemmas();
-//
-//                    if(currentSentence.posTag(lemmaIndexCurrent).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-//                        //write("Compare to 1st if");
-////                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-////                            //write("Compare to 2nd if");
-////                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-////                            //compareToWords.add(new StringAndTag());
-////                            write("Compare to words size: " + compareToWords.size() + "\n");
-////                        }
-//                          compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-//                    }
-//
-//                    if(compareToWords.size() == firstSetCount){
-//                        firstSetDone = true;
-//                        //write("first half done");
-//                        break;
-//                    }
-//
-//                }
-//
-//                if(firstSetDone){
-//                   break; 
-//                }
-//                else{
-//                    sentenceIndexCurrent--;
-//                    Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
-//                    Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
-//                    lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
-//                }
-//
-//            }
-//
-//            if(firstSetDone){
-//                break;
-//            }
-//            else{
-//                answerIndexCurrent--;
-//                Document currentAnswerTemp = compareToGroupedAnswers.get(answerIndexCurrent);
-//                sentenceIndexCurrent = currentAnswerTemp.sentences().size()-1;
-//                Sentence currentSentenceTemp = currentAnswerTemp.sentences().get(sentenceIndexCurrent);
-//                lemmaIndexCurrent = currentSentenceTemp.lemmas().size()-1;
-//            }
-//        }
-//        
-//        answerIndexCurrent = answerIndex;
-//        sentenceIndexCurrent = sentenceIndex;
-//        lemmaIndexCurrent = lemmaIndex;
-//        
-//        //traverse answers
-//        while((answerIndexCurrent < compareToGroupedAnswers.size())){
-//
-//        compareToGroupedAnswers.get(answerIndexCurrent);
-//        currentSentences = currentAnswer.sentences();
-//
-//            //traverse sentences
-//            while((sentenceIndexCurrent < currentSentences.size())){
-//
-//                Sentence currentSentence = currentSentences.get(sentenceIndexCurrent);
-//
-//                while((lemmaIndexCurrent++) < currentSentence.lemmas().size()){
-//
-//                    //get lemma to be added here
-//                    List<String> lemmas = currentSentence.lemmas();
-//
-//                    if(currentSentence.posTag(lemmaIndexCurrent).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-////                        if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-////                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-////                            write("Compare to words size: " + compareToWords.size() + "\n");
-////                        }
-//                        compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
-//                    }
-//
-//                    if(compareToWords.size() == compareToWordsSize){
-//                        compareToWordListFull = true;
-//                        break;
-//                    }
-//                }
-//
-//                if(compareToWordListFull){
-//                    break;
-//                }
-//                else{
-//                    sentenceIndexCurrent++;
-//                    lemmaIndexCurrent = 0;
-//                }
-//
-//
-//            }
-//
-//            if(compareToWordListFull){
-//                break;
-//            }
-//            else{
-//                answerIndexCurrent++;
-//                sentenceIndexCurrent = 0;
-//                lemmaIndexCurrent = 0;
-//            }
-//
-//        }
-//        
-//        write("Exiting GetCompareToWords");
-//        
-//        return compareToWords;
-//        
-//    }
-    
     public static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
-        write("Inside of GetCompareToWords");
+//        write("Inside of GetCompareToWords");
         List<StringAndTag> compareToWords = new ArrayList<StringAndTag>();
         try{
 
@@ -589,7 +445,7 @@ public class SummarizeText {
             exc.printStackTrace();
         }
         
-        write("Exiting GetCompareToWords");
+//        write("Exiting GetCompareToWords");
         return compareToWords;
         
     }

@@ -57,7 +57,6 @@ public class SummarizeText {
     
      public static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
         
-        write("----------------------------------------");
         write("Inside GetSentiment");
         
         double sentimentScore = 0;
@@ -88,19 +87,14 @@ public class SummarizeText {
                             
                             IWord word = dictionary.getWord(wordIDs.get(indexOfWordToBeUsed));
                             ISynset synset = word.getSynset();
-                            write("ISynset: "+synset);
-                            List<ISynsetID> synsetID = synset.getRelatedSynsets();
-                            String[] synsetIDdissected = synsetID.get(0).toString().split("-");
-//                            
+                            List<ISynsetID> synsetIDs = synset.getRelatedSynsets();
+                            String[] synsetIDdissected = synsetIDs.get(0).toString().split("-");
+                            
                             Connection connect = DriverManager.getConnection(host,user,password);
                             Statement stmt = connect.createStatement();
-                            write("Synset ID: " + synsetID.get(0));
-                            List<ISynsetID> synsetIDs = synset.getRelatedSynsets();
                             
-//                            String[] synsetIDdissected = synsetIDs.get(0).toString().split("-");
-//                            Connection connect = DriverManager.getConnection(host,user,password);
-//                            Statement stmt = connect.createStatement();
-//                            write("Synset ID: " + synsetIDs.get(0));
+                            write("Synset ID: " + synsetIDs.get(0));
+                            write("Synset ID: ");
                             for(ISynsetID synsetID : synsetIDs){
                                 write(synsetID.toString() + " ");
                             }
@@ -122,6 +116,7 @@ public class SummarizeText {
 //                            if(results.next()){
 //                                write("Result: " + results.getInt("ID") + "|" + results.getInt("POS") + "|" + results.getInt("Gloss"));
 //                            }
+                            
                         }
                     }   
                 

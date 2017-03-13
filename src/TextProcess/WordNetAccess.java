@@ -34,7 +34,11 @@ public class WordNetAccess {
         
         IDictionary retDictionary = null;
         
+<<<<<<< HEAD
         String WNHome = "C:\\Users\\csc1701\\Google Drive\\Current Thesis\\tools";
+=======
+        String WNHome = "C:\\Users\\AnnTherese\\Google Drive\\Current Thesis\\tools\\WordNet-3.0";
+>>>>>>> refs/remotes/origin/master
         String path = WNHome + File.separator + "dict";
         
         try{

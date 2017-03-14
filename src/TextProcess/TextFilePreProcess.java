@@ -62,12 +62,12 @@ public class TextFilePreProcess {
             write("Removing redundant subject labels");
                     
             for(int i = 2; i < array.length; i++){
-                if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
-                    if(TextFilePreProcess.newSubject(array[i])){
+                //if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
+                    if(newSubject(array[i])){
                         currSubject = array[i-1].trim();
                     }
                     retVal += array[i].trim() + "\n";
-                }
+                //}
                 
             }
             

@@ -86,7 +86,7 @@ public class SummarizeText {
         }
     }
     
-    public static void AssignToPosNeg(double score, Document answer){
+    private static void AssignToPosNeg(double score, Document answer){
         if(score < 0){
             negativeSentences.add(answer);
         }
@@ -98,7 +98,7 @@ public class SummarizeText {
         }
     }
     
-    public static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
+    private static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
         
 //        write("Inside GetSentiment");
         double sentimentScore = 0;
@@ -204,7 +204,7 @@ public class SummarizeText {
         
     }
     
-    public static boolean IfUniqueWord(List<String> words,List<String> POS, String word, String POSofWord){
+    private static boolean IfUniqueWord(List<String> words,List<String> POS, String word, String POSofWord){
         
         //write("Inside of IfUniqueWord");
         
@@ -223,7 +223,7 @@ public class SummarizeText {
         return retVal;
     }
     
-    public static boolean IfUniqueWord(List<StringAndTag> listOfWords, String word){
+    private static boolean IfUniqueWord(List<StringAndTag> listOfWords, String word){
         
         boolean retVal = false;
         
@@ -244,7 +244,7 @@ public class SummarizeText {
         
     }
     
-    public static int Disambiguate(IIndexWord indexWord, List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
+    private static int Disambiguate(IIndexWord indexWord, List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
 //        write("Inside Disambiguate");
         
@@ -338,7 +338,7 @@ public class SummarizeText {
         
     }
     
-    public static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
+    private static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
 //        write("Inside of GetCompareToWords");
         List<StringAndTag> compareToWords = new ArrayList<StringAndTag>();
@@ -518,6 +518,54 @@ public class SummarizeText {
         
     }
     */
+    
+    public static String printPositiveNegativeStatements(){
+            
+        String classifiedString = "";
+            
+            
+        classifiedString += "Positive" + "\n\n";
+        for(Document answer : positiveSentences){
+            List <Sentence> sentences = answer.sentences();
+
+            classifiedString += ">";
+
+            for(Sentence sentence : sentences){
+                classifiedString += sentence.text();
+            }
+
+            classifiedString += "\n";
+        }
+
+        classifiedString += "\n" + "Negative" + "\n\n";
+        for(Document answer : negativeSentences){
+            List <Sentence> sentences = answer.sentences();
+
+            classifiedString += ">";
+
+            for(Sentence sentence : sentences){
+                classifiedString += sentence.text();
+            }
+
+            classifiedString += "\n";
+        }
+
+        classifiedString += "\n" + "Neutral" + "\n\n";
+        for(Document answer : neutralSentences){
+            List <Sentence> sentences = answer.sentences();
+
+            classifiedString += ">";
+
+            for(Sentence sentence : sentences){
+                classifiedString += sentence.text();
+            }
+
+            classifiedString += "\n";
+        }
+
+        return classifiedString;
+            
+    }
     
     private static void write(Tree tree){
         

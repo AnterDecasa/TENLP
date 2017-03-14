@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import ContainerClasses.LemmaSentenceWithPOStag;
+import edu.stanford.nlp.simple.Document;
+import edu.stanford.nlp.simple.Sentence;
 
 public class TextFilePreProcess {
 	
@@ -15,7 +17,7 @@ public class TextFilePreProcess {
         static private String[] subjects;
         
         static public List<String> questions = new ArrayList<String>();
-	
+        
 	private static String getTeacherName(BufferedReader text){
             
 		String name = "";

@@ -226,7 +226,7 @@ public class MainForm extends javax.swing.JFrame {
         
         //SummarizeText.StoreImportantSentences();
         
-        //analyzedTextArea.setText(analyzedText);
+        analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());
         
     }//GEN-LAST:event_analyzeBtnActionPerformed
 

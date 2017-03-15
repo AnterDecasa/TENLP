@@ -19,6 +19,8 @@ import java.util.Properties;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import ContainerClasses.LemmaSentenceWithPOStag;
+import edu.stanford.nlp.simple.Document;
+import edu.stanford.nlp.simple.Sentence;
 
 public class TextFilePreProcess {
 	
@@ -26,7 +28,7 @@ public class TextFilePreProcess {
         static private String[] subjects;
         
         static public List<String> questions = new ArrayList<String>();
-	
+        
 	private static String getTeacherName(BufferedReader text){
             
 		String name = "";
@@ -71,12 +73,12 @@ public class TextFilePreProcess {
             write("Removing redundant subject labels");
                     
             for(int i = 2; i < array.length; i++){
-                if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
-                    if(TextFilePreProcess.newSubject(array[i])){
+                //if(!currSubject.trim().equalsIgnoreCase(array[i].trim())){
+                    if(newSubject(array[i])){
                         currSubject = array[i-1].trim();
                     }
                     retVal += array[i].trim() + "\n";
-                }
+                //}
                 
             }
             

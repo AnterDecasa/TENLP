@@ -37,6 +37,9 @@ public class SummarizeText {
     private static String host = "jdbc:mysql://localhost:3306/tenlp";
     private static String user = "root";
     private static String password = "";
+    private static List<Document> positiveSentences = new ArrayList<Document>();
+    private static List<Document> negativeSentences = new ArrayList<Document>();
+    private static List<Document> neutralSentences = new ArrayList<Document>();
     
     public static void summarize(String string){
         
@@ -57,16 +60,20 @@ public class SummarizeText {
             //TeachWeakness
             write("Teacher Weakness");
             answerIndex = 0;
+            List<Document> currentGroup = groupedAnswers.getTeachWeak();
             for(; answerIndex < groupedAnswers.getTeachWeak().size(); answerIndex++){ 
-                double sentimentScore = GetSentiment(groupedAnswers.getTeachWeak(),answerIndex, 0);
+                double sentimentScore = GetSentiment(currentGroup,answerIndex, 0);
+                AssignToPosNeg(sentimentScore,currentGroup.get(answerIndex));
                 write("Score:" + sentimentScore);
             }
             
             //Comments
             write("Comment");
             answerIndex = 0;
+            currentGroup = groupedAnswers.getComments();
             for(; answerIndex < groupedAnswers.getComments().size(); answerIndex++){ 
-                double sentimentScore = GetSentiment(groupedAnswers.getComments(),answerIndex, 0);
+                double sentimentScore = GetSentiment(currentGroup,answerIndex, 0);
+                AssignToPosNeg(sentimentScore,currentGroup.get(answerIndex));
                 write("Score:" + sentimentScore);
             }
             
@@ -79,7 +86,19 @@ public class SummarizeText {
         }
     }
     
-     public static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
+    private static void AssignToPosNeg(double score, Document answer){
+        if(score < 0){
+            negativeSentences.add(answer);
+        }
+        else if(score == 0){
+            neutralSentences.add(answer);
+        }
+        else if(score > 0){
+            positiveSentences.add(answer);
+        }
+    }
+    
+    private static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
         
 //        write("Inside GetSentiment");
         double sentimentScore = 0;
@@ -185,40 +204,7 @@ public class SummarizeText {
         
     }
     
-    public static LemmaSentenceWithPOStag getCleanedLemmaSentence(Document document){
-        
-        List<Sentence> sentencesAnswer = document.sentences();
-        LemmaSentenceWithPOStag retVal = new LemmaSentenceWithPOStag();
-        
-        for(Sentence oneSentenceAnswer : sentencesAnswer){
-                
-                Tree sentenceTree = oneSentenceAnswer.parse();
-                
-                Iterator trav = sentenceTree.iterator();
-                Tree childTree = sentenceTree;
-                String POSTag = "";
-                int wordIndex = 0;
-      
-                while(trav.hasNext()){
-                    POSTag = childTree.value();
-                    childTree = (Tree) trav.next();
-                    if(childTree.isLeaf()){
-                        if(POSTag.matches("NN(S|P|PS)?|RB(R|S)?|JJ(R|S)?|VB(D|G|N|P|Z)?")){
-                            if(IfUniqueWord(retVal.cleanedLemmaAnswers, retVal.cleanedLemmaAnswersPOSTag, oneSentenceAnswer.lemma(wordIndex),POSTag)){
-                                retVal.cleanedLemmaAnswers.add(oneSentenceAnswer.lemma(wordIndex));
-                                retVal.cleanedLemmaAnswersPOSTag.add(POSTag);
-                            }
-                        }
-                    }
-                }
-            
-            }
-        
-        return retVal;
-        
-    }
-    
-    public static boolean IfUniqueWord(List<String> words,List<String> POS, String word, String POSofWord){
+    private static boolean IfUniqueWord(List<String> words,List<String> POS, String word, String POSofWord){
         
         //write("Inside of IfUniqueWord");
         
@@ -237,7 +223,7 @@ public class SummarizeText {
         return retVal;
     }
     
-    public static boolean IfUniqueWord(List<StringAndTag> listOfWords, String word){
+    private static boolean IfUniqueWord(List<StringAndTag> listOfWords, String word){
         
         boolean retVal = false;
         
@@ -258,7 +244,7 @@ public class SummarizeText {
         
     }
     
-    public static int Disambiguate(IIndexWord indexWord, List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
+    private static int Disambiguate(IIndexWord indexWord, List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
 //        write("Inside Disambiguate");
         
@@ -352,7 +338,7 @@ public class SummarizeText {
         
     }
     
-    public static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
+    private static List<StringAndTag> GetCompareToWords(List<Document> compareToGroupedAnswers, int answerIndex, int sentenceIndex, int lemmaIndex, int questionIndex){
         
 //        write("Inside of GetCompareToWords");
         List<StringAndTag> compareToWords = new ArrayList<StringAndTag>();
@@ -450,16 +436,6 @@ public class SummarizeText {
         
     }
     
-    public static Tree GetSentenceTree(){
-        
-        Tree retTree = null;
-        
-        
-        
-        return retTree;
-                
-    }
-    
     private static AnswerGroups groupAnswers(String[] answers){
         
         AnswerGroups answerGroups = new AnswerGroups();
@@ -541,27 +517,55 @@ public class SummarizeText {
         }
         
     }
+    */
     
-    public static void getWordInfo(String word, String POStag, String sentence, int questionIndexNum){
-        
-        List<IWordID> correctTagWordIDs = WordNetAccess.getSense(word, POStag);   
-        
-        if(correctTagWordIDs.size() > 1){
-            //start Lesk algo
-            Sentence sentForLesk = new Sentence(sentence);
-            for(String sentWord : sentForLesk.words()){
-                List<IWordID> wordSet =  WordNetAccess.getSense(sentWord, sentence);
-                for(IWordID wordInSet : wordSet){;
-                    IWord wordFromDict = WordNetAccess.dict.getWord(wordInSet);
-                    String glossOfWord = wordFromDict.getSynset().getGloss();
-                    write(glossOfWord);
-                }
-            }
+    public static String printPositiveNegativeStatements(){
             
-            //end Lesk algo
+        String classifiedString = "";
+            
+            
+        classifiedString += "Positive" + "\n\n";
+        for(Document answer : positiveSentences){
+            List <Sentence> sentences = answer.sentences();
+
+            classifiedString += ">";
+
+            for(Sentence sentence : sentences){
+                classifiedString += sentence.text();
+            }
+
+            classifiedString += "\n";
         }
-        
-    }*/
+
+        classifiedString += "\n" + "Negative" + "\n\n";
+        for(Document answer : negativeSentences){
+            List <Sentence> sentences = answer.sentences();
+
+            classifiedString += ">";
+
+            for(Sentence sentence : sentences){
+                classifiedString += sentence.text();
+            }
+
+            classifiedString += "\n";
+        }
+
+        classifiedString += "\n" + "Neutral" + "\n\n";
+        for(Document answer : neutralSentences){
+            List <Sentence> sentences = answer.sentences();
+
+            classifiedString += ">";
+
+            for(Sentence sentence : sentences){
+                classifiedString += sentence.text();
+            }
+
+            classifiedString += "\n";
+        }
+
+        return classifiedString;
+            
+    }
     
     private static void write(Tree tree){
         

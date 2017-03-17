@@ -53,7 +53,7 @@ public class SummarizeText {
             //Get sentimentScore for each answer
             write("Teacher Strength");
             int answerIndex = 0;
-            for(; answerIndex < groupedAnswers.getTeachStrength().size();answerIndex++){ 
+            for(; answerIndex < groupedAnswers.getTeachStrength().size(); answerIndex++){ 
                 double sentimentScore = GetSentiment(groupedAnswers.getTeachStrength(),answerIndex, 0);
                 write("Score:" + sentimentScore);
             }

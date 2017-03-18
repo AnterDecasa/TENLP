@@ -220,13 +220,24 @@ public class MainForm extends javax.swing.JFrame {
 
     private void analyzeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeBtnActionPerformed
         
+        final long startTime = System.currentTimeMillis();
+        
         String analyzedText = evalForOneSubjTextArea.getText();
         
-        SummarizeText.summarize(analyzedText);    
-        
+        //SummarizeText.summarize(analyzedText);
+        SummarizeText.summarizeAdjAdvCount(analyzedText);
         //SummarizeText.StoreImportantSentences();
         
         analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());
+        
+        final long endTime = System.currentTimeMillis();
+        
+        final long convertedToSeconds = (endTime - startTime)/1000;
+        final long minutes = convertedToSeconds/60;
+        final long seconds = convertedToSeconds%60;
+        final long milliseconds = ((endTime - startTime)%1000);
+        
+        write("Total processing time: " + minutes + "min " + seconds + "sec " + milliseconds + "millisec");
         
     }//GEN-LAST:event_analyzeBtnActionPerformed
 

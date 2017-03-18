@@ -9,8 +9,6 @@ import ContainerClasses.AnswerGroups;
 import ContainerClasses.LemmaSentenceWithPOStag;
 import ContainerClasses.StringAndTag;
 import TextProcess.LanguageProcess;
-import static TextProcess.SummarizeText.Disambiguate;
-import static TextProcess.SummarizeText.GetCompareToWords;
 import TextProcess.TextFilePreProcess;
 import TextProcess.WordNetAccess;
 import edu.mit.jwi.IDictionary;

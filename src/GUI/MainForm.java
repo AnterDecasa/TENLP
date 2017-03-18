@@ -180,11 +180,7 @@ public class MainForm extends javax.swing.JFrame {
     private void chooseFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileBtnActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser;
-<<<<<<< HEAD
         fileChooser = new JFileChooser(new File("C:\\Users\\csc1701\\Google Drive\\Current Thesis\\Resources\\Text Files"));
-=======
-        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Google Drive\\Current Thesis\\Resources\\Text Files"));
->>>>>>> refs/remotes/origin/master
         int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
         String cleanedText = "";
             

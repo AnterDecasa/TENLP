@@ -148,12 +148,18 @@ public class SummarizeText {
     }
     
     private static void AssignToPosNegAdjAdvNegativeCount(int negativeCount,  Document answer){
-        if(negativeCount%2 != 0){
+//        if(negativeCount == 0){
+//            neutralSentences.add(answer);
+//        }
+//        else{
+            if(negativeCount%2 != 0){
             negativeSentences.add(answer);
-        }
-        else {
-            positiveSentences.add(answer);
-        }
+            }
+            else {
+                positiveSentences.add(answer);
+            }
+//        }
+        
     }
     
     private static int GetSentimentAdjAdvNegativeCount(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
@@ -176,7 +182,10 @@ public class SummarizeText {
                 for(int lemmaCtr = 0; lemmaCtr < lemmaSize; lemmaCtr++){
                 
                     String currentPOSTag = currentSentence.posTag(lemmaCtr);
-                    if(currentPOSTag.matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(currentPOSTag.matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(currentPOSTag.matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(currentPOSTag.matches("JJ(R|S)?|RB(S|R)?")){
+                    if(currentPOSTag.matches("JJ(R|S)?")){
                         Connection connect = DriverManager.getConnection(host,user,password);
                         Statement stmt = connect.createStatement();
                         ResultSet results;

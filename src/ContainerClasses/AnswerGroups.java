@@ -85,23 +85,32 @@ public class AnswerGroups {
     public void asssignToGroup(int questionIndxNum, Document sentandTag){
         
         switch(questionIndxNum){
-            case 1:
+            case 0:
                 teachStrength.add(sentandTag);
+//                write("" + 0);
+                break;
+            case 1:
+                teachWeak.add(sentandTag);
+//                write("" + 1);
                 break;
             case 2:
-                teachWeak.add(sentandTag);
+                subjLike.add(sentandTag);
+//                write("" + 2);
                 break;
             case 3:
-                subjLike.add(sentandTag);
+                subjHate.add(sentandTag);
+//                write("" + 3);
                 break;
             case 4:
-                subjHate.add(sentandTag);
-                break;
-            case 5:
                 comments.add(sentandTag);
+//                write("" + 4);
                 break;
             }
         
+    }
+    
+    private void write(String string){
+        System.out.println(string);
     }
     
 }

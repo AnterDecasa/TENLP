@@ -304,13 +304,9 @@ public class TextFilePreProcess {
         if ("".equals(line)){
             hasComment = false;
         }
-        
-<<<<<<< HEAD
-=======
 //        if (!hasComment){
 //            write(line);
 //        }
->>>>>>> refs/remotes/origin/master
         return hasComment;
     }
 

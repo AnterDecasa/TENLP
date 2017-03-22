@@ -224,11 +224,12 @@ public class MainForm extends javax.swing.JFrame {
         
         String analyzedText = evalForOneSubjTextArea.getText();
         
-        //SummarizeText.summarize(analyzedText);
-        SummarizeText.summarizeZeroOneNegative(analyzedText);
-        //SummarizeText.StoreImportantSentences();
+//        SummarizeText.summarize(analyzedText);
+//        SummarizeText.summarizeZeroOneNegative(analyzedText);
+        SummarizeText.getSentimentofWholeDocument(analyzedText);
+//        SummarizeText.StoreImportantSentences();
         
-        analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());
+//        analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());
         
         final long endTime = System.currentTimeMillis();
         

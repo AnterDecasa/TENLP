@@ -63,21 +63,11 @@ public class TextFilePreProcess {
             if (i < array.length - 1 && newSubject(array[i + 1])) {
                 currSubject = array[i].trim();
                 retVal += currSubject + "\n";
-                write(currSubject + " is new subject");
+//                write(currSubject + " is new subject");
             } else if (!currSubject.trim().equalsIgnoreCase(array[i].trim())) {
                 retVal += array[i].trim() + "\n";
             }
         }
-
-        return retVal;
-
-    }
-
-    public static String combineOneSubject(String string) {
-
-        String retVal = "";
-
-        String[] array = string.split("\r?\n|\n");
 
         return retVal;
 
@@ -252,7 +242,7 @@ public class TextFilePreProcess {
     }
 
     private static boolean isDate(String string) {
-        return string.matches("(.*)(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)(.*)");
+        return string.matches("(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday), (.*)");
     }
 
     public static String removeNoComment(String string) {
@@ -298,17 +288,15 @@ public class TextFilePreProcess {
             hasComment = false;
         }
         if (line.matches("\\d+\\.*")){
-            write("digit");
             hasComment = false;
         }
         if ("".equals(line)){
-            write("empty");
             hasComment = false;
         }
         
-        if (!hasComment){
-            write(line);
-        }
+//        if (!hasComment){
+//            write(line);
+//        }
         return hasComment;
 
     }
@@ -361,48 +349,6 @@ public class TextFilePreProcess {
 
     }
 
-//        public static String getSubjectEvaluation(String string, String subject){
-//            
-//            String retVal = "";
-//            String[] stringArray = string.split("\\r?\\n");
-//            
-//            write("Getting evaluation for " + subject);
-//            
-//            for(int i = 0; i < stringArray.length;){
-//                if(stringArray[i].equalsIgnoreCase(subject)){
-//                    i++;
-//                    while(i < stringArray.length && !isSubject(stringArray[i])){
-//                        retVal += stringArray[i] + "\n";
-//                        i++;
-//                    }
-//                    break;
-//                }
-//                i++;
-//            }
-//            return retVal;
-//            
-//        }
-//        public static String getSubjectEvaluation(String string, String subject){
-//            
-//            String retVal = "";
-//            String[] stringArray = string.split("\\r?\\n");
-//            
-//            write("Getting evaluation for " + subject);
-//            
-//            for(int i = 0; i < stringArray.length;){
-//                if(stringArray[i].equalsIgnoreCase(subject)){
-//                    i++;
-//                    while(i < stringArray.length && !subjectExists(stringArray[i])){
-//                        retVal += stringArray[i] + "\n";
-//                        i++;
-//                    }
-//                    break;
-//                }
-//                i++;
-//            }
-//            return retVal;
-//            
-//        }
     public static String getSubjectEvaluation(String string, String subject) {
 
         String retVal = "";
@@ -419,7 +365,7 @@ public class TextFilePreProcess {
                     i++;
                 }
                 if (i < stringArray.length - 1 && newSubject(stringArray[i + 1])) {
-                    write(stringArray[i] + " is new subject");
+//                    write(stringArray[i] + " is new subject");
                 }
 //                    break;
             } else {
@@ -439,7 +385,7 @@ public class TextFilePreProcess {
         write("Removing questions");
 
         for (String line : stringArray) {
-            if (!ifQuestion(line)) {
+            if (!ifQuestion(line.trim().replaceFirst(">",""))) {
                 retVal += line + "\n";
             }
         }
@@ -455,7 +401,7 @@ public class TextFilePreProcess {
 
         write("Removing carets");
         for (String line : stringArray) {
-            retVal += line.trim().replaceAll("> ", "") + "\n";
+            retVal += line.trim().replaceFirst(">", "").trim() + "\n";
 
         }
 
@@ -488,6 +434,30 @@ public class TextFilePreProcess {
 
     }
 
+    public static String putPeriodsForNoPeriod(String string){
+        
+        String retVal = "";
+        String[] stringArray = string.split("\\r?\\n|\\r");
+        
+        for(String element : stringArray){
+            if(!hasPeriod(element.trim())){
+                retVal += element + "." + "\n";
+            }
+            else{
+                retVal += element + "\n";
+            }
+        }
+        
+        return retVal;
+        
+    }
+    
+    private static boolean hasPeriod(String string){
+        
+        return string.matches(".*\\.");
+        
+    }
+    
     private static void write(String string, boolean newLine) {
         if (newLine) {
             System.out.print(string);
@@ -507,5 +477,49 @@ public class TextFilePreProcess {
         System.out.println(tree);
 
     }
+    
+//    public static String getSubjectEvaluation(String string, String subject){
+//
+//        String retVal = "";
+//        String[] stringArray = string.split("\\r?\\n");
+//
+//        write("Getting evaluation for " + subject);
+//
+//        for(int i = 0; i < stringArray.length;){
+//            if(stringArray[i].equalsIgnoreCase(subject)){
+//                i++;
+//                while(i < stringArray.length && !subjectExists(stringArray[i])){
+//                    retVal += stringArray[i] + "\n";
+//                    i++;
+//                }
+//                break;
+//            }
+//            i++;
+//        }
+//        return retVal;
+//
+//    }
+    
+//    public static String getSubjectEvaluation(String string, String subject){
+//
+//        String retVal = "";
+//        String[] stringArray = string.split("\\r?\\n");
+//
+//        write("Getting evaluation for " + subject);
+//
+//        for(int i = 0; i < stringArray.length;){
+//            if(stringArray[i].equalsIgnoreCase(subject)){
+//                i++;
+//                while(i < stringArray.length && !isSubject(stringArray[i])){
+//                    retVal += stringArray[i] + "\n";
+//                    i++;
+//                }
+//                break;
+//            }
+//            i++;
+//        }
+//        return retVal;
+//
+//    }    
 
 }

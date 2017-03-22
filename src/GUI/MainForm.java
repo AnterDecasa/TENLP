@@ -225,7 +225,7 @@ public class MainForm extends javax.swing.JFrame {
         String analyzedText = evalForOneSubjTextArea.getText();
         
         //SummarizeText.summarize(analyzedText);
-        SummarizeText.summarizeAdjAdvCount(analyzedText);
+        SummarizeText.summarizeZeroOneNegative(analyzedText);
         //SummarizeText.StoreImportantSentences();
         
         analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());

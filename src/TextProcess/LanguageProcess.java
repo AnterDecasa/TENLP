@@ -65,6 +65,10 @@ public class LanguageProcess {
         
     }
     
+    public static Tree getPOS(Sentence sent){
+        return sent.parse();
+    }
+    
     public static List<String> getNER(String string){
         
         List<String> retVal = new ArrayList<String>();

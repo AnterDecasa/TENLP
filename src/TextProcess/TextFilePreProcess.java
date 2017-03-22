@@ -317,59 +317,7 @@ public class TextFilePreProcess {
             hasComment = false;
         }
         
-<<<<<<< HEAD
-        public static String getImportantText(File file){
-            
-            String retVal = "";
-            BufferedReader evaluationText;
-            String newSubject = "";
-            
-            write("Getting evaluation");
-            
-            try{
-                evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
-                String line;
-                    
-                //Get Teacher name
-                retVal += getTeacherName(evaluationText) + "\n";
-                    
-                //Remove other info
-                while((newSubject = newSubject(evaluationText)).equalsIgnoreCase("")){}
-                retVal += newSubject + "\n";
-                    
-                evaluationText.reset();
-                    
-                line = evaluationText.readLine();
-                while(line != null){
-                    retVal += line + "\n";
-                    line = evaluationText.readLine();
-//                    Polarity[] p = annotate(line);
-//                    for(int ctr = 0; ctr < line.length(); ctr++){
-//                        assertTrue(p[ctr].isUpwards());
-//                    	assertTrue(p[ctr].isDownwards());
-//                    }
-                }
-                retVal = removeDate(retVal);
-                retVal = removePageNumber(retVal);
-                retVal = removeRedundantSubjectLabel(retVal);
-                retVal = removeExtraCarriageReturn(retVal);
-                subjects = getSubjects(retVal);
-                retVal = putTogetherOneCommment(retVal);
-                retVal = removeNoComment(retVal);
-                String[] array = retVal.split("\\r?\\n");
-                LanguageProcess.getWords(array[4].replace('>', ' '));
-                questions.add("As a teacher, what are his/her strengths?");
-                questions.add("As a teacher, what areas should s/he improve?");
-                questions.add("What do you like best about this course?");
-                questions.add("What do you like least about this course?");
-                questions.add("Comment");
-                //LanguageProcess.getWords(array[4].replace('>', ' '));
-=======
-        if (!hasComment){
-            write(line);
-        }
         return hasComment;
-
     }
 
     public static String getImportantText(File file) {
@@ -389,7 +337,6 @@ public class TextFilePreProcess {
 
             //Remove other info
             while ((newSubject = newSubject(evaluationText)).equalsIgnoreCase("")) {
->>>>>>> refs/remotes/origin/master
             }
             retVal += newSubject + "\n";
 

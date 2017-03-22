@@ -42,6 +42,28 @@ public class SummarizeText {
     private static List<Document> negativeSentences = new ArrayList<Document>();
     private static List<Document> neutralSentences = new ArrayList<Document>();
     
+    public static void summarizeDocument(){
+        
+    }
+    
+    public static void getSentimentofWholeDocument(String string){
+        
+        String noQuestions = TextFilePreProcess.removeQuestions(string);
+
+        noQuestions = TextFilePreProcess.removeCarets(noQuestions);
+        
+        noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
+        
+        write(noQuestions);
+        
+        Document docu = new Document(noQuestions);
+        
+        for(Sentence sent : docu.sentences()){
+            write(sent.parse());
+        }
+        
+    }
+    
     public static void summarizeZeroOneNegative(String string){
         
         try{
@@ -97,6 +119,150 @@ public class SummarizeText {
         }
     }
     
+    private static int GetSentimentReturnZeroOneNegative(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
+        
+//        write("Inside GetSentiment");
+        int sentimentScore = 0;
+        double positive = 0;
+        double negative = 0;
+        int wordCount = 0;
+        try{
+        
+            //Get sense for each word
+            List<Sentence> answerSentences = compareToGroupedAnswers.get(answerIndex).sentences();
+            int answerSentencesSize = answerSentences.size();
+        
+            IDictionary dictionary = WordNetAccess.loadDic();
+            dictionary.open();
+            for(int sentenceCtr = 0; sentenceCtr < answerSentencesSize; sentenceCtr++){
+            
+                Sentence currentSentence = answerSentences.get(sentenceCtr);
+//                write(currentSentence.text());
+                write(currentSentence.parse());
+                int lemmaSize = currentSentence.lemmas().size();
+            
+                for(int lemmaCtr = 0; lemmaCtr < lemmaSize; lemmaCtr++){
+                
+                    String currentPOSTag = currentSentence.posTag(lemmaCtr);
+//                    if(currentPOSTag.matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+                    if(currentPOSTag.matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(currentPOSTag.matches("JJ(R|S)?|RB(S|R)?")){
+//                    if(currentPOSTag.matches("JJ(R|S)?")){
+                        Connection connect = DriverManager.getConnection(host,user,password);
+                        Statement stmt = connect.createStatement();
+                        ResultSet results;
+                            
+//                        write(currentSentence.lemma(lemmaCtr));
+//                        write("Tag: " + LanguageProcess.GetPOSTag(currentPOSTag));
+                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
+                        if(indexWord != null){
+                            List<IWordID> wordIDs = indexWord.getWordIDs();
+                            if(wordIDs.size() > 1){
+                                //Disambiguate
+                                int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
+    //                            write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
+    //                            write("IWordID of word: " + wordIDs.get(indexOfWordToBeUsed).toString());
+
+                                IWord word = dictionary.getWord(wordIDs.get(indexOfWordToBeUsed));
+    //                            ISynset synset = word.getSynset();
+    //                            List<ISynsetID> synsetIDs = synset.getRelatedSynsets();
+    //                            String[] synsetIDdissected = synsetIDs.get(0).toString().split("-");
+
+    //                            write("Synset ID: " + synsetIDs.get(0));
+    //                            write("Synset ID: ");
+    //                            for(ISynsetID synsetID : synsetIDs){
+    //                                write(synsetID.toString() + " ");
+    //                            }
+    //                            String sqlStmtsynsetID =  "SELECT * FROM dict WHERE ID = " + synsetIDdissected[1]; 
+
+    //                            write(sqlStmtsynsetID);     
+
+    //                            for(IWordID wordIDeach : wordIDs){
+    //                                String[] wordIDDisected = wordIDeach.toString().split("-");
+    //                                write("ID of word: " + wordIDDisected[1]);
+    //                            }
+                                String[] wordIDDisected = wordIDs.get(indexOfWordToBeUsed).toString().split("-");
+    //                            write("ID of word: " + wordIDDisected[1]);
+
+                                String sqlStmtwordID = "SELECT * FROM dict WHERE ID = " + wordIDDisected[1];
+    //                            write(sqlStmtwordID);
+                                results = stmt.executeQuery(sqlStmtwordID);
+    //                            write("\t\t" + "ID" + "\t|" + "PosScore" + "\t|" + "NegScore");
+                                if(results.next()){
+    //                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getInt("PosScore") + "\t|" + results.getInt("NegScore"));
+                                    positive += results.getFloat("PosScore");
+                                    negative += results.getFloat("NegScore");
+                                    wordCount++;
+                                }
+                                else{
+                                    write("not result");
+                                }
+
+                            }
+                            else{
+                                IWord word = dictionary.getWord(wordIDs.get(0));
+                                String[] wordIDDisected = wordIDs.get(0).toString().split("-");
+    //                            write("ID of word: " + wordIDDisected[1]);
+
+                                String sqlStmtwordID = "SELECT * FROM dict WHERE ID = " + wordIDDisected[1];
+    //                            write(sqlStmtwordID);
+                                results = stmt.executeQuery(sqlStmtwordID);
+    //                            write("\t\t" + "ID" + "\t|" + "PosScore" + "\t|" + "NegScore");
+                                if(results.next()){
+    //                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getInt("PosScore") + "\t|" + results.getInt("NegScore"));
+                                    positive += results.getFloat("PosScore");
+                                    negative += results.getFloat("NegScore");
+                                    wordCount++;
+                                }
+                            }
+                        }
+                        
+                    }   
+                
+                }
+            }
+        }
+        catch(SQLException sqlError){
+            write(sqlError.getMessage());
+            sqlError.printStackTrace();
+        }
+        catch(Exception exc){
+            write(exc.getMessage());
+            exc.printStackTrace();
+        }
+        
+//        write("Exiting GetSentiment");
+        
+        write("Pos: " + positive + " Neg: " + negative);
+        if(positive >= negative){
+            sentimentScore = 1;
+        }
+        else if(negative > positive){
+            sentimentScore = -1;
+        }
+
+        return sentimentScore;
+        
+    }
+    
+    private static void AssignToPosNegZeroOneNegative(int polarity,  Document answer){
+//        if(negativeCount == 0){
+//            neutralSentences.add(answer);
+//        }
+//        else{
+        if(polarity == -1){
+            negativeSentences.add(answer);
+        }
+        else if(polarity == 1) {
+            positiveSentences.add(answer);
+        }
+        else{
+            neutralSentences.add(answer);
+        }
+//        }
+
+    }
+    
     public static void summarizeAdjAdvCount(String string){
         
         try{
@@ -145,98 +311,6 @@ public class SummarizeText {
         catch(Exception exc){
             exc.printStackTrace();
         }
-    }
-    
-    public static void summarize(String string){
-        
-        try{
-        
-            string = TextFilePreProcess.removeCarets(string);
-            String[] stringArray = string.split("\\r?\\n");
-        
-            groupedAnswers = groupAnswers(stringArray);
-        
-            //Get sentimentScore for each answer
-            write("Teacher Strength");
-            int answerIndex = 0;
-            List<Document> currentGroup = groupedAnswers.getTeachStrength();
-            for(; answerIndex < groupedAnswers.getTeachStrength().size(); answerIndex++){ 
-               double sentimentScore = GetSentiment(currentGroup,answerIndex, 0);
-               AssignToPosNeg(sentimentScore,currentGroup.get(answerIndex));
-               write("Score:" + sentimentScore);
-            }
-            //TeachWeakness
-            write("Teacher Weakness");
-            answerIndex = 0;
-            currentGroup = groupedAnswers.getTeachWeak();
-            for(; answerIndex < groupedAnswers.getTeachWeak().size(); answerIndex++){ 
-                double sentimentScore = GetSentiment(currentGroup,answerIndex, 0);
-                AssignToPosNeg(sentimentScore,currentGroup.get(answerIndex));
-                write("Score:" + sentimentScore);
-            }
-            
-            //Comments
-            write("Comment");
-            answerIndex = 0;
-            currentGroup = groupedAnswers.getComments();
-            for(; answerIndex < groupedAnswers.getComments().size(); answerIndex++){ 
-                double sentimentScore = GetSentiment(currentGroup,answerIndex, 0);
-                AssignToPosNeg(sentimentScore,currentGroup.get(answerIndex));
-                write("Score:" + sentimentScore);
-            }
-            
-            write("Done");
-            
-        }
-        
-        catch(Exception exc){
-            exc.printStackTrace();
-        }
-    }
-    
-    private static void AssignToPosNeg(double score, Document answer){
-        if(score < 0){
-            negativeSentences.add(answer);
-        }
-        else if(score == 0){
-            neutralSentences.add(answer);
-        }
-        else if(score > 0){
-            positiveSentences.add(answer);
-        }
-    }
-    
-    private static void AssignToPosNegAdjAdvNegativeCount(int negativeCount,  Document answer){
-//        if(negativeCount == 0){
-//            neutralSentences.add(answer);
-//        }
-//        else{
-            if(negativeCount%2 != 0){
-                negativeSentences.add(answer);
-            }
-            else {
-                positiveSentences.add(answer);
-            }
-//        }
-        
-    }
-    
-    private static void AssignToPosNegZeroOneNegative(int polarity,  Document answer){
-//        if(negativeCount == 0){
-//            neutralSentences.add(answer);
-//        }
-//        else{
-            if(polarity == -1){
-                negativeSentences.add(answer);
-            }
-            else if(polarity == 1) {
-                positiveSentences.add(answer);
-            }
-            else{
-                neutralSentences.add(answer);
-            }
-//        }
-        
     }
     
     private static int GetSentimentAdjAdvNegativeCount(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
@@ -351,11 +425,11 @@ public class SummarizeText {
             }
         }
         catch(SQLException sqlError){
-            write(sqlError.getMessage());
             sqlError.printStackTrace();
         }
         catch(Exception exc){
             write(exc.getMessage());
+//            write(sqlError.getMessage());
             exc.printStackTrace();
         }
         
@@ -365,7 +439,81 @@ public class SummarizeText {
         
     }
     
-    private static double GetSentiment(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
+    private static void AssignToPosNegAdjAdvNegativeCount(int negativeCount,  Document answer){
+//        if(negativeCount == 0){
+//            neutralSentences.add(answer);
+//        }
+//        else{
+        if(negativeCount%2 != 0){
+            negativeSentences.add(answer);
+        }
+        else {
+            positiveSentences.add(answer);
+        }
+//        }
+        
+    }
+    
+    public static void summarizeFirstAlgo(String string){
+        
+        try{
+        
+            string = TextFilePreProcess.removeCarets(string);
+            String[] stringArray = string.split("\\r?\\n");
+        
+            groupedAnswers = groupAnswers(stringArray);
+        
+            //Get sentimentScore for each answer
+            write("Teacher Strength");
+            int answerIndex = 0;
+            List<Document> currentGroup = groupedAnswers.getTeachStrength();
+            for(; answerIndex < groupedAnswers.getTeachStrength().size(); answerIndex++){ 
+               double sentimentScore = GetSentimentFirstAlgo(currentGroup,answerIndex, 0);
+               AssignToPosNegFirstAlgo(sentimentScore,currentGroup.get(answerIndex));
+               write("Score:" + sentimentScore);
+            }
+            //TeachWeakness
+            write("Teacher Weakness");
+            answerIndex = 0;
+            currentGroup = groupedAnswers.getTeachWeak();
+            for(; answerIndex < groupedAnswers.getTeachWeak().size(); answerIndex++){ 
+                double sentimentScore = GetSentimentFirstAlgo(currentGroup,answerIndex, 0);
+                AssignToPosNegFirstAlgo(sentimentScore,currentGroup.get(answerIndex));
+                write("Score:" + sentimentScore);
+            }
+            
+            //Comments
+            write("Comment");
+            answerIndex = 0;
+            currentGroup = groupedAnswers.getComments();
+            for(; answerIndex < groupedAnswers.getComments().size(); answerIndex++){ 
+                double sentimentScore = GetSentimentFirstAlgo(currentGroup,answerIndex, 0);
+                AssignToPosNegFirstAlgo(sentimentScore,currentGroup.get(answerIndex));
+                write("Score:" + sentimentScore);
+            }
+            
+            write("Done");
+            
+        }
+        
+        catch(Exception exc){
+            exc.printStackTrace();
+        }
+    }
+    
+    private static void AssignToPosNegFirstAlgo(double score, Document answer){
+        if(score < 0){
+            negativeSentences.add(answer);
+        }
+        else if(score == 0){
+            neutralSentences.add(answer);
+        }
+        else if(score > 0){
+            positiveSentences.add(answer);
+        }
+    }
+    
+    private static double GetSentimentFirstAlgo(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
         
 //        write("Inside GetSentiment");
         double sentimentScore = 0;
@@ -467,131 +615,6 @@ public class SummarizeText {
         
 //        write("Exiting GetSentiment");
         
-        return sentimentScore;
-        
-    }
-    
-    private static int GetSentimentReturnZeroOneNegative(List<Document> compareToGroupedAnswers, int answerIndex, int questionIndex){
-        
-//        write("Inside GetSentiment");
-        int sentimentScore = 0;
-        double positive = 0;
-        double negative = 0;
-        int wordCount = 0;
-        try{
-        
-            //Get sense for each word
-            List<Sentence> answerSentences = compareToGroupedAnswers.get(answerIndex).sentences();
-            int answerSentencesSize = answerSentences.size();
-        
-            IDictionary dictionary = WordNetAccess.loadDic();
-            dictionary.open();
-            for(int sentenceCtr = 0; sentenceCtr < answerSentencesSize; sentenceCtr++){
-            
-                Sentence currentSentence = answerSentences.get(sentenceCtr);
-                write(currentSentence.text());
-                int lemmaSize = currentSentence.lemmas().size();
-            
-                for(int lemmaCtr = 0; lemmaCtr < lemmaSize; lemmaCtr++){
-                
-                    String currentPOSTag = currentSentence.posTag(lemmaCtr);
-//                    if(currentPOSTag.matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-                    if(currentPOSTag.matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-//                    if(currentPOSTag.matches("JJ(R|S)?|RB(S|R)?")){
-//                    if(currentPOSTag.matches("JJ(R|S)?")){
-                        Connection connect = DriverManager.getConnection(host,user,password);
-                        Statement stmt = connect.createStatement();
-                        ResultSet results;
-                            
-//                        write(currentSentence.lemma(lemmaCtr));
-//                        write("Tag: " + LanguageProcess.GetPOSTag(currentPOSTag));
-                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
-                        if(indexWord != null){
-                            List<IWordID> wordIDs = indexWord.getWordIDs();
-                            if(wordIDs.size() > 1){
-                                //Disambiguate
-                                int indexOfWordToBeUsed = Disambiguate(indexWord, compareToGroupedAnswers, answerIndex, sentenceCtr, lemmaCtr, questionIndex);
-    //                            write("Index of word to be used: " + indexOfWordToBeUsed + "\n");
-    //                            write("IWordID of word: " + wordIDs.get(indexOfWordToBeUsed).toString());
-
-                                IWord word = dictionary.getWord(wordIDs.get(indexOfWordToBeUsed));
-    //                            ISynset synset = word.getSynset();
-    //                            List<ISynsetID> synsetIDs = synset.getRelatedSynsets();
-    //                            String[] synsetIDdissected = synsetIDs.get(0).toString().split("-");
-
-    //                            write("Synset ID: " + synsetIDs.get(0));
-    //                            write("Synset ID: ");
-    //                            for(ISynsetID synsetID : synsetIDs){
-    //                                write(synsetID.toString() + " ");
-    //                            }
-    //                            String sqlStmtsynsetID =  "SELECT * FROM dict WHERE ID = " + synsetIDdissected[1]; 
-
-    //                            write(sqlStmtsynsetID);     
-
-    //                            for(IWordID wordIDeach : wordIDs){
-    //                                String[] wordIDDisected = wordIDeach.toString().split("-");
-    //                                write("ID of word: " + wordIDDisected[1]);
-    //                            }
-                                String[] wordIDDisected = wordIDs.get(indexOfWordToBeUsed).toString().split("-");
-    //                            write("ID of word: " + wordIDDisected[1]);
-
-                                String sqlStmtwordID = "SELECT * FROM dict WHERE ID = " + wordIDDisected[1];
-    //                            write(sqlStmtwordID);
-                                results = stmt.executeQuery(sqlStmtwordID);
-    //                            write("\t\t" + "ID" + "\t|" + "PosScore" + "\t|" + "NegScore");
-                                if(results.next()){
-    //                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getInt("PosScore") + "\t|" + results.getInt("NegScore"));
-                                    positive += results.getFloat("PosScore");
-                                    negative += results.getFloat("NegScore");
-                                    wordCount++;
-                                }
-                                else{
-                                    write("not result");
-                                }
-
-                            }
-                            else{
-                                IWord word = dictionary.getWord(wordIDs.get(0));
-                                String[] wordIDDisected = wordIDs.get(0).toString().split("-");
-    //                            write("ID of word: " + wordIDDisected[1]);
-
-                                String sqlStmtwordID = "SELECT * FROM dict WHERE ID = " + wordIDDisected[1];
-    //                            write(sqlStmtwordID);
-                                results = stmt.executeQuery(sqlStmtwordID);
-    //                            write("\t\t" + "ID" + "\t|" + "PosScore" + "\t|" + "NegScore");
-                                if(results.next()){
-    //                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getInt("PosScore") + "\t|" + results.getInt("NegScore"));
-                                    positive += results.getFloat("PosScore");
-                                    negative += results.getFloat("NegScore");
-                                    wordCount++;
-                                }
-                            }
-                        }
-                        
-                    }   
-                
-                }
-            }
-        }
-        catch(SQLException sqlError){
-            write(sqlError.getMessage());
-            sqlError.printStackTrace();
-        }
-        catch(Exception exc){
-            write(exc.getMessage());
-            exc.printStackTrace();
-        }
-        
-//        write("Exiting GetSentiment");
-        
-        write("Pos: " + positive + " Neg: " + negative);
-        if(positive >= negative){
-            sentimentScore = 1;
-        }
-        else if(negative > positive){
-            sentimentScore = -1;
-        }
-
         return sentimentScore;
         
     }
@@ -850,65 +873,6 @@ public class SummarizeText {
         return answerGroups;
         
     }
-    
-    /*
-    //Test method
-    public static void StoreImportantSentences(){
-        
-        Iterator it;
-        //Tree tree = sentence.getTree();
-        Sentence sentence = new Sentence("The pine cone is cute.");
-        Tree tree = sentence.parse();
-        
-        Tree temp = null;
-        String POStag = null;
-        temp = tree;
-        int wordIndex = 0;
-        for(it = tree.iterator(); it.hasNext();){
-            
-            write(temp);
-            
-            POStag = temp.value();
-            temp = (Tree) it.next();
-            
-            if(temp.isLeaf()){
-                write("Leaf tag:" + POStag);
-                write("Word Index: " + wordIndex);
-                
-                if(POStag.matches("NN(S|P|PS)?|RB(R|S)?|JJ(R|S)?|VB(D|G|N|P|Z)?")){
-                    getWordInfo(sentence.lemma(wordIndex), POStag, sentence.text(),1);
-                }
-                
-                wordIndex++;
-            }
-            
-        }
-        
-    }
-    
-    public static void StoreImportantSentences(SentenceAndTag sentence,int questionIndexNum){
-        
-        Iterator it;
-        Tree tree = sentence.getTree();
-        
-        Tree temp = null;
-        String POStag = null;
-        
-        int wordIndex = 0;
-        for(it = tree.iterator(); it.hasNext();){
-            POStag = temp.value();
-            temp = (Tree) it.next();
-            
-            if(temp.isLeaf()){
-                if(POStag.matches("NN(S|P|PS)?|RB(R|S)?|JJ(R|S)?|VB(D|G|N|P|Z)?")){
-                    getWordInfo(new Sentence(sentence.getSentence()).lemma(wordIndex), POStag, sentence.getSentence(), questionIndexNum);
-                }
-                wordIndex++;
-            }  
-        }
-        
-    }
-    */
     
     public static String printPositiveNegativeStatements(){
             

@@ -373,6 +373,9 @@ public class TextFilePreProcess {
                     retVal += stringArray[i] + "\n";
                     i++;
                 }
+                if(i == stringArray.length - 1){
+                    retVal += stringArray[i];
+                }
                 if (i < stringArray.length - 1 && newSubject(stringArray[i + 1])) {
 //                    write(stringArray[i] + " is new subject");
                 }
@@ -380,7 +383,7 @@ public class TextFilePreProcess {
             } else {
                 i++;
             }
-
+            
         }
         return retVal;
 

@@ -49,19 +49,79 @@ public class SummarizeText {
     public static void getSentimentofWholeDocument(String string){
         
         String noQuestions = TextFilePreProcess.removeQuestions(string);
-
         noQuestions = TextFilePreProcess.removeCarets(noQuestions);
-        
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
+//        write(noQuestions);
         
-        write(noQuestions);
+        double positive = 0;
+        double negative = 0;
+        double wordCount = 0;
         
         Document docu = new Document(noQuestions);
         
-        for(Sentence sent : docu.sentences()){
-            write(sent.parse());
-        }
+        write("Calculating sentiment...");
+        try{
+            Connection connect = DriverManager.getConnection(host,user,password);
+            Statement stmt = connect.createStatement();
+            ResultSet results;
         
+            for(Sentence sent : docu.sentences()){
+    //            write(sent.parse());
+                List <String> tags = sent.posTags();
+            
+                List <String> words =  sent.lemmas();
+            
+                int index = 0;
+                for(;index < tags.size(); index++){
+                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
+//                    if(tags.get(index).matches("JJ(R|S)?")){
+//                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
+                        wordCount++;
+                        IDictionary dictionary = WordNetAccess.loadDic();
+                        dictionary.open();
+
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(index), LanguageProcess.GetPOSTag(tags.get(index)));
+                        if(indexWord != null){
+                            List<IWordID> wordIDs = indexWord.getWordIDs();
+                            double posScore = 0;
+                            double negScore = 0;    
+                            double senseCtr = 0;
+                            IWord word = dictionary.getWord(wordIDs.get(0));
+                            write(word.getLemma());
+//                            write("ID of word: " + wordIDDisected[1]);
+                            String sqlStmtwordID = "SELECT * FROM dict WHERE (SynsetTerms LIKE '%"+ word.getLemma() +"#%' OR SynsetTerms LIKE '%"+ word.getLemma() +"#%') AND (PosScore > 0 AND NegScore > 0)";
+//                                write(sqlStmtwordID);
+                            results = stmt.executeQuery(sqlStmtwordID);
+                            while(results.next()){
+                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
+                                posScore += results.getFloat("PosScore");
+                                negScore += results.getFloat("NegScore");
+                                senseCtr++;
+                            }
+                            write("Sense Count: " + senseCtr++);
+                            positive += posScore/senseCtr;
+                            negative += negScore/senseCtr;
+                            senseCtr = 0;
+                            posScore = 0;
+                            negScore = 0;
+                        }
+
+                        dictionary.close();
+                    
+                    }
+                }
+            }
+            connect.close();
+        }
+        catch(Exception exc){
+            exc.printStackTrace();
+        }
+           
+        write("Positive: " + positive/wordCount);
+        write("Negtive: " + negative/wordCount);
+        write("Word Count: " + wordCount);
     }
     
     public static void summarizeZeroOneNegative(String string){
@@ -145,7 +205,8 @@ public class SummarizeText {
                 
                     String currentPOSTag = currentSentence.posTag(lemmaCtr);
 //                    if(currentPOSTag.matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-                    if(currentPOSTag.matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+                    if(currentPOSTag.matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
+//                    if(currentPOSTag.matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(currentPOSTag.matches("JJ(R|S)?|RB(S|R)?")){
 //                    if(currentPOSTag.matches("JJ(R|S)?")){
                         Connection connect = DriverManager.getConnection(host,user,password);

@@ -73,11 +73,11 @@ public class SummarizeText {
             
                 int index = 0;
                 for(;index < tags.size(); index++){
-                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?")){
-//                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
+                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         wordCount++;
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();

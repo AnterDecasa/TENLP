@@ -226,7 +226,10 @@ public class MainForm extends javax.swing.JFrame {
         
 //        SummarizeText.summarize(analyzedText);
 //        SummarizeText.summarizeZeroOneNegative(analyzedText);
-        SummarizeText.getSentimentofWholeDocument(analyzedText);
+//        SummarizeText.getSentimentofWholeDocument(analyzedText);
+//        SummarizeText.getSentimentofWholeDocumentWithNegation(analyzedText);
+        SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguation(analyzedText);
+        SummarizeText.listPosNeg();
 //        SummarizeText.StoreImportantSentences();
         
 //        analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());

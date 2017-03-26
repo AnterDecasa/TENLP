@@ -411,12 +411,12 @@ public class SummarizeText {
             exc.getMessage();
         }
            
-//        write("Positive: " + positive/wordCount);
-//        write("Negtive: " + negative/wordCount);
-//        write("Word Count: " + wordCount);
-        write("Positive: " + positive);
-        write("Negtive: " + negative);
+        write("Positive: " + positive/wordCount);
+        write("Negtive: " + negative/wordCount);
         write("Word Count: " + wordCount);
+//        write("Positive: " + positive);
+//        write("Negtive: " + negative);
+//        write("Word Count: " + wordCount);
     }
     
     private static int Disambiguate(IIndexWord indexWord, Document document, int sentenceIndex, int lemmaIndex){

@@ -302,8 +302,8 @@ public class SummarizeText {
                 for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
 //                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
-//                    if(tags.get(index).matches("JJ(R|S)?")){
+//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
+                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         
                         IDictionary dictionary = WordNetAccess.loadDic();
@@ -329,7 +329,7 @@ public class SummarizeText {
                             results = stmt.executeQuery(sqlStmtwordID);
                             if(results.next()){
                                 write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
-                                positive += results.getFloat("PosScore");
+                                posScore += results.getFloat("PosScore");
                                 negScore += results.getFloat("NegScore");
                             }
 //                            write("Sense Count: " + senseCtr++);
@@ -368,21 +368,29 @@ public class SummarizeText {
     //                                    posScore = negScore + advPosScore;
     //                                    negScore = temp + advNegScore;
     //                                }
-                                    if(advPosScore <= advNegScore){
+                                    if(advPosScore < advNegScore){
                                         double temp = posScore;
                                         posScore = negScore;
                                         negScore = temp + advNegScore;
                                     }
                                     else if(advPosScore >= advNegScore){
-                                        posScore = posScore + advPosScore;
+                                        if(posScore >= negScore){
+                                            posScore = posScore + advPosScore;
+                                            negScore = negScore + advNegScore;
+                                        }
+                                        else if(posScore < negScore){
+                                            negScore = negScore + advPosScore;
+                                            posScore = posScore + advNegScore;
+                                        }
+                                        
                                     }
                                 } 
                                 
                             }
                             write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
                             if(posScore >= negScore){
-                                    
-                                        positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
+                                if(posScore != 0)    
+                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             else{
                                 
@@ -410,12 +418,12 @@ public class SummarizeText {
             exc.getMessage();
         }
            
-//        write("Positive: " + positive/wordCount);
-//        write("Negtive: " + negative/wordCount);
-//        write("Word Count: " + wordCount);
-        write("Positive: " + positive);
-        write("Negtive: " + negative);
+        write("Positive: " + positive/wordCount);
+        write("Negtive: " + negative/wordCount);
         write("Word Count: " + wordCount);
+//        write("Positive: " + positive);
+//        write("Negtive: " + negative);
+//        write("Word Count: " + wordCount);
     }
     
     private static int Disambiguate(IIndexWord indexWord, Document document, int sentenceIndex, int lemmaIndex){

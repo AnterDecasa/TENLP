@@ -17,7 +17,7 @@ public class TextFilePreProcess {
     static private String[] subjects;
 
     static public List<String> questions = new ArrayList<String>();
-
+    
     private static String getTeacherName(BufferedReader text) {
 
         String name = "";
@@ -41,6 +41,34 @@ public class TextFilePreProcess {
 
     }
 
+    public static String convertAllCAPSTolowerCase(String string){
+        write("removing all caps");
+        String retVal = "";
+        String[] stringArray = string.split("\r?\n|\n");
+        
+        for(String stringElem : stringArray){
+            
+            String[] words = stringElem.split(" ");
+            for(int i = 0; i < words.length; i++){
+                if(words[i].matches("([A-Z]){2,}\\.*")){
+                    retVal += words[i].toLowerCase();
+                }
+                else{
+                    retVal += words[i];
+                }
+                ;
+                if(i < words.length-1){
+                    retVal += " ";
+                }
+            }
+            retVal += "\n";
+        }
+        
+        
+        return retVal;
+        
+    }
+    
     public static String getTeacherName(String string) {
 
         return string.split("\r?\n|\n")[0];

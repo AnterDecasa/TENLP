@@ -328,12 +328,12 @@ public class SummarizeText {
 //                            write(sqlStmtwordID);
                             results = stmt.executeQuery(sqlStmtwordID);
                             if(results.next()){
-                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
+//                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                 posScore += results.getFloat("PosScore");
                                 negScore += results.getFloat("NegScore");
                             }
 //                            write("Sense Count: " + senseCtr++);
-                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+//                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
                             String adverb = "";
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
@@ -354,7 +354,7 @@ public class SummarizeText {
                                     double advPosScore = 0;
                                     double advNegScore = 0;
                                     if(results.next()){
-                                        write("Result: \t" + results.getInt("ID") + "\t |" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
+//                                        write("Result: \t" + results.getInt("ID") + "\t |" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                         advPosScore = results.getFloat("PosScore");
                                         advNegScore = results.getFloat("NegScore");
                                     }
@@ -387,7 +387,7 @@ public class SummarizeText {
                                 } 
                                 
                             }
-                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
                             if(posScore >= negScore){
                                 if(posScore != 0)    
                                     positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
@@ -410,6 +410,7 @@ public class SummarizeText {
                     }
                     
                 }
+                write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
             }
             connect.close();
         }

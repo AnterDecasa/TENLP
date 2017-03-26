@@ -332,7 +332,7 @@ public class TextFilePreProcess {
         boolean hasComment = true;
         String line = string.trim().replaceFirst(">", "");
         line = line.trim();
-        if (line.matches("((-*|\\.*|,*|_*))\\.*")) {
+        if (line.matches("((-*|\\.*|,*|_*|/*))\\.*")) {
             hasComment = false;
         }
         if (line.matches("((n|N)(o|O)(n|N)(e|E))\\.*")) {

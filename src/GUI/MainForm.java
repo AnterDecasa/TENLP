@@ -110,9 +110,10 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         jButton1.setText("Output sentences");
+        jButton1.setName("outputSentenceButton"); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                outputSentencesButtonActionPerformed(evt);
             }
         });
 
@@ -256,7 +257,7 @@ public class MainForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_analyzeBtnActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void outputSentencesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputSentencesButtonActionPerformed
         // TODO add your handling code here:
         try{
             TextFilePreProcess.outputSentencesCSV(evalForOneSubjTextArea.getText());
@@ -264,7 +265,7 @@ public class MainForm extends javax.swing.JFrame {
         catch(FileNotFoundException exc){
             exc.printStackTrace();
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_outputSentencesButtonActionPerformed
 
     /**
      * @param args the command line arguments

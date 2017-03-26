@@ -24,6 +24,8 @@ import edu.stanford.nlp.simple.Sentence;
 import java.util.ArrayList;
 import java.util.List;
 import edu.mit.jwi.item.POS;
+import java.io.File;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Optional;
 
@@ -273,7 +275,7 @@ public class SummarizeText {
         noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
 //        write(noQuestions);
-        
+
         double positive = 0;
         double negative = 0;
         double wordCount = 0;
@@ -282,6 +284,12 @@ public class SummarizeText {
         
         write("Calculating sentiment...");
         try{
+            
+            PrintWriter pw = new PrintWriter(new File("sentenceScores.csv"));
+            StringBuilder sb = new StringBuilder();
+            
+            sb.append("Sentence,Positive,Negative");
+        
             Connection connect = DriverManager.getConnection(host,user,password);
             Statement stmt = connect.createStatement();
             ResultSet results;
@@ -411,8 +419,17 @@ public class SummarizeText {
                     
                 }
                 write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
+                
+                sb.append(sentences.get(sentCtr).text() + "," + sentPos + "," + sentNeg);
+                if(sentCtr < sentences.size()-1){
+                    sb.append('\n');
+                }
+        
             }
             connect.close();
+            pw.write(sb.toString());
+            pw.close();
+            System.out.println("output sentences done!");
         }
         catch(Exception exc){
             exc.printStackTrace();

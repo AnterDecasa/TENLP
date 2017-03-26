@@ -53,6 +53,7 @@ public class SummarizeText {
         
         String noQuestions = TextFilePreProcess.removeQuestions(string);
         noQuestions = TextFilePreProcess.removeCarets(noQuestions);
+        noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
 //        write(noQuestions);
         
@@ -145,6 +146,7 @@ public class SummarizeText {
         
         String noQuestions = TextFilePreProcess.removeQuestions(string);
         noQuestions = TextFilePreProcess.removeCarets(noQuestions);
+        noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
 //        write(noQuestions);
         
@@ -269,6 +271,7 @@ public class SummarizeText {
         
         String noQuestions = TextFilePreProcess.removeQuestions(string);
         noQuestions = TextFilePreProcess.removeCarets(noQuestions);
+        noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
 //        write(noQuestions);
         
@@ -287,8 +290,9 @@ public class SummarizeText {
             List<Sentence> sentences = docu.sentences();
             int sentCtr = 0;
             for(; sentCtr < sentences.size(); sentCtr++){
-    //            write(sent.parse());
+                
                 write(sentences.get(sentCtr).text());
+                write(sentences.get(sentCtr).parse());
                 double sentPos = 0;
                 double sentNeg = 0;
                 List <String> tags = sentences.get(sentCtr).posTags();
@@ -317,7 +321,7 @@ public class SummarizeText {
                                 indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex);
                             }
                             IWord word= dictionary.getWord(wordIDs.get(indexForSense));
-                            write(word.getLemma());
+//                            write(word.getLemma());
                             String[] wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
                             
 //                            write("ID of word: " + wordIDDisected[1]);
@@ -330,8 +334,11 @@ public class SummarizeText {
                                 negScore += results.getFloat("NegScore");
                             }
 //                            write("Sense Count: " + senseCtr++);
+                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+                            String adverb = "";
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
+                                adverb += words.get(lemmaTagIndex-1);
                                 indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
@@ -348,7 +355,7 @@ public class SummarizeText {
                                     double advPosScore = 0;
                                     double advNegScore = 0;
                                     if(results.next()){
-                                        write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
+                                        write("Result: \t" + results.getInt("ID") + "\t |" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                         advPosScore = results.getFloat("PosScore");
                                         advNegScore = results.getFloat("NegScore");
                                     }
@@ -368,26 +375,21 @@ public class SummarizeText {
                                         negScore = temp + advNegScore;
                                     }
                                     else if(advPosScore >= advNegScore){
-                                        double temp = posScore;
-                                        posScore = negScore + advPosScore;
-                                        negScore = temp;
+                                        posScore = posScore + advPosScore;
                                     }
-                                }
-                                if(posScore >= negScore){
-                                    positiveWords.add(words.get(lemmaTagIndex-1) + " " + words.get(lemmaTagIndex));
-                                }
-                                else{
-                                    negativeWords.add(words.get(lemmaTagIndex-1) + " " + words.get(lemmaTagIndex));
-                                }
+                                } 
+                                
+                            }
+                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+                            if(posScore >= negScore){
+                                    
+                                        positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             else{
-                                if(posScore >= negScore){
-                                    positiveWords.add(words.get(lemmaTagIndex));
-                                }
-                                else{
-                                    negativeWords.add(words.get(lemmaTagIndex));
-                                }
+                                
+                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
+                            
                             positive += posScore;
                             negative += negScore;
                             sentPos += posScore;

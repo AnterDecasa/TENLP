@@ -24,6 +24,8 @@ import edu.stanford.nlp.simple.Sentence;
 import java.util.ArrayList;
 import java.util.List;
 import edu.mit.jwi.item.POS;
+import java.io.File;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Optional;
 
@@ -274,7 +276,7 @@ public class SummarizeText {
         noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
 //        write(noQuestions);
-        
+
         double positive = 0;
         double negative = 0;
         double wordCount = 0;
@@ -283,6 +285,12 @@ public class SummarizeText {
         
         write("Calculating sentiment...");
         try{
+            
+            PrintWriter pw = new PrintWriter(new File("sentenceScores.csv"));
+            StringBuilder sb = new StringBuilder();
+            
+            sb.append("Sentence,Positive,Negative");
+        
             Connection connect = DriverManager.getConnection(host,user,password);
             Statement stmt = connect.createStatement();
             ResultSet results;
@@ -329,12 +337,12 @@ public class SummarizeText {
 //                            write(sqlStmtwordID);
                             results = stmt.executeQuery(sqlStmtwordID);
                             if(results.next()){
-                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
+//                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                 posScore += results.getFloat("PosScore");
                                 negScore += results.getFloat("NegScore");
                             }
 //                            write("Sense Count: " + senseCtr++);
-                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+//                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
                             String adverb = "";
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
@@ -355,7 +363,7 @@ public class SummarizeText {
                                     double advPosScore = 0;
                                     double advNegScore = 0;
                                     if(results.next()){
-                                        write("Result: \t" + results.getInt("ID") + "\t |" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
+//                                        write("Result: \t" + results.getInt("ID") + "\t |" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                         advPosScore = results.getFloat("PosScore");
                                         advNegScore = results.getFloat("NegScore");
                                     }
@@ -388,7 +396,7 @@ public class SummarizeText {
                                 } 
                                 
                             }
-                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
                             if(posScore >= negScore){
                                 if(posScore != 0)    
                                     positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
@@ -411,8 +419,18 @@ public class SummarizeText {
                     }
                     
                 }
+                write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
+                
+                sb.append(sentences.get(sentCtr).text() + "," + sentPos + "," + sentNeg);
+                if(sentCtr < sentences.size()-1){
+                    sb.append('\n');
+                }
+        
             }
             connect.close();
+            pw.write(sb.toString());
+            pw.close();
+            System.out.println("output sentences done!");
         }
         catch(Exception exc){
             exc.printStackTrace();

@@ -78,15 +78,11 @@ public class SummarizeText {
                 for(;index < tags.size(); index++){
 //                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
+//                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?")){
-<<<<<<< HEAD
                     if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         wordCount++;
-=======
 //                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
-                        
->>>>>>> refs/remotes/origin/master
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 

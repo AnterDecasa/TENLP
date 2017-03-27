@@ -274,6 +274,7 @@ public class SummarizeText {
         noQuestions = TextFilePreProcess.removeCarets(noQuestions);
         noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
+        noQuestions = TextFilePreProcess.correctPeriodsPutSpaceAfter(noQuestions);
 //        write(noQuestions);
 
         double positive = 0;

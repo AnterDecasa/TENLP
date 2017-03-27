@@ -93,7 +93,7 @@ public class TextFilePreProcess {
             
             String[] words = stringElem.split(" ");
             for(int i = 0; i < words.length; i++){
-                if(words[i].matches("([A-Z]){2,}\\.*")){
+                if(words[i].matches("([A-Z]){2,}(\\.*|!*|\\?*)")){
                     retVal += words[i].toLowerCase();
                 }
                 else{
@@ -324,7 +324,7 @@ public class TextFilePreProcess {
         write("Removing no comments");
 
         for (String lineArray : stringArray) {
-            if (hasComment(lineArray)) {
+                if (hasComment(lineArray)) {
                 retVal += lineArray + "\n";
             }
         }
@@ -343,7 +343,7 @@ public class TextFilePreProcess {
         boolean hasComment = true;
         String line = string.trim().replaceFirst(">", "");
         line = line.trim();
-        if (line.matches("((-*|\\.*|,*|_*|/*))\\.*")) {
+        if (line.matches("\\W+\\.*")) {
             hasComment = false;
         }
         if (line.matches("((n|N)(o|O)(n|N)(e|E))\\.*")) {
@@ -480,7 +480,11 @@ public class TextFilePreProcess {
         return retVal;
 
     }
-
+    
+    public static String correctPeriodsPutSpaceAfter(String string){
+        return string.replaceAll(".*\\.\\w", ". ");
+    }
+    
     public static List<String> NERtagging(String string) {
 
         String[] stringArray = string.split("\\r?\\n");
@@ -526,7 +530,7 @@ public class TextFilePreProcess {
     
     private static boolean hasPeriod(String string){
         
-        return string.matches(".*\\.");
+        return string.matches(".*(\\.|!|\\?)");
         
     }
     

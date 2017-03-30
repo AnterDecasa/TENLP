@@ -6,11 +6,14 @@
 package GUI;
 
 import TextProcess.*;
+import static TextProcess.TextFilePreProcess.newSubject;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.IRAMDictionary;
 import edu.stanford.nlp.trees.Tree;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +57,10 @@ public class MainForm extends javax.swing.JFrame {
         evalForAllSubjLabel = new javax.swing.JLabel();
         analyzeBtn = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        cleanTextUploadButton = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        cleanTextDisplay = new javax.swing.JTextArea();
+        analyzeCleanTextButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,11 +124,26 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Clean Text Upload");
-        jButton2.setName(""); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        cleanTextUploadButton.setText("Clean Text Upload");
+        cleanTextUploadButton.setName(""); // NOI18N
+        cleanTextUploadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                cleanTextUploadButtonActionPerformed(evt);
+            }
+        });
+
+        cleanTextDisplay.setEditable(false);
+        cleanTextDisplay.setColumns(20);
+        cleanTextDisplay.setLineWrap(true);
+        cleanTextDisplay.setRows(5);
+        cleanTextDisplay.setName(""); // NOI18N
+        jScrollPane4.setViewportView(cleanTextDisplay);
+        cleanTextDisplay.getAccessibleContext().setAccessibleName("");
+
+        analyzeCleanTextButton.setText("Analyze");
+        analyzeCleanTextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analyzeCleanTextButtonActionPerformed(evt);
             }
         });
 
@@ -163,8 +184,14 @@ public class MainForm extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(analyzeBtn))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cleanTextUploadButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(analyzeCleanTextButton, javax.swing.GroupLayout.Alignment.TRAILING))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -193,13 +220,18 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(evaluationLabel)
                     .addComponent(analyzeBtn)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(cleanTextUploadButton))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(analyzeCleanTextButton)))
                 .addContainerGap())
         );
 
-        jButton2.getAccessibleContext().setAccessibleName("cleanTextButt\non");
+        cleanTextUploadButton.getAccessibleContext().setAccessibleName("cleanTextButt\non");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -282,37 +314,45 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_outputSentencesButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void cleanTextUploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanTextUploadButtonActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser;
         fileChooser = new JFileChooser(new File("C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\test"));
         int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
-        String cleanedText = "";
+        String text = "";
+        BufferedReader reader;
             
-//        if (returnVal == JFileChooser.APPROVE_OPTION) {
-//            File file = fileChooser.getSelectedFile();
-//                
-//            //This is where a real application would open the file.
-//            System.out.print("Opening: " + file.getName() + "." + "\n");
-//            System.out.print("" + file.getAbsolutePath() + "" + "\n");
-//                 
-//            evalForAllSubjTextArea.setText(""); //Empty text field
-//            
-//            //Fill with first clean up of text
-//            cleanedText += TextFilePreProcess.getImportantText(file);
-//            evalForAllSubjTextArea.append(cleanedText);
-//            evalForAllSubjTextArea.setCaretPosition(0);
-//            teacherNameText.setText(TextFilePreProcess.getTeacherName(cleanedText));
-//            subjectComboBox.removeAllItems();
-//            String[] subjects = TextFilePreProcess.getSubjects();
-//            for(String subject : subjects){
-//                subjectComboBox.addItem(subject);
-//            }
-//            getEvalForSubjBtn.setEnabled(true);
-//        } else {
-//            System.out.print("Open command cancelled by user." + "\n");
-//        }
-    }//GEN-LAST:event_jButton2ActionPerformed
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+                
+            //This is where a real application would open the file.
+            System.out.print("Opening: " + file.getName() + "." + "\n");
+            System.out.print("" + file.getAbsolutePath() + "" + "\n");
+                 
+            cleanTextDisplay.setText(""); //Empty text field
+            try{
+                reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
+                String line = "";
+            
+                line = reader.readLine();
+                while (line != null) {
+                    text += line + "\n";
+                    line = reader.readLine();
+                }
+                cleanTextDisplay.setText(text);
+            }
+            catch(Exception exc){
+                exc.printStackTrace();
+            }
+        } else {
+            System.out.print("Open command cancelled by user." + "\n");
+        }
+    }//GEN-LAST:event_cleanTextUploadButtonActionPerformed
+
+    private void analyzeCleanTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeCleanTextButtonActionPerformed
+        // TODO add your handling code here:
+        SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanText(cleanTextDisplay.getText());
+    }//GEN-LAST:event_analyzeCleanTextButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -357,18 +397,21 @@ public class MainForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton analyzeBtn;
+    private javax.swing.JButton analyzeCleanTextButton;
     private javax.swing.JTextArea analyzedTextArea;
     private javax.swing.JButton chooseFileBtn;
+    private javax.swing.JTextArea cleanTextDisplay;
+    private javax.swing.JButton cleanTextUploadButton;
     private javax.swing.JLabel evalForAllSubjLabel;
     private javax.swing.JTextArea evalForAllSubjTextArea;
     private javax.swing.JTextArea evalForOneSubjTextArea;
     private javax.swing.JLabel evaluationLabel;
     private javax.swing.JButton getEvalForSubjBtn;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JComboBox<String> subjectComboBox;
     private javax.swing.JLabel subjectLabel;
     private javax.swing.JLabel teacherNameLabel;

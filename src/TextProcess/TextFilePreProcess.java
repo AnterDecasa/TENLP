@@ -88,7 +88,6 @@ public class TextFilePreProcess {
                 else{
                     retVal += words[i];
                 }
-                ;
                 if(i < words.length-1){
                     retVal += " ";
                 }
@@ -214,8 +213,25 @@ public class TextFilePreProcess {
 
     public static boolean ifQuestion(String string) {
 
-        return string.matches("(.*\\?)|Comment");
+        boolean retVal = false;
+        if (string.matches("As a teacher, what are his/her strengths\\?")){
+            retVal = true;
+        }
+        if (string.matches("As a teacher, what areas should s/he improve\\?")){
+            retVal = true;
+        }
+        if (string.matches("What do you like best about this course\\?")){
+            retVal = true;
+        }
+        if (string.matches("What do you like least about this course\\?")){
+            retVal = true;
+        }
+        if (string.matches("Comment")){
+            retVal = true;
+        }
 
+        return retVal;
+        
     }
 
     private static String removeExtraCarriageReturn(String string) {

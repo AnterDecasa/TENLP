@@ -274,7 +274,8 @@ public class SummarizeText {
         noQuestions = TextFilePreProcess.removeCarets(noQuestions);
         noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
-        noQuestions = TextFilePreProcess.correctPeriodsPutSpaceAfter(noQuestions);
+//        noQuestions = TextFilePreProcess.correctPeriodsPutSpaceAfter(noQuestions);
+        
 //        write(noQuestions);
 
         double positive = 0;
@@ -289,18 +290,22 @@ public class SummarizeText {
             PrintWriter pw = new PrintWriter(new File("sentenceScores.csv"));
             StringBuilder sb = new StringBuilder();
             
-            sb.append("Sentence,Positive,Negative");
+            PrintWriter cleanText = new PrintWriter(new File("cleanText.txt"));
+            StringBuilder sbCleanText = new StringBuilder();
+            
+            sb.append("Sentence,Positive,Negative\n");
         
             Connection connect = DriverManager.getConnection(host,user,password);
             Statement stmt = connect.createStatement();
             ResultSet results;
             
             List<Sentence> sentences = docu.sentences();
-            int sentCtr = 0;
-            for(; sentCtr < sentences.size(); sentCtr++){
+            for(int sentCtr = 0; sentCtr < sentences.size(); sentCtr++){
                 
                 write(sentences.get(sentCtr).text());
                 write(sentences.get(sentCtr).parse());
+                sbCleanText.append(sentences.get(sentCtr).text());
+                sbCleanText.append(" ");
                 double sentPos = 0;
                 double sentNeg = 0;
                 List <String> tags = sentences.get(sentCtr).posTags();
@@ -310,6 +315,7 @@ public class SummarizeText {
                 int lemmaTagIndex = 0;
                 for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
 //                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
                     if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
@@ -352,7 +358,7 @@ public class SummarizeText {
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
                                     if(wordIDs.size() > 1){
-                                        indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex);;
+                                        indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex-1);;
                                     }
                                     wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
 //                                    write("ID of word: " + wordIDDisected[1]);
@@ -421,15 +427,19 @@ public class SummarizeText {
                 }
                 write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
                 
-                sb.append(sentences.get(sentCtr).text() + "," + sentPos + "," + sentNeg);
-                if(sentCtr < sentences.size()-1){
-                    sb.append('\n');
-                }
+                sb.append(sentences.get(sentCtr).text());
+                sb.append(",");
+                sb.append(sentPos);
+                sb.append(",");
+                sb.append(sentNeg);
+                sb.append('\n');
         
             }
             connect.close();
             pw.write(sb.toString());
             pw.close();
+            cleanText.write(sbCleanText.toString());
+            cleanText.close();
             System.out.println("output sentences done!");
         }
         catch(Exception exc){

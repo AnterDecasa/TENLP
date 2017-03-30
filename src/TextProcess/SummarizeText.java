@@ -310,7 +310,7 @@ public class SummarizeText {
             
                 int lemmaTagIndex = 0;
                 for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
-//                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
                     if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){

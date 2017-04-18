@@ -634,8 +634,13 @@ public class SummarizeText {
             exc.printStackTrace();
             exc.getMessage();
         }
-           
+        
+        write("Positive: " + positive/wordCount);
+        write("Negtive: " + negative/wordCount);
+        write("Word Count: " + wordCount);  
+        
         return "Positive: " + positive/wordCount + "\n" + "Negtive: " + negative/wordCount + "\n" + "Word Count: " + wordCount;
+        
 //        write("Positive: " + positive);
 //        write("Negtive: " + negative);
 //        write("Word Count: " + wordCount);

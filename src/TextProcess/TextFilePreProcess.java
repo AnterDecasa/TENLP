@@ -73,6 +73,36 @@ public class TextFilePreProcess {
         System.out.println("output sentences done!");
     }
     
+    public static void outputSentencesText(String string) throws FileNotFoundException{
+        
+        String noQuestions = TextFilePreProcess.removeQuestions(string);
+        noQuestions = TextFilePreProcess.removeCarets(noQuestions);
+        noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
+        noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
+        
+        PrintWriter pw = new PrintWriter(new File("cleanedWithBreaks.txt"));
+        StringBuilder sb = new StringBuilder();
+        
+        Document docu = new Document(noQuestions);
+        List <Sentence> sentences = docu.sentences();
+        
+        for(int i = 0; i < sentences.size(); i++){
+            sb.append(sentences.get(i).text());
+            if(i < sentences.size()-1){
+                sb.append('\n');
+            }
+        }
+        
+//        sb.append("id");
+//        sb.append(',');
+//        sb.append("Name");
+//        sb.append('\n');
+
+        pw.write(sb.toString());
+        pw.close();
+        System.out.println("output sentences done!");
+    }
+    
     public static String convertAllCAPSTolowerCase(String string){
         write("removing all caps");
         String retVal = "";
@@ -376,7 +406,11 @@ public class TextFilePreProcess {
         return hasComment;
 
     }
-
+    
+    public static String replaceAllPageBreaks(String string){
+        return string.replaceAll("<br />", "\\n");
+    }
+    
     public static String getImportantText(File file) {
 
         String retVal = "";

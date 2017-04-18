@@ -461,7 +461,7 @@ public class SummarizeText {
         double negative = 0;
         double wordCount = 0;
         
-        Document docu = new Document(string);
+        Document docu = new Document(TextFilePreProcess.replaceAllPageBreaks(string));
         
         write("Calculating sentiment...");
         try{

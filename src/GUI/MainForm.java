@@ -62,6 +62,9 @@ public class MainForm extends javax.swing.JFrame {
         cleanTextDisplay = new javax.swing.JTextArea();
         analyzeCleanTextButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        resultsTextArea = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -155,6 +158,12 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        resultsTextArea.setColumns(20);
+        resultsTextArea.setRows(5);
+        jScrollPane5.setViewportView(resultsTextArea);
+
+        jLabel1.setText("Results");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -201,7 +210,11 @@ public class MainForm extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(analyzeCleanTextButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(cleanTextUploadButton)))))
+                                .addComponent(cleanTextUploadButton))
+                            .addComponent(jScrollPane5)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -234,9 +247,14 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(analyzeCleanTextButton)
                     .addComponent(jButton2))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -428,10 +446,13 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton getEvalForSubjBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JTextArea resultsTextArea;
     private javax.swing.JComboBox<String> subjectComboBox;
     private javax.swing.JLabel subjectLabel;
     private javax.swing.JLabel teacherNameLabel;

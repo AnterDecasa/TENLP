@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Optional;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -446,13 +447,208 @@ public class SummarizeText {
 //        write("Word Count: " + wordCount);
     }
     
+    public static String getSentimentofWholeDocumentWithNegationWithDisambiguationReturnString(String string){
+        
+        String noQuestions = TextFilePreProcess.removeQuestions(string);
+        noQuestions = TextFilePreProcess.removeCarets(noQuestions);
+        noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
+        noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
+//        noQuestions = TextFilePreProcess.correctPeriodsPutSpaceAfter(noQuestions);
+        
+//        write(noQuestions);
+
+        double positive = 0;
+        double negative = 0;
+        double wordCount = 0;
+        
+        Document docu = new Document(noQuestions);
+        
+        write("Calculating sentiment...");
+        try{
+            
+            PrintWriter pw = new PrintWriter(new File("sentenceScores.csv"));
+            StringBuilder sb = new StringBuilder();
+            
+            PrintWriter cleanText = new PrintWriter(new File("cleanText.txt"));
+            StringBuilder sbCleanText = new StringBuilder();
+            
+            sb.append("Sentence,Positive,Negative\n");
+        
+            Connection connect = DriverManager.getConnection(host,user,password);
+            Statement stmt = connect.createStatement();
+            ResultSet results;
+            
+            List<Sentence> sentences = docu.sentences();
+            for(int sentCtr = 0; sentCtr < sentences.size(); sentCtr++){
+                
+                write(sentences.get(sentCtr).text());
+                write(sentences.get(sentCtr).parse());
+                sbCleanText.append(sentences.get(sentCtr).text());
+                sbCleanText.append(" ");
+                double sentPos = 0;
+                double sentNeg = 0;
+                List <String> tags = sentences.get(sentCtr).posTags();
+            
+                List <String> words =  sentences.get(sentCtr).lemmas();
+            
+                int lemmaTagIndex = 0;
+                for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
+//                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
+//                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
+                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
+//                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
+                        
+                        IDictionary dictionary = WordNetAccess.loadDic();
+                        dictionary.open();
+
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        if(indexWord != null){
+                            wordCount++;
+                            double posScore = 0;
+                            double negScore = 0;
+                            List<IWordID> wordIDs = indexWord.getWordIDs();
+                            int indexForSense = 0;
+                            if(wordIDs.size() > 1){
+                                indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex);
+                            }
+                            IWord word= dictionary.getWord(wordIDs.get(indexForSense));
+//                            write(word.getLemma());
+                            String[] wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
+                            
+//                            write("ID of word: " + wordIDDisected[1]);
+                            String sqlStmtwordID = "SELECT * FROM dict WHERE ID = "+ wordIDDisected[1];
+//                            write(sqlStmtwordID);
+                            results = stmt.executeQuery(sqlStmtwordID);
+                            if(results.next()){
+//                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
+                                posScore += results.getFloat("PosScore");
+                                negScore += results.getFloat("NegScore");
+                            }
+//                            write("Sense Count: " + senseCtr++);
+//                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+                            String adverb = "";
+                            if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
+                                wordCount++;
+                                adverb += words.get(lemmaTagIndex-1);
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                if(indexWord != null){
+                                    wordIDs = indexWord.getWordIDs();
+                                    indexForSense = 0;
+                                    if(wordIDs.size() > 1){
+                                        indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex-1);;
+                                    }
+                                    wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
+//                                    write("ID of word: " + wordIDDisected[1]);
+                                    sqlStmtwordID = "SELECT * FROM dict WHERE ID = "+ wordIDDisected[1];
+//                                    write("ID of word: " + wordIDDisected[1]);
+//                                    write(sqlStmtwordID);
+                                    results = stmt.executeQuery(sqlStmtwordID);
+                                    double advPosScore = 0;
+                                    double advNegScore = 0;
+                                    if(results.next()){
+//                                        write("Result: \t" + results.getInt("ID") + "\t |" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
+                                        advPosScore = results.getFloat("PosScore");
+                                        advNegScore = results.getFloat("NegScore");
+                                    }
+    //                                if(advPosScore <= advNegScore){
+    //                                    double temp = posScore;
+    //                                    posScore = negScore;
+    //                                    negScore = temp;
+    //                                }
+    //                                if(advPosScore <= advNegScore){
+    //                                    double temp = posScore;
+    //                                    posScore = negScore + advPosScore;
+    //                                    negScore = temp + advNegScore;
+    //                                }
+                                    if(advPosScore < advNegScore){
+                                        double temp = posScore;
+                                        posScore = negScore;
+                                        negScore = temp + advNegScore;
+                                    }
+                                    else if(advPosScore >= advNegScore){
+                                        if(posScore >= negScore){
+                                            posScore = posScore + advPosScore;
+                                            negScore = negScore + advNegScore;
+                                        }
+                                        else if(posScore < negScore){
+                                            negScore = negScore + advPosScore;
+                                            posScore = posScore + advNegScore;
+                                        }
+                                        
+                                    }
+                                } 
+                                
+                            }
+//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+                            if(posScore >= negScore){
+                                if(posScore != 0)    
+                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
+                            }
+                            else{
+                                
+                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
+                            }
+                            
+                            positive += posScore;
+                            negative += negScore;
+                            sentPos += posScore;
+                            sentNeg += negScore;
+//                            write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
+                            posScore = 0;
+                            negScore = 0;
+                        }
+
+                        dictionary.close();
+                    }
+                    
+                }
+                write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
+                
+                sb.append(sentences.get(sentCtr).text());
+                sb.append(",");
+                sb.append(sentPos);
+                sb.append(",");
+                sb.append(sentNeg);
+                sb.append('\n');
+        
+            }
+            connect.close();
+            pw.write(sb.toString());
+            pw.close();
+            cleanText.write(sbCleanText.toString());
+            cleanText.close();
+            System.out.println("output sentences done!");
+        }
+        catch(Exception exc){
+            exc.printStackTrace();
+            exc.getMessage();
+        }
+        
+        write("Positive: " + positive/wordCount);
+        write("Negtive: " + negative/wordCount);
+        write("Word Count: " + wordCount);  
+        
+        return "Positive: " + positive/wordCount + "\n" + "Negtive: " + negative/wordCount + "\n" + "Word Count: " + wordCount;
+        
+//        write("Positive: " + positive);
+//        write("Negtive: " + negative);
+//        write("Word Count: " + wordCount);
+    }
+    
+    public static void getSentimentFromCleanfile(String string, JTextArea resultsArea){
+        resultsArea.setText("");
+        resultsArea.setText(getSentimentofWholeDocumentWithNegationWithDisambiguationReturnString(string));
+    } 
+    
     public static void getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanText(String string){
 
         double positive = 0;
         double negative = 0;
         double wordCount = 0;
         
-        Document docu = new Document(string);
+        Document docu = new Document(TextFilePreProcess.replaceAllPageBreaks(string));
         
         write("Calculating sentiment...");
         try{

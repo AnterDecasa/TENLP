@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -61,6 +62,12 @@ public class MainForm extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         cleanTextDisplay = new javax.swing.JTextArea();
         analyzeCleanTextButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        resultsTextArea = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        filenameTextField = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -147,6 +154,21 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Output to text file");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        resultsTextArea.setColumns(20);
+        resultsTextArea.setRows(5);
+        jScrollPane5.setViewportView(resultsTextArea);
+
+        jLabel1.setText("Results");
+
+        jLabel2.setText("Filename");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -162,6 +184,32 @@ public class MainForm extends javax.swing.JFrame {
                         .addGap(269, 269, 269)
                         .addComponent(getEvalForSubjBtn))
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(evaluationLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(analyzeBtn))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(filenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(analyzeCleanTextButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(cleanTextUploadButton))
+                            .addComponent(jScrollPane5)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(teacherNameLabel)
@@ -174,24 +222,7 @@ public class MainForm extends javax.swing.JFrame {
                                     .addComponent(chooseFileBtn))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(evaluationLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(analyzeBtn))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cleanTextUploadButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(analyzeCleanTextButton, javax.swing.GroupLayout.Alignment.TRAILING))))))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -220,14 +251,20 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(evaluationLabel)
                     .addComponent(analyzeBtn)
                     .addComponent(jButton1)
-                    .addComponent(cleanTextUploadButton))
+                    .addComponent(cleanTextUploadButton)
+                    .addComponent(analyzeCleanTextButton)
+                    .addComponent(jButton2)
+                    .addComponent(filenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(analyzeCleanTextButton)))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -317,7 +354,7 @@ public class MainForm extends javax.swing.JFrame {
     private void cleanTextUploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanTextUploadButtonActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser;
-        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\test"));
+        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\train\\pos"));
         int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
         String text = "";
         BufferedReader reader;
@@ -326,6 +363,8 @@ public class MainForm extends javax.swing.JFrame {
             File file = fileChooser.getSelectedFile();
                 
             //This is where a real application would open the file.
+            filenameTextField.setText("");
+            filenameTextField.setText(file.getAbsolutePath());
             System.out.print("Opening: " + file.getName() + "." + "\n");
             System.out.print("" + file.getAbsolutePath() + "" + "\n");
                  
@@ -351,8 +390,18 @@ public class MainForm extends javax.swing.JFrame {
 
     private void analyzeCleanTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeCleanTextButtonActionPerformed
         // TODO add your handling code here:
-        SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanText(cleanTextDisplay.getText());
+        SummarizeText.getSentimentFromCleanfile(cleanTextDisplay.getText(),resultsTextArea);
     }//GEN-LAST:event_analyzeCleanTextButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        try{
+            TextFilePreProcess.outputSentencesText(evalForOneSubjTextArea.getText());
+        }
+        catch(Exception exc){
+            exc.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,12 +455,18 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTextArea evalForAllSubjTextArea;
     private javax.swing.JTextArea evalForOneSubjTextArea;
     private javax.swing.JLabel evaluationLabel;
+    private javax.swing.JTextField filenameTextField;
     private javax.swing.JButton getEvalForSubjBtn;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JTextArea resultsTextArea;
     private javax.swing.JComboBox<String> subjectComboBox;
     private javax.swing.JLabel subjectLabel;
     private javax.swing.JLabel teacherNameLabel;

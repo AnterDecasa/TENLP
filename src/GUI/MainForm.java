@@ -68,6 +68,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         filenameTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        openMulitpleFileAnalysisWindow = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -161,6 +162,7 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        resultsTextArea.setEditable(false);
         resultsTextArea.setColumns(20);
         resultsTextArea.setRows(5);
         jScrollPane5.setViewportView(resultsTextArea);
@@ -168,6 +170,13 @@ public class MainForm extends javax.swing.JFrame {
         jLabel1.setText("Results");
 
         jLabel2.setText("Filename");
+
+        openMulitpleFileAnalysisWindow.setText("Open Multiple File Analysis");
+        openMulitpleFileAnalysisWindow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMulitpleFileAnalysisWindowActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -182,7 +191,9 @@ public class MainForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(subjectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(269, 269, 269)
-                        .addComponent(getEvalForSubjBtn))
+                        .addComponent(getEvalForSubjBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(openMulitpleFileAnalysisWindow))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -245,7 +256,8 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subjectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(subjectLabel)
-                    .addComponent(getEvalForSubjBtn))
+                    .addComponent(getEvalForSubjBtn)
+                    .addComponent(openMulitpleFileAnalysisWindow))
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(evaluationLabel)
@@ -354,7 +366,7 @@ public class MainForm extends javax.swing.JFrame {
     private void cleanTextUploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanTextUploadButtonActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser;
-        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\train\\pos"));
+        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\train\\neg"));
         int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
         String text = "";
         BufferedReader reader;
@@ -390,6 +402,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void analyzeCleanTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeCleanTextButtonActionPerformed
         // TODO add your handling code here:
+        resultsTextArea.setText("");
         SummarizeText.getSentimentFromCleanfile(cleanTextDisplay.getText(),resultsTextArea);
     }//GEN-LAST:event_analyzeCleanTextButtonActionPerformed
 
@@ -402,6 +415,11 @@ public class MainForm extends javax.swing.JFrame {
             exc.printStackTrace();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void openMulitpleFileAnalysisWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMulitpleFileAnalysisWindowActionPerformed
+        // TODO add your handling code here:
+        new OpenMultipleFiles().setVisible(true);
+    }//GEN-LAST:event_openMulitpleFileAnalysisWindowActionPerformed
 
     /**
      * @param args the command line arguments
@@ -466,6 +484,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JButton openMulitpleFileAnalysisWindow;
     private javax.swing.JTextArea resultsTextArea;
     private javax.swing.JComboBox<String> subjectComboBox;
     private javax.swing.JLabel subjectLabel;

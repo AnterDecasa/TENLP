@@ -45,6 +45,9 @@ public class SummarizeText {
     private static List<Document> negativeSentences = new ArrayList<Document>();
     private static List<Document> neutralSentences = new ArrayList<Document>();
     
+    private static List<Sentence> posSent = new ArrayList<Sentence>();
+    private static List<Sentence> negSent = new ArrayList<Sentence>();
+    
     public static List<String> positiveWords = new ArrayList<String>();
     public static List<String> negativeWords = new ArrayList<String>();
     
@@ -400,12 +403,17 @@ public class SummarizeText {
                             }
 //                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
                             if(posScore >= negScore){
-                                if(posScore != 0)    
+                                if(posScore != 0){    
                                     positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
+//                                    positiveSentences.add(docu.sentence(sentCtr));
+                                    posSent.add(docu.sentence(sentCtr));
+                                }
                             }
                             else{
                                 
                                     negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
+//                                    negativeSentences.add(lemmaTagIndex, docu);
+                                    negSent.add(docu.sentence(sentCtr));
                             }
                             
                             positive += posScore;
@@ -1989,10 +1997,36 @@ public class SummarizeText {
         
     }
     
+    public static String printPosNegSent(){
+            
+        String classifiedString = "";
+        
+            
+        classifiedString += "Positive" + "\n\n";
+        for(Sentence sent : posSent){
+//            posSent.add(sent);
+
+            classifiedString += ">";
+            classifiedString += sent.text();
+            classifiedString += "\n";
+        }
+
+        classifiedString += "\n" + "Negative" + "\n\n";
+        for(Sentence sent : negSent){
+//            negSent.add(sent);
+            classifiedString += ">";
+            classifiedString += sent.text();
+            classifiedString += "\n";
+        }
+
+        return classifiedString;
+            
+    }
+    
     public static String printPositiveNegativeStatements(){
             
         String classifiedString = "";
-            
+        
             
         classifiedString += "Positive" + "\n\n";
         for(Document answer : positiveSentences){

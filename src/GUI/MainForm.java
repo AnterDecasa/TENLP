@@ -339,9 +339,9 @@ public class MainForm extends javax.swing.JFrame {
         SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguation(analyzedText);
 //        SummarizeText.listPosNeg();
 //        SummarizeText.StoreImportantSentences();
-        
 //        analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());
-        
+        analyzedTextArea.setText(SummarizeText.printPosNegSent());
+
         final long endTime = System.currentTimeMillis();
         
         final long convertedToSeconds = (endTime - startTime)/1000;

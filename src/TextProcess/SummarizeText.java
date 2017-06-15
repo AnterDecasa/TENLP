@@ -47,6 +47,7 @@ public class SummarizeText {
     
     private static List<Sentence> posSent = new ArrayList<Sentence>();
     private static List<Sentence> negSent = new ArrayList<Sentence>();
+    private static List<Sentence> noScore = new ArrayList<Sentence>();
     
     public static List<String> positiveWords = new ArrayList<String>();
     public static List<String> negativeWords = new ArrayList<String>();
@@ -408,6 +409,9 @@ public class SummarizeText {
 //                                    positiveSentences.add(docu.sentence(sentCtr));
                                     posSent.add(docu.sentence(sentCtr));
                                 }
+                            }
+                            else if(posScore == 0 && negScore == 0) {
+                                    noScore.add(docu.sentence(sentCtr));
                             }
                             else{
                                 
@@ -2013,6 +2017,14 @@ public class SummarizeText {
 
         classifiedString += "\n" + "Negative" + "\n\n";
         for(Sentence sent : negSent){
+//            negSent.add(sent);
+            classifiedString += ">";
+            classifiedString += sent.text();
+            classifiedString += "\n";
+        }
+        
+        classifiedString += "\n" + "No Score" + "\n\n";
+        for(Sentence sent : noScore){
 //            negSent.add(sent);
             classifiedString += ">";
             classifiedString += sent.text();

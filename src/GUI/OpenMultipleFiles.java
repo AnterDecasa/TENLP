@@ -139,7 +139,7 @@ public class OpenMultipleFiles extends javax.swing.JFrame {
                     text += line + "\n";
                     line = reader.readLine();
                 }
-                SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanTextRecordInAFile(folderpath + o.toString(), text, pw, sb);
+                SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanTextRecordInAFileTwo(folderpath + o.toString(), text, pw, sb);
                 text = "";
                 System.out.println("Done");
                                 

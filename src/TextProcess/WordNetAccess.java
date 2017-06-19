@@ -33,8 +33,7 @@ public class WordNetAccess {
     public static IDictionary loadDic(){
         
         IDictionary retDictionary = null;
-        
-        String WNHome = "C:\\Users\\user\\Google Drive\\Current Thesis\\tools\\WordNet-3.0";
+        String WNHome = "C:\\Users\\csc1701\\Google Drive\\Current Thesis\\tools\\WordNet-3.0";
         String path = WNHome + File.separator + "dict";
         
         try{

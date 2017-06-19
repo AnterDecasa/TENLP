@@ -288,7 +288,7 @@ public class MainForm extends javax.swing.JFrame {
     private void chooseFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileBtnActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser;
-        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Google Drive\\Current Thesis\\Resources\\Text Files"));
+        fileChooser = new JFileChooser(new File("C:\\Users\\csc1701\\Google Drive\\Current Thesis\\Resources\\Text Files"));
         int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
         String cleanedText = "";
             
@@ -339,9 +339,9 @@ public class MainForm extends javax.swing.JFrame {
         SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguation(analyzedText);
 //        SummarizeText.listPosNeg();
 //        SummarizeText.StoreImportantSentences();
-        
 //        analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());
-        
+        analyzedTextArea.setText(SummarizeText.printPosNegSent());
+
         final long endTime = System.currentTimeMillis();
         
         final long convertedToSeconds = (endTime - startTime)/1000;

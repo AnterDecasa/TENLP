@@ -1,5 +1,13 @@
 package TextProcess;
 
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
+import edu.stanford.nlp.naturalli.Polarity;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import edu.stanford.nlp.semgraph.SemanticGraph;
+import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.trees.Tree;
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,6 +15,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 import ContainerClasses.LemmaSentenceWithPOStag;
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
@@ -399,12 +410,10 @@ public class TextFilePreProcess {
         if ("".equals(line)){
             hasComment = false;
         }
-        
 //        if (!hasComment){
 //            write(line);
 //        }
         return hasComment;
-
     }
     
     public static String replaceAllPageBreaks(String string){

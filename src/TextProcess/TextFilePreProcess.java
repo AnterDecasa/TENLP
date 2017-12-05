@@ -17,7 +17,8 @@ public class TextFilePreProcess {
 
     static private String currSubject = "";
     static private String[] subjects;
-
+    static private String teacherName = "";
+    
     static public List<String> questions = new ArrayList<String>();
     
     private static String getTeacherName(BufferedReader text) {
@@ -27,19 +28,20 @@ public class TextFilePreProcess {
         try {
             line = text.readLine();
 
-            while (!line.equalsIgnoreCase("Faculty Evaluation Report Tool")) {
-                line = text.readLine();
-            }
-            for (int i = 1; i <= 3; i++) {
+//            while (!line.equalsIgnoreCase("Faculty Evaluation Report Tool")) {
+//                line = text.readLine();
+//            }
+            for (int i = 1; i <= 4; i++) {
                 line = text.readLine();
             }
             name = line.trim();
+            teacherName = name;
             write("Teacher name identified.");
         } catch (IOException e) {
             write("No text read");
         }
 
-        return name;
+        return teacherName;
 
     }
     
@@ -71,6 +73,19 @@ public class TextFilePreProcess {
         pw.write(sb.toString());
         pw.close();
         System.out.println("output sentences done!");
+    }
+    
+    public static String cleanTextFromEvaluation(String text){
+        
+        String retVal = "";
+                
+        retVal = TextFilePreProcess.removeQuestions(text);
+        retVal = TextFilePreProcess.removeCarets(retVal);
+        retVal = TextFilePreProcess.convertAllCAPSTolowerCase(retVal);
+        retVal = TextFilePreProcess.putPeriodsForNoPeriod(retVal);
+        
+        return retVal;
+        
     }
     
     public static void outputSentencesText(String string) throws FileNotFoundException{
@@ -130,9 +145,9 @@ public class TextFilePreProcess {
         
     }
     
-    public static String getTeacherName(String string) {
+    public static String getTeacherName() {
 
-        return string.split("\r?\n|\n")[0];
+        return teacherName;
 
     }
 
@@ -141,21 +156,30 @@ public class TextFilePreProcess {
 
         String retVal = "";
         String[] array = string.split("\r?\n|\n");
-        String currSubject = "";
+        String currSubject = array[0];
 
-        retVal += getTeacherName(string) + "\n";
-        retVal += currSubject.trim() + "\n";
+//        retVal += currSubject.trim() + "\n";
 
         write("Removing redundant subject labels");
 
-        for (int i = 1; i < array.length; i++) {
-            if (i < array.length - 1 && newSubject(array[i + 1])) {
-                currSubject = array[i].trim();
-                retVal += currSubject + "\n";
-//                write(currSubject + " is new subject");
-            } else if (!currSubject.trim().equalsIgnoreCase(array[i].trim())) {
+        for (int i = 0; i < array.length; i++) {
+//            if (i < array.length - 1 && newSubject(array[i + 1])) {
+//                currSubject = array[i].trim();
+//                retVal += currSubject + "\n";
+////                write(currSubject + " is new subject");
+//            }
+//            else if (!currSubject.trim().equalsIgnoreCase(array[i].trim())) {
+//                retVal += array[i].trim() + "\n";
+//            }
+            if(i < array.length - 1 && newSubject(array[i + 1])){
+                write(array[i]);
+                currSubject = array[i].trim(); //just set again maybe it is a different section
                 retVal += array[i].trim() + "\n";
             }
+            else if(i < array.length - 1 && !newSubject(array[i + 1]) && !array[i].equalsIgnoreCase(currSubject) ){
+                retVal += array[i].trim() + "\n";
+            }
+//            retVal += "\n";
         }
 
         return retVal;
@@ -172,11 +196,15 @@ public class TextFilePreProcess {
 
         String[] stringArray = string.split("\\r?\\n|\\n|\\n?\\f");
 
-        for (int i = 1; i < stringArray.length; i++) {
+        for (int i = 0; i < stringArray.length; i++) {
             if (i < stringArray.length - 1 && newSubject(stringArray[i + 1])) {
-
-                if (!itemExistsInList(stringArray[i].trim(), retVal)) {
-                    retVal.add(stringArray[i].trim());
+                
+                int numberOfOccurence = itemExistsInList(stringArray[i].trim(), retVal) + 1;
+                if (numberOfOccurence == 0) {
+                    retVal.add(stringArray[i].trim() + "_1");
+                }
+                else{
+                    retVal.add(stringArray[i].trim() + "_" + numberOfOccurence);
                 }
 
             }
@@ -186,14 +214,15 @@ public class TextFilePreProcess {
 
     }
 
-    public static boolean itemExistsInList(String string, List<String> list) {
+    public static int itemExistsInList(String string, List<String> list) {
 
-        boolean retVal = false;
+        int retVal = 0;
         if (list != null) {
             for (String item : list) {
-                if (string.equalsIgnoreCase(item)) {
-                    retVal = true;
-                    break;
+                String itemRemoveUnderScore = item.split("_")[0];
+                write(item +": "+ itemRemoveUnderScore);
+                if (string.equalsIgnoreCase(itemRemoveUnderScore)) {
+                    retVal++;
                 }
             }
         }
@@ -207,7 +236,7 @@ public class TextFilePreProcess {
         boolean retVal = false;
         if (subjects != null) {
             for (String subject : subjects) {
-                if (string.equalsIgnoreCase(subject)) {
+                if (string.equalsIgnoreCase(subject.split("_")[0])) {
                     retVal = true;
                     break;
                 }
@@ -295,13 +324,14 @@ public class TextFilePreProcess {
             if (!line.equalsIgnoreCase("As a teacher, what are his/her strengths?")) {
                 currSubject = line.trim();
                 text.mark(20);
-            } else {
+            }
+            else {
                 newSubject = currSubject;
             }
         } catch (IOException e) {
             write("No text read" + "\n");
         }
-
+//        write(newSubject +" New Subject Function");
         return newSubject;
 
     }
@@ -423,9 +453,9 @@ public class TextFilePreProcess {
             evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
             String line;
 
-            //Get Teacher name
-            retVal += getTeacherName(evaluationText) + "\n";
-
+            //Set Teacher name
+//            retVal = getTeacherName(evaluationText) + "\n";
+            getTeacherName(evaluationText);
             //Remove other info
             while ((newSubject = newSubject(evaluationText)).equalsIgnoreCase("")) {
             }
@@ -434,18 +464,18 @@ public class TextFilePreProcess {
             evaluationText.reset();
 
             line = evaluationText.readLine();
+            
             while (line != null) {
                 retVal += line + "\n";
                 line = evaluationText.readLine();
             }
             retVal = removeDate(retVal);
             retVal = removePageNumber(retVal);
-            retVal = removeRedundantSubjectLabel(retVal);
             retVal = removeExtraCarriageReturn(retVal);
+            retVal = removeRedundantSubjectLabel(retVal);
             subjects = setSubjects(retVal);
             retVal = putTogetherOneCommment(retVal);
             retVal = removeNoComment(retVal);
-            String[] array = retVal.split("\\r?\\n");
             questions.add("As a teacher, what are his/her strengths?");
             questions.add("As a teacher, what areas should s/he improve?");
             questions.add("What do you like best about this course?");
@@ -465,10 +495,21 @@ public class TextFilePreProcess {
         String[] stringArray = string.split("\\r?\\n");
 
         write("Getting evaluation for " + subject);
-
+        
+        String[] subjectNameSplit = subject.split("_");
+        String subjectWithoutSectionNumber = subjectNameSplit[0];
+        int sectionNumber =  Integer.parseInt(subjectNameSplit[1]);
+        write("Section Number: " + sectionNumber);
+        int sectionFinderCount = 0;
+        
         for (int i = 0; i < stringArray.length;) {
-            if (stringArray[i].equalsIgnoreCase(subject)) {
+            write("Line count: " + i);
+            if (stringArray[i].equalsIgnoreCase(subjectWithoutSectionNumber)){
+                sectionFinderCount++;
+            }
+            if(stringArray[i].equalsIgnoreCase(subjectWithoutSectionNumber) && sectionFinderCount == sectionNumber){
                 write(stringArray[i]);
+                write(subjectWithoutSectionNumber + " " + sectionFinderCount);
                 i++;
                 while (i < stringArray.length && (i < stringArray.length - 1 && !newSubject(stringArray[i + 1]))) {
                     retVal += stringArray[i] + "\n";
@@ -477,15 +518,17 @@ public class TextFilePreProcess {
                 if(i == stringArray.length - 1){
                     retVal += stringArray[i];
                 }
-                if (i < stringArray.length - 1 && newSubject(stringArray[i + 1])) {
-//                    write(stringArray[i] + " is new subject");
-                }
-//                    break;
-            } else {
+                
+                sectionFinderCount = 0;
+                
+            } 
+            else{
                 i++;
             }
             
         }
+        write("loop done");
+        write(retVal);
         return retVal;
 
     }

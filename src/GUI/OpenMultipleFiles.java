@@ -92,7 +92,7 @@ public class OpenMultipleFiles extends javax.swing.JFrame {
     
 //    String folderpath = "C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\train\\pos\\";
 //    String folderpath = "C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\test\\pos\\";
-    String folderpath = "C:\\Users\\user\\Desktop\\Working IMDB Files\\train\\pos\\";
+    String folderpath = "C:\\Users\\user\\Desktop\\Working IMDB Files\\train\\neg\\";
 //    String folderpath = "C:\\Users\\user\\Desktop\\Working IMDB Files\\test\\neg\\";
 //    String folderpath = "C:\\Users\\user\\Google Drive\\Current Thesis\\Resources\\Text Files\\text files for each teacher(for each subject)\\";
     

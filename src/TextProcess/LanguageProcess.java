@@ -81,37 +81,25 @@ public class LanguageProcess {
         
     }
     
-    public static POS GetPOSTag(String POSTag){
-        
-        POS pos = null;
-        
-        if(POSTag.matches("JJ(R|S)?")){
-            pos = POS.ADJECTIVE;
-        }
-        if(POSTag.matches("(NN)S?")){
-            pos = POS.NOUN;
-        }
-        if(POSTag.matches("RB(S|R)?")){
-            pos = POS.ADVERB;
-        }
-        if(POSTag.matches("VB(D|G|N|P|Z)?")){
-            pos = POS.VERB;
-        }
-        
-        return pos;
-        
-    }
-    
-    private static void write(String string){
-        
-        System.out.println(string);
-        
-    }
-    
-    private static void write(Tree tree){
-        
-        System.out.println(tree);
-        
-    }
+//    public static POS GetPOSTag(String POSTag){
+//        
+//        POS pos = null;
+//        
+//        if(POSTag.matches("JJ(R|S)?")){
+//            pos = POS.ADJECTIVE;
+//        }
+//        if(POSTag.matches("(NN)S?")){
+//            pos = POS.NOUN;
+//        }
+//        if(POSTag.matches("RB(S|R)?")){
+//            pos = POS.ADVERB;
+//        }
+//        if(POSTag.matches("VB(D|G|N|P|Z)?")){
+//            pos = POS.VERB;
+//        }
+//        
+//        return pos;
+//        
+//    }
     
 }

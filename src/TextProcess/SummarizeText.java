@@ -48,7 +48,6 @@ public class SummarizeText {
     private static List<String> positiveSentencesList = new ArrayList<String>();
     private static List<String> negativeSentencesList = new ArrayList<String>();
     
-    public static List<String> positiveWords = new ArrayList<String>();
     public static List<String> negativeWords = new ArrayList<String>();
     
     public static List<String> getPositiveSentences(){
@@ -100,7 +99,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(index), LanguageProcess.GetPOSTag(tags.get(index)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(index), GetPOSTag(tags.get(index)));
                         if(indexWord != null){
                             wordCount++;
                             List<IWordID> wordIDs = indexWord.getWordIDs();
@@ -143,18 +142,6 @@ public class SummarizeText {
         write("Word Count: " + wordCount);
     }
     
-    public static void listPosNeg(){
-        write("Positive");
-        for(String word : positiveWords){
-            write(word);
-        }
-        write("Negative");
-        for(String word : negativeWords){
-            write(word);
-        }
-        
-    }
-    
     public static void getSentimentofWholeDocumentWithNegation(String string){
         
         String noQuestions = TextFilePreProcess.removeQuestions(string);
@@ -195,7 +182,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(index), LanguageProcess.GetPOSTag(tags.get(index)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(index), GetPOSTag(tags.get(index)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -217,7 +204,7 @@ public class SummarizeText {
 //                            write("Sense Count: " + senseCtr++);
                             if((tags.get(index).matches("JJ(R|S)?") || tags.get(index).matches("VB(D|G|N|P|Z)?")) && (index > 0 && tags.get(index-1).matches("RB(S|R)?"))){
                                 wordCount++;
-                                indexWord = dictionary.getIndexWord(words.get(index-1), LanguageProcess.GetPOSTag(tags.get(index-1)));
+                                indexWord = dictionary.getIndexWord(words.get(index-1), GetPOSTag(tags.get(index-1)));
                                 wordIDs = indexWord.getWordIDs();
                                 word = dictionary.getWord(wordIDs.get(0));
                                 write(word.getLemma());
@@ -336,7 +323,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -365,7 +352,7 @@ public class SummarizeText {
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -413,15 +400,6 @@ public class SummarizeText {
                                     }
                                 } 
                                 
-                            }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             
                             positive += posScore;
@@ -523,7 +501,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -552,7 +530,7 @@ public class SummarizeText {
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -600,15 +578,6 @@ public class SummarizeText {
                                     }
                                 } 
                                 
-                            }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             
                             positive += posScore;
@@ -710,7 +679,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -739,7 +708,7 @@ public class SummarizeText {
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -787,15 +756,6 @@ public class SummarizeText {
                                     }
                                 } 
                                 
-                            }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             
                             positive += posScore;
@@ -882,7 +842,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -911,7 +871,7 @@ public class SummarizeText {
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -975,15 +935,6 @@ public class SummarizeText {
                                     }
                                 } 
                                 
-                            }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             
                             positive += posScore;
@@ -1069,7 +1020,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -1098,7 +1049,7 @@ public class SummarizeText {
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -1176,15 +1127,6 @@ public class SummarizeText {
                                     }
                                 } 
                                 
-                            }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             
                             positive += posScore;
@@ -1270,7 +1212,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -1299,7 +1241,7 @@ public class SummarizeText {
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -1341,15 +1283,6 @@ public class SummarizeText {
 
                                 } 
                                 
-                            }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             
                             positive += posScore;
@@ -1425,17 +1358,17 @@ public class SummarizeText {
             
                 int lemmaTagIndex = 0;
                 for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
-                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
+//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
-//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
+                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|RB(S|R)?")){
                         
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -1543,7 +1476,7 @@ public class SummarizeText {
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -1572,7 +1505,7 @@ public class SummarizeText {
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -1599,15 +1532,6 @@ public class SummarizeText {
 
                                 } 
                                 
-                            }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             
                             positive += posScore;
@@ -1684,16 +1608,16 @@ public class SummarizeText {
                 int lemmaTagIndex = 0;
                 for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
 //                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
+//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
-//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
+                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
@@ -1722,7 +1646,7 @@ public class SummarizeText {
                             if(tags.get(lemmaTagIndex).matches("JJ(R|S)?") && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -1749,15 +1673,6 @@ public class SummarizeText {
 
                                 } 
                                 
-                            }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
                             }
                             
                             positive += posScore;
@@ -1820,7 +1735,8 @@ public class SummarizeText {
         
         write("Calculating sentiment...");
         try{
-        
+            
+            //SentiWordNet Database connection
             Connection connect = DriverManager.getConnection(host,user,password);
             Statement stmt = connect.createStatement();
             ResultSet results;
@@ -1833,37 +1749,47 @@ public class SummarizeText {
                 
                 double sentPos = 0;
                 double sentNeg = 0;
+                
                 List <String> tags = sentences.get(sentCtr).posTags();
-            
                 List <String> words =  sentences.get(sentCtr).lemmas();
             
                 int lemmaTagIndex = 0;
                 for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
+                    //Check if adjective, noun or verb
 //                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
-                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
+//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
-//                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
+                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         
+
+                        //Search WordNet for synset ID
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
-                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex)));
+                        IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
                             double posScore = 0;
                             double negScore = 0;
+                            
+                            //Synset IDs
                             List<IWordID> wordIDs = indexWord.getWordIDs();
                             int indexForSense = 0;
+                            //Disamiguate
                             if(wordIDs.size() > 1){
                                 indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex);
                             }
+                            
+                            //Get synset ID
                             IWord word= dictionary.getWord(wordIDs.get(indexForSense));
 //                            write(word.getLemma());
                             String[] wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
                             
 //                            write("ID of word: " + wordIDDisected[1]);
+
+                            //Get sentiment in SentiWordNet
                             String sqlStmtwordID = "SELECT * FROM dict WHERE ID = "+ wordIDDisected[1];
 //                            write(sqlStmtwordID);
                             results = stmt.executeQuery(sqlStmtwordID);
@@ -1873,12 +1799,16 @@ public class SummarizeText {
                                 negScore += results.getFloat("NegScore");
                             }
 //                            write("Sense Count: " + senseCtr++);
-//                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+//                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);
+
+                            //Check if word is adjective then check if there is adverb preceeds it
                             String adverb = "";
                             if(tags.get(lemmaTagIndex).matches("JJ(R|S)?") && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 adverb += words.get(lemmaTagIndex-1);
-                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), LanguageProcess.GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
+                                
+                                //Get sentiment of adverb
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
                                     indexForSense = 0;
@@ -1899,6 +1829,7 @@ public class SummarizeText {
                                         advNegScore = results.getFloat("NegScore");
                                     }
                                     
+                                    //Combine score of adverb and adjective
                                     double objectiveScore = 1 - (posScore + negScore); 
                                     posScore = posScore + (objectiveScore * advPosScore);
                                     negScore = negScore + (objectiveScore * advNegScore);
@@ -1906,16 +1837,8 @@ public class SummarizeText {
                                 } 
                                 
                             }
-//                            write((adverb + " "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
-                            if(posScore >= negScore){
-                                if(posScore != 0)    
-                                    positiveWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
-                            else{
-                                
-                                    negativeWords.add((adverb + " "+ words.get(lemmaTagIndex)).trim());
-                            }
                             
+                            //Add the sentiment of word to total score of document and to the total score of its sentence                      
                             positive += posScore;
                             negative += negScore;
                             sentPos += posScore;
@@ -1931,6 +1854,7 @@ public class SummarizeText {
                     
                 }
                 write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
+                //Classify sentence
                 if(sentPos >= sentNeg){
                     positiveSentencesList.add(sentences.get(sentCtr).text());
                 }
@@ -1945,6 +1869,7 @@ public class SummarizeText {
             write("Negtive: " + negative/wordCount);
             write("Word Count: " + wordCount);
 
+            //Get average of scores
             retValSentimentScore = retValSentimentScore + (positive/wordCount);
             retValSentimentScore = retValSentimentScore + ",";
             retValSentimentScore = retValSentimentScore + (negative/wordCount);
@@ -1973,6 +1898,7 @@ public class SummarizeText {
         int indexOfWordToBeUsed = 0;
         try
         {
+            //WordNet access
             IDictionary dictionary = WordNetAccess.loadDic();
             dictionary.open();
 
@@ -1982,7 +1908,6 @@ public class SummarizeText {
             int[] wordSenseScores = new int[wordSensesSize];
             List<IWordID> wordSenses = indexWord.getWordIDs();
 
-
             //get word with most similar words in gloss
 
             //access each answer
@@ -1991,18 +1916,20 @@ public class SummarizeText {
 
                 //write("Disambiguate 1st loop");
                 //write("Word Sense Traverse Ctr: " + wordSenseTraverseCtr + "\n");
-                //get gloss for current wordSense from wordNet
+                //get gloss for current wordSense/meaning from wordNet
 
                 IWord word = dictionary.getWord(wordSenses.get(wordSenseTraverseCtr));
 
                 String glossOfWordSense = word.getSynset().getGloss();
 
+                //Get neighboring words of the word being disambiguated
                 List<StringAndTag> compareToWords = GetCompareToWords(document, sentenceIndex, lemmaIndex);
 //                if(compareToWords != null){
-//                    write("not null");
+//                    write("compare to not null");
 //                }
                 //write("Disambiguate Compare To Words Size: " + compareToWords.size() + "\n");
 
+                //Compare the meanings of neighbouring words and the meanings of the word disambiguated
                 for(StringAndTag wordWithTag : compareToWords){
                     //write("Disambiguate 2nd loop" + "\n");
                     IIndexWord indexWordOfNeighborWord = dictionary.getIndexWord(wordWithTag.word, wordWithTag.tag);
@@ -2040,7 +1967,8 @@ public class SummarizeText {
                 }
                 wordSenseTraverseCtr++;
             }
-
+            
+            //Choose the meaning to be used
             int largestCnt = wordSenseScores[0];
             //write("Largest Count: " + largestCnt + "\n");
             for(int travCntr = 1; travCntr < wordSensesSize; travCntr++){
@@ -2084,10 +2012,10 @@ public class SummarizeText {
                         //write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prev Index: " + lemmaIndexPrev + "\n");
                         if(currentSentence.posTag(lemmaIndexPrev).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                            if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-//                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+//                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
 //                                write("Compare to words size: " + compareToWords.size() + "\n");
 //                            }
-                        compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrev),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexPrev))));
+                        compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrev),GetPOSTag(currentSentence.posTag(lemmaIndexPrev))));
                                 if(compareToWords.size() == compareToWordsFullSize){
                                 full = true;
                             }
@@ -2108,13 +2036,11 @@ public class SummarizeText {
                         //write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prec Index: " + lemmaIndexPrec + "\n");
                         if(currentSentence.posTag(lemmaIndexPrec).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                            if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-//                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+//                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
 //                                write("Compare to words size: " + compareToWords.size() + "\n");
 //                            }
-                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrec),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexPrec))));
-                            if(compareToWords.size() == compareToWordsFullSize){
-                                full = true;
-                            }
+                            compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrec),GetPOSTag(currentSentence.posTag(lemmaIndexPrec))));
+                            
                         }
                     }
                     else{
@@ -2123,13 +2049,20 @@ public class SummarizeText {
                     }
                     
                 }
+                if(compareToWords.size() == compareToWordsFullSize){
+                    full = true;
+                }
+                if(sentenceIndexPrec >= sentences.size() && sentenceIndexPrev < 0){
+                    full = true;
+                }
             }   
         }
         catch(Exception exc){
             exc.printStackTrace();
-        }
+        } 
         
 //        write("Exiting GetCompareToWords");
+//        write(compareToWords.toArray().length + "\n");
         return compareToWords;
         
     }
@@ -2224,8 +2157,8 @@ public class SummarizeText {
                         ResultSet results;
                             
 //                        write(currentSentence.lemma(lemmaCtr));
-//                        write("Tag: " + LanguageProcess.GetPOSTag(currentPOSTag));
-                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
+//                        write("Tag: " + GetPOSTag(currentPOSTag));
+                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), GetPOSTag(currentPOSTag));
                         if(indexWord != null){
                             List<IWordID> wordIDs = indexWord.getWordIDs();
                             if(wordIDs.size() > 1){
@@ -2423,8 +2356,8 @@ public class SummarizeText {
                         ResultSet results;
                             
 //                        write(currentSentence.lemma(lemmaCtr));
-//                        write("Tag: " + LanguageProcess.GetPOSTag(currentPOSTag));
-                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
+//                        write("Tag: " + GetPOSTag(currentPOSTag));
+                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), GetPOSTag(currentPOSTag));
                         if(indexWord != null){
                             List<IWordID> wordIDs = indexWord.getWordIDs();
                             if(wordIDs.size() > 1){
@@ -2610,8 +2543,8 @@ public class SummarizeText {
                         ResultSet results;
                             
 //                        write(currentSentence.lemma(lemmaCtr));
-//                        write("Tag: " + LanguageProcess.GetPOSTag(currentPOSTag));
-                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), LanguageProcess.GetPOSTag(currentPOSTag));
+//                        write("Tag: " + GetPOSTag(currentPOSTag));
+                        IIndexWord indexWord = dictionary.getIndexWord(currentSentence.lemma(lemmaCtr), GetPOSTag(currentPOSTag));
                         if(indexWord != null){
                             List<IWordID> wordIDs = indexWord.getWordIDs();
                             if(wordIDs.size() > 1){
@@ -2854,10 +2787,10 @@ public class SummarizeText {
                             //write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prev Index: " + lemmaIndexPrev + "\n");
                             if(currentSentence.posTag(lemmaIndexPrev).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
     //                            if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-    //                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+    //                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
     //                                write("Compare to words size: " + compareToWords.size() + "\n");
     //                            }
-                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrev),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexPrev))));
+                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrev),GetPOSTag(currentSentence.posTag(lemmaIndexPrev))));
                                 if(compareToWords.size() == compareToWordsFullSize){
                                     full = true;
                                 }
@@ -2891,10 +2824,10 @@ public class SummarizeText {
                             //write("Lemmas: " + lemmas.size() + "\n" + "Lemma Prec Index: " + lemmaIndexPrec + "\n");
                             if(currentSentence.posTag(lemmaIndexPrec).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
     //                            if(IfUniqueWord(compareToWords,lemmas.get(lemmaIndexCurrent))){
-    //                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
+    //                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexCurrent),GetPOSTag(currentSentence.posTag(lemmaIndexCurrent))));
     //                                write("Compare to words size: " + compareToWords.size() + "\n");
     //                            }
-                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrec),LanguageProcess.GetPOSTag(currentSentence.posTag(lemmaIndexPrec))));
+                                compareToWords.add(new StringAndTag(lemmas.get(lemmaIndexPrec),GetPOSTag(currentSentence.posTag(lemmaIndexPrec))));
                                 if(compareToWords.size() == compareToWordsFullSize){
                                     full = true;
                                 }
@@ -2919,6 +2852,27 @@ public class SummarizeText {
         
 //        write("Exiting GetCompareToWords");
         return compareToWords;
+        
+    }
+    
+    public static POS GetPOSTag(String POSTag){
+        
+        POS pos = null;
+        
+        if(POSTag.matches("JJ(R|S)?")){
+            pos = POS.ADJECTIVE;
+        }
+        if(POSTag.matches("(NN)S?")){
+            pos = POS.NOUN;
+        }
+        if(POSTag.matches("RB(S|R)?")){
+            pos = POS.ADVERB;
+        }
+        if(POSTag.matches("VB(D|G|N|P|Z)?")){
+            pos = POS.VERB;
+        }
+        
+        return pos;
         
     }
     

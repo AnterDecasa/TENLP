@@ -1,5 +1,11 @@
 FileName,Positive,Negative
-C:\Users\user\Desktop\Working IMDB Files\train\neg\100_3.txt,0.10126201923076923,0.13521634615384615
-C:\Users\user\Desktop\Working IMDB Files\train\neg\101_1.txt,0.04660326086956522,0.07527173913043478
-C:\Users\user\Desktop\Working IMDB Files\train\neg\102_1.txt,0.057432432432432436,0.06756756756756757
-C:\Users\user\Desktop\Working IMDB Files\train\neg\103_1.txt,0.039634146341463415,0.06707317073170732
+C:\Users\user\Desktop\Working IMDB Files\train\pos\0_9.txt,0.140625,0.203125
+C:\Users\user\Desktop\Working IMDB Files\train\pos\1_7.txt,0.16666666666666666,0.10416666666666667
+C:\Users\user\Desktop\Working IMDB Files\train\pos\2_9.txt,0.203125,0.1796875
+C:\Users\user\Desktop\Working IMDB Files\train\pos\3_10.txt,0.28125,0.0
+C:\Users\user\Desktop\Working IMDB Files\train\pos\4_8.txt,0.16666666666666666,0.20238095238095238
+C:\Users\user\Desktop\Working IMDB Files\train\pos\5_10.txt,0.21875,0.11875
+C:\Users\user\Desktop\Working IMDB Files\train\pos\6_10.txt,0.275,0.1125
+C:\Users\user\Desktop\Working IMDB Files\train\pos\7_7.txt,0.2,0.0375
+C:\Users\user\Desktop\Working IMDB Files\train\pos\8_7.txt,0.16666666666666666,0.25
+C:\Users\user\Desktop\Working IMDB Files\train\pos\9_7.txt,0.1625,0.225

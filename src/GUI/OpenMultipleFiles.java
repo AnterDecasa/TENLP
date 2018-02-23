@@ -92,20 +92,23 @@ public class OpenMultipleFiles extends javax.swing.JFrame {
     
 //    String folderpath = "C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\train\\pos\\";
 //    String folderpath = "C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\test\\pos\\";
-    String folderpath = "C:\\Users\\user\\Desktop\\Working IMDB Files\\train\\neg\\";
+    String defaultFolderpath = "C:\\Users\\user\\Desktop\\Working IMDB Files\\train\\";
 //    String folderpath = "C:\\Users\\user\\Desktop\\Working IMDB Files\\test\\neg\\";
 //    String folderpath = "C:\\Users\\user\\Google Drive\\Current Thesis\\Resources\\Text Files\\text files for each teacher(for each subject)\\";
+    String folderpath = "";
     
     private void selectFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFilesActionPerformed
         JFileChooser fileChooser;
-        fileChooser = new JFileChooser(new File(folderpath));
+        fileChooser = new JFileChooser(new File(defaultFolderpath));
         fileChooser.setMultiSelectionEnabled(true);
         int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
         
         final DefaultListModel model = new DefaultListModel();
         
         if(returnVal == JFileChooser.APPROVE_OPTION){
+            folderpath = "";
             File[] files = fileChooser.getSelectedFiles();
+            folderpath += files[0].getParent() + "\\";
             for(int i = 0; i < files.length; i++){
                 model.addElement(files[i].getName());
             }
@@ -130,6 +133,7 @@ public class OpenMultipleFiles extends javax.swing.JFrame {
 
                 System.out.print("Opening: " + o.toString() + "." + "\n");
                 reader = new BufferedReader(new FileReader(folderpath + o.toString()));
+                System.out.print(folderpath + o.toString() + "\n");
                 System.out.println(o.toString());
 
                 String line = "";
@@ -139,7 +143,8 @@ public class OpenMultipleFiles extends javax.swing.JFrame {
                     text += line + "\n";
                     line = reader.readLine();
                 }
-                SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanTextRecordInAFileSix(folderpath + o.toString(), text, pw, sb);
+//                SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanTextRecordInAFileSix(folderpath + o.toString(), text, pw, sb);
+                SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanTextRecordInAFileFour(folderpath + o.toString(), text, pw, sb);
                 text = "";
                 System.out.println("Done");
                                 

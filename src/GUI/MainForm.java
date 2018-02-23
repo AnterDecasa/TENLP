@@ -43,36 +43,25 @@ public class MainForm extends javax.swing.JFrame {
     private void initComponents() {
 
         evalForAllSubjLabel = new javax.swing.JLabel();
-        analyzeBtn = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        cleanTextUploadButton = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        cleanTextDisplay = new javax.swing.JTextArea();
-        analyzeCleanTextButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        resultsTextArea = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
-        filenameTextField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        openMulitpleFileAnalysisWindow = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         subjectLabel = new javax.swing.JLabel();
         subjectComboBox = new javax.swing.JComboBox<>();
-        getEvalForSubjBtn = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         evalForOneSubjTextArea = new javax.swing.JTextArea();
         getSentimentButton = new javax.swing.JButton();
+        outputIntoCSVButton = new javax.swing.JButton();
+        outputIntoTextButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         chooseFileBtn = new javax.swing.JButton();
         teacherNameText = new javax.swing.JTextField();
         teacherNameLabel = new javax.swing.JLabel();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        subjectTextArea = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         evalForAllSubjTextArea = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        filenameTextField = new javax.swing.JTextField();
+        openMulitpleFileAnalysisWindow = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -89,75 +78,13 @@ public class MainForm extends javax.swing.JFrame {
 
         evalForAllSubjLabel.setText(" ");
 
-        analyzeBtn.setText("Get Sentiment");
-        analyzeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                analyzeBtnActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Output into csv file");
-        jButton1.setName("outputSentenceButton"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                outputSentencesButtonActionPerformed(evt);
-            }
-        });
-
-        cleanTextUploadButton.setText("Clean Text Upload");
-        cleanTextUploadButton.setName(""); // NOI18N
-        cleanTextUploadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cleanTextUploadButtonActionPerformed(evt);
-            }
-        });
-
-        cleanTextDisplay.setEditable(false);
-        cleanTextDisplay.setColumns(20);
-        cleanTextDisplay.setLineWrap(true);
-        cleanTextDisplay.setRows(5);
-        cleanTextDisplay.setName(""); // NOI18N
-        jScrollPane4.setViewportView(cleanTextDisplay);
-        cleanTextDisplay.getAccessibleContext().setAccessibleName("");
-
-        analyzeCleanTextButton.setText("Analyze");
-        analyzeCleanTextButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                analyzeCleanTextButtonActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Output into text file");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        resultsTextArea.setEditable(false);
-        resultsTextArea.setColumns(20);
-        resultsTextArea.setRows(5);
-        jScrollPane5.setViewportView(resultsTextArea);
-
-        jLabel1.setText("Results");
-
-        jLabel2.setText("Filename");
-
-        openMulitpleFileAnalysisWindow.setText("Open Multiple File Analysis");
-        openMulitpleFileAnalysisWindow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openMulitpleFileAnalysisWindowActionPerformed(evt);
-            }
-        });
-
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Sentiment Analysis", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 1, 18))); // NOI18N
 
         subjectLabel.setText("Subject:");
 
-        getEvalForSubjBtn.setText("See Evaluation");
-        getEvalForSubjBtn.addActionListener(new java.awt.event.ActionListener() {
+        subjectComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                getEvalForSubjBtnActionPerformed(evt);
+                subjectComboBoxActionPerformed(evt);
             }
         });
 
@@ -171,9 +98,27 @@ public class MainForm extends javax.swing.JFrame {
         jScrollPane2.setViewportView(evalForOneSubjTextArea);
 
         getSentimentButton.setText("Get Sentiment");
+        getSentimentButton.setEnabled(false);
         getSentimentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 getSentimentButtonActionPerformed(evt);
+            }
+        });
+
+        outputIntoCSVButton.setText("Output into csv file");
+        outputIntoCSVButton.setName("outputSentenceButton"); // NOI18N
+        outputIntoCSVButton.setVisible(false);
+        outputIntoCSVButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputSentencesButtonActionPerformed(evt);
+            }
+        });
+
+        outputIntoTextButton.setText("Output into text file");
+        outputIntoTextButton.setVisible(false);
+        outputIntoTextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputIntoTextButtonActionPerformed(evt);
             }
         });
 
@@ -190,16 +135,16 @@ public class MainForm extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(subjectLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(subjectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(subjectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel5)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(getSentimentButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(getEvalForSubjBtn))
-                            .addComponent(jLabel5))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(outputIntoCSVButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(outputIntoTextButton)))
+                        .addGap(0, 255, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(324, 324, 324)
-                .addComponent(getSentimentButton)
-                .addContainerGap(327, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,14 +152,16 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subjectLabel)
-                    .addComponent(subjectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(getEvalForSubjBtn))
+                    .addComponent(subjectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(getSentimentButton)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(getSentimentButton)
+                    .addComponent(outputIntoCSVButton)
+                    .addComponent(outputIntoTextButton))
                 .addContainerGap())
         );
 
@@ -229,51 +176,9 @@ public class MainForm extends javax.swing.JFrame {
 
         teacherNameText.setEditable(false);
 
-        teacherNameLabel.setText("Teacher Name: ");
+        teacherNameLabel.setText("Teacher Name:");
 
-        subjectTextArea.setColumns(20);
-        subjectTextArea.setRows(5);
-        jScrollPane6.setViewportView(subjectTextArea);
-
-        jLabel3.setText("Subjects:");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(teacherNameLabel)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(teacherNameText)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(chooseFileBtn)))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(chooseFileBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(teacherNameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(teacherNameLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane6))
-                .addContainerGap())
-        );
+        jLabel3.setText("Entire Evaluation:");
 
         evalForAllSubjTextArea.setEditable(false);
         evalForAllSubjTextArea.setColumns(20);
@@ -282,11 +187,71 @@ public class MainForm extends javax.swing.JFrame {
         evalForAllSubjTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(evalForAllSubjTextArea);
 
+        jLabel2.setText("Filename:");
+
+        openMulitpleFileAnalysisWindow.setText("Open Multiple File Analysis");
+        //openMulitpleFileAnalysisWindow.setVisible(false);
+        openMulitpleFileAnalysisWindow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMulitpleFileAnalysisWindowActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2)
+                            .addComponent(teacherNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1)
+                                .addGap(0, 0, 0))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(filenameTextField)
+                                .addGap(0, 0, 0))
+                            .addComponent(teacherNameText)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 350, Short.MAX_VALUE)
+                        .addComponent(openMulitpleFileAnalysisWindow)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chooseFileBtn)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chooseFileBtn)
+                    .addComponent(openMulitpleFileAnalysisWindow))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(teacherNameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(teacherNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Sentiment Analysis Results", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 1, 18))); // NOI18N
 
-        jLabel4.setText("Positive:");
+        jLabel4.setText("Positive Score:");
 
-        jLabel6.setText("Negative:");
+        jLabel6.setText("Negative Score:");
 
         jLabel7.setText("List of Positive statements");
 
@@ -307,42 +272,42 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(positiveScoreTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(negativeScoreTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(positiveScoreTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(67, 67, 67)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(195, Short.MAX_VALUE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(negativeScoreTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel8))
+                        .addContainerGap())
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(positiveScoreTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(negativeScoreTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(jScrollPane7))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -350,169 +315,34 @@ public class MainForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(393, 393, 393)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(375, 375, 375)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 495, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(241, 241, 241))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1)
-                                    .addComponent(analyzeBtn))
-                                .addGap(172, 172, 172)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(filenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(analyzeCleanTextButton))
-                            .addComponent(openMulitpleFileAnalysisWindow))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(618, 618, 618)
-                .addComponent(cleanTextUploadButton)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(evalForAllSubjLabel)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(evalForAllSubjLabel)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(evalForAllSubjLabel)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(40, 40, 40)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(openMulitpleFileAnalysisWindow)
-                        .addGap(10, 10, 10)
-                        .addComponent(jButton2)
-                        .addGap(49, 49, 49)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(analyzeBtn))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(filenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
-                            .addComponent(analyzeCleanTextButton))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cleanTextUploadButton)
-                                .addGap(2, 2, 2)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(29, 29, 29)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(38, 38, 38))
+                        .addComponent(evalForAllSubjLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(54, 54, 54))
         );
-
-        cleanTextUploadButton.getAccessibleContext().setAccessibleName("cleanTextButt\non");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void chooseFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileBtnActionPerformed
-        // TODO add your handling code here:
-        JFileChooser fileChooser;
-        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Google Drive\\Current Thesis\\Resources\\Text Files"));
-        int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
-        String cleanedText = "";
-            
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-                
-            //This is where a real application would open the file.
-            System.out.print("Opening: " + file.getName() + "." + "\n");
-            System.out.print("" + file.getAbsolutePath() + "" + "\n");
-                 
-            evalForAllSubjTextArea.setText(""); //Empty text field
-            
-            //Fill with first clean up of text
-            cleanedText += TextFilePreProcess.getImportantText(file);
-            evalForAllSubjTextArea.append(cleanedText);
-            evalForAllSubjTextArea.setCaretPosition(0);
-            teacherNameText.setText(TextFilePreProcess.getTeacherName());
-            subjectComboBox.removeAllItems();
-            String[] subjects = TextFilePreProcess.getSubjects();
-            subjectTextArea.setText("");
-            for(String subject : subjects){
-                subjectComboBox.addItem(subject);
-                subjectTextArea.append(subject + "\n");
-            }
-            getEvalForSubjBtn.setEnabled(true);
-        } else {
-            System.out.print("Open command cancelled by user." + "\n");
-        }
-    }//GEN-LAST:event_chooseFileBtnActionPerformed
-
-    private void getEvalForSubjBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getEvalForSubjBtnActionPerformed
-        // TODO add your handling code here:
-        if(!teacherNameText.getText().isEmpty() && subjectComboBox.getItemCount() != 0){
-            String subjectEval = TextFilePreProcess.getSubjectEvaluation(evalForAllSubjTextArea.getText(), subjectComboBox.getSelectedItem().toString());
-            evalForOneSubjTextArea.setText("");
-            evalForOneSubjTextArea.setText(subjectEval);
-            evalForOneSubjTextArea.setCaretPosition(0);
-            jLabel5.setText("Evaluation for " + subjectComboBox.getSelectedItem().toString());
-        }
-    }//GEN-LAST:event_getEvalForSubjBtnActionPerformed
-
-    private void analyzeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeBtnActionPerformed
-        
-        final long startTime = System.currentTimeMillis();
-        
-        String analyzedText = evalForOneSubjTextArea.getText();
-        
-//        SummarizeText.summarize(analyzedText);
-//        SummarizeText.summarizeZeroOneNegative(analyzedText);
-//        SummarizeText.getSentimentofWholeDocument(analyzedText);
-//        SummarizeText.getSentimentofWholeDocumentWithNegation(analyzedText);
-        SummarizeText.getSentimentofWholeDocumentWithNegationWithDisambiguation(analyzedText);
-//        SummarizeText.listPosNeg();
-//        SummarizeText.StoreImportantSentences();
-        
-//        analyzedTextArea.setText(SummarizeText.printPositiveNegativeStatements());
-        
-        final long endTime = System.currentTimeMillis();
-        
-        final long convertedToSeconds = (endTime - startTime)/1000;
-        final long minutes = convertedToSeconds/60;
-        final long seconds = convertedToSeconds%60;
-        final long milliseconds = ((endTime - startTime)%1000);
-        
-        write("Total processing time: " + minutes + "min " + seconds + "sec " + milliseconds + "millisec");
-        
-    }//GEN-LAST:event_analyzeBtnActionPerformed
 
     private void outputSentencesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputSentencesButtonActionPerformed
         // TODO add your handling code here:
@@ -524,50 +354,7 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_outputSentencesButtonActionPerformed
 
-    private void cleanTextUploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanTextUploadButtonActionPerformed
-        // TODO add your handling code here:
-        JFileChooser fileChooser;
-        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Desktop\\IMDB\\aclImdb\\train\\neg"));
-        int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
-        String text = "";
-        BufferedReader reader;
-            
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-                
-            //This is where a real application would open the file.
-            filenameTextField.setText("");
-            filenameTextField.setText(file.getAbsolutePath());
-            System.out.print("Opening: " + file.getName() + "." + "\n");
-            System.out.print("" + file.getAbsolutePath() + "" + "\n");
-                 
-            cleanTextDisplay.setText(""); //Empty text field
-            try{
-                reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
-                String line = "";
-            
-                line = reader.readLine();
-                while (line != null) {
-                    text += line + "\n";
-                    line = reader.readLine();
-                }
-                cleanTextDisplay.setText(text);
-            }
-            catch(Exception exc){
-                exc.printStackTrace();
-            }
-        } else {
-            System.out.print("Open command cancelled by user." + "\n");
-        }
-    }//GEN-LAST:event_cleanTextUploadButtonActionPerformed
-
-    private void analyzeCleanTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeCleanTextButtonActionPerformed
-        // TODO add your handling code here:
-        resultsTextArea.setText("");
-        SummarizeText.getSentimentFromCleanfile(cleanTextDisplay.getText(),resultsTextArea);
-    }//GEN-LAST:event_analyzeCleanTextButtonActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void outputIntoTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputIntoTextButtonActionPerformed
         // TODO add your handling code here:
         try{
             TextFilePreProcess.outputSentencesText(evalForOneSubjTextArea.getText());
@@ -575,7 +362,7 @@ public class MainForm extends javax.swing.JFrame {
         catch(Exception exc){
             exc.printStackTrace();
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_outputIntoTextButtonActionPerformed
 
     private void openMulitpleFileAnalysisWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMulitpleFileAnalysisWindowActionPerformed
         // TODO add your handling code here:
@@ -586,6 +373,9 @@ public class MainForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         String text = TextFilePreProcess.cleanTextFromEvaluation(evalForOneSubjTextArea.getText());
+        
+        //new ProgressDialogue().setVisible(true);
+        
         String score = SummarizeText.getSentimentofOneDocument(text);
         
         String[] posNegScore = score.split(",");
@@ -600,14 +390,63 @@ public class MainForm extends javax.swing.JFrame {
         for(String statement : positiveList){
             positiveStatementsTextArea.append("> " + statement + "\n");
         }
+        positiveStatementsTextArea.setCaretPosition(0);
         
         negativeStatementsTextArea.setText("");
         for(String statement : negativeList){
             negativeStatementsTextArea.append("> " + statement + "\n");
         }
+        negativeStatementsTextArea.setCaretPosition(0);
         
         write("sentiment analysis complete");
     }//GEN-LAST:event_getSentimentButtonActionPerformed
+
+    private void subjectComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subjectComboBoxActionPerformed
+        // TODO add your handling code here:
+        if(!teacherNameText.getText().isEmpty() && subjectComboBox.getItemCount() != 0){
+            String subjectEval = TextFilePreProcess.getSubjectEvaluation(evalForAllSubjTextArea.getText(), subjectComboBox.getSelectedItem().toString());
+            evalForOneSubjTextArea.setText("");
+            evalForOneSubjTextArea.setText(subjectEval);
+            evalForOneSubjTextArea.setCaretPosition(0);
+            jLabel5.setText("Evaluation for " + subjectComboBox.getSelectedItem().toString());
+        }
+        getSentimentButton.setEnabled(true);
+    }//GEN-LAST:event_subjectComboBoxActionPerformed
+
+    private void chooseFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileBtnActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser;
+        fileChooser = new JFileChooser(new File("C:\\Users\\user\\Google Drive\\Current Thesis\\Resources\\Text Files"));
+        int returnVal = fileChooser.showOpenDialog(fileChooser.getParent());
+        String cleanedText = "";
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+
+            //This is where a real application would open the file.
+            System.out.print("Opening: " + file.getName() + "." + "\n");
+            System.out.print("" + file.getAbsolutePath() + "" + "\n");
+
+            evalForAllSubjTextArea.setText(""); //Empty text field
+
+            //Fill with first clean up of text
+            cleanedText += TextFilePreProcess.getImportantText(file);
+            evalForAllSubjTextArea.append(cleanedText);
+            evalForAllSubjTextArea.setCaretPosition(0);
+            teacherNameText.setText(TextFilePreProcess.getTeacherName());
+            subjectComboBox.removeAllItems();
+            String[] subjects = TextFilePreProcess.getSubjects();
+            for(String subject : subjects){
+                subjectComboBox.addItem(subject);
+            }
+            getSentimentButton.setEnabled(false);
+            evalForOneSubjTextArea.setText("");
+            subjectComboBox.setSelectedIndex(0);
+            filenameTextField.setText(file.getAbsolutePath());
+        } else {
+            System.out.print("Open command cancelled by user." + "\n");
+        }
+    }//GEN-LAST:event_chooseFileBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -651,20 +490,12 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton analyzeBtn;
-    private javax.swing.JButton analyzeCleanTextButton;
     private javax.swing.JButton chooseFileBtn;
-    private javax.swing.JTextArea cleanTextDisplay;
-    private javax.swing.JButton cleanTextUploadButton;
     private javax.swing.JLabel evalForAllSubjLabel;
     private javax.swing.JTextArea evalForAllSubjTextArea;
     private javax.swing.JTextArea evalForOneSubjTextArea;
     private javax.swing.JTextField filenameTextField;
-    private javax.swing.JButton getEvalForSubjBtn;
     private javax.swing.JButton getSentimentButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -678,19 +509,16 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextField negativeScoreTextField;
     private javax.swing.JTextArea negativeStatementsTextArea;
     private javax.swing.JButton openMulitpleFileAnalysisWindow;
+    private javax.swing.JButton outputIntoCSVButton;
+    private javax.swing.JButton outputIntoTextButton;
     private javax.swing.JTextField positiveScoreTextField;
     private javax.swing.JTextArea positiveStatementsTextArea;
-    private javax.swing.JTextArea resultsTextArea;
     private javax.swing.JComboBox<String> subjectComboBox;
     private javax.swing.JLabel subjectLabel;
-    private javax.swing.JTextArea subjectTextArea;
     private javax.swing.JLabel teacherNameLabel;
     private javax.swing.JTextField teacherNameText;
     // End of variables declaration//GEN-END:variables

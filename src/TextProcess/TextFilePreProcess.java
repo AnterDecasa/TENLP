@@ -453,14 +453,15 @@ public class TextFilePreProcess {
             evaluationText = new BufferedReader(new FileReader(file.getAbsolutePath()));
             String line;
 
-            //Set Teacher name
-//            retVal = getTeacherName(evaluationText) + "\n";
+            //Identify teacher name
             getTeacherName(evaluationText);
-            //Remove other info
+            
+            //Identify subjects and sections
             while ((newSubject = newSubject(evaluationText)).equalsIgnoreCase("")) {
             }
             retVal += newSubject + "\n";
-
+            
+            //Remove other unneeded text
             evaluationText.reset();
 
             line = evaluationText.readLine();

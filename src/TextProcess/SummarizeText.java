@@ -7,18 +7,11 @@ package TextProcess;
 
 import ContainerClasses.AnswerGroups;
 import edu.stanford.nlp.trees.Tree;
-import java.util.Iterator;
-import ContainerClasses.LemmaSentenceWithPOStag;
 import ContainerClasses.StringAndTag;
 import edu.mit.jwi.IDictionary;
-import edu.mit.jwi.IRAMDictionary;
 import edu.mit.jwi.item.IIndexWord;
-import edu.mit.jwi.item.ISynset;
-import edu.mit.jwi.item.ISynsetID;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
-import edu.mit.jwi.item.POS;
-import edu.mit.jwi.item.Synset;
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
 import java.util.ArrayList;
@@ -27,7 +20,6 @@ import edu.mit.jwi.item.POS;
 import java.io.File;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.Optional;
 import javax.swing.JTextArea;
 
 /**
@@ -38,17 +30,15 @@ public class SummarizeText {
     
     static AnswerGroups groupedAnswers;
     static String[] compareWords;
-    private static String host = "jdbc:mysql://localhost:3306/tenlp";
-    private static String user = "root";
-    private static String password = "";
+    private static final String host = "jdbc:mysql://localhost:3306/tenlp";
+    private static final String user = "root";
+    private static final String password = "";
     private static List<Document> positiveSentences = new ArrayList<Document>();
     private static List<Document> negativeSentences = new ArrayList<Document>();
     private static List<Document> neutralSentences = new ArrayList<Document>();
     
     private static List<String> positiveSentencesList = new ArrayList<String>();
     private static List<String> negativeSentencesList = new ArrayList<String>();
-    
-    public static List<String> negativeWords = new ArrayList<String>();
     
     public static List<String> getPositiveSentences(){
         return positiveSentencesList;
@@ -58,18 +48,24 @@ public class SummarizeText {
         return negativeSentencesList;
     }
     
-    public static void summarizeDocument(){
-        
-    }
-    
+    /*
+    1st algorithm
+        - Used for getting sentiment of one document only
+        - No disambiguation
+        - No negation
+    */
     public static void getSentimentofWholeDocument(String string){
         
         String noQuestions = TextFilePreProcess.removeQuestions(string);
         noQuestions = TextFilePreProcess.removeCarets(noQuestions);
         noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
-//        write(noQuestions);
         
+        /*
+        Sum of Positive score and negative score,
+        and counted words that were used in calculation of sentiment 
+        of entire document
+        */
         double positive = 0;
         double negative = 0;
         double wordCount = 0;
@@ -78,16 +74,23 @@ public class SummarizeText {
         
         write("Calculating sentiment...");
         try{
+            /*Connect to SentiWordNet database*/
             Connection connect = DriverManager.getConnection(host,user,password);
             Statement stmt = connect.createStatement();
             ResultSet results;
         
             for(Sentence sent : docu.sentences()){
-    //            write(sent.parse());
-                List <String> tags = sent.posTags();
-            
+                /*
+                Getting the part-of-speech tag for each word in the sentence
+                Getting the root form of the words for each sentence
+                */
+                List <String> tags = sent.posTags();           
                 List <String> words =  sent.lemmas();
             
+                /*
+                Calculating sentiment using different combinations of
+                nouns(NN), verbs(VB), adjectives(JJ) and adverbs(RB)
+                */
                 int index = 0;
                 for(;index < tags.size(); index++){
 //                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
@@ -96,21 +99,25 @@ public class SummarizeText {
 //                    if(tags.get(index).matches("JJ(R|S)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         
+                        /*Loading WordNet dictionary for accessing*/
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
 
+                        /*Get the wordID that represent word meaning*/
                         IIndexWord indexWord = dictionary.getIndexWord(words.get(index), GetPOSTag(tags.get(index)));
                         if(indexWord != null){
                             wordCount++;
+                            /*Get all the word IDs*/
                             List<IWordID> wordIDs = indexWord.getWordIDs();
+                            
+                            /*Positive, negative and objective score of the word*/
                             double posScore = 0;
                             double negScore = 0;    
                             double senseCtr = 0;
+                            
+                            /*Get the first meaning/sense of the word*/
                             IWord word = dictionary.getWord(wordIDs.get(0));
-                            write(word.getLemma());
-//                            write("ID of word: " + wordIDDisected[1]);
                             String sqlStmtwordID = "SELECT * FROM dict WHERE (SynsetTerms LIKE '%"+ word.getLemma() +"#%' OR SynsetTerms LIKE '%"+ word.getLemma() +"#%') AND (PosScore > 0 AND NegScore > 0)";
-//                                write(sqlStmtwordID);
                             results = stmt.executeQuery(sqlStmtwordID);
                             while(results.next()){
                                 write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
@@ -142,14 +149,26 @@ public class SummarizeText {
         write("Word Count: " + wordCount);
     }
     
+    /*
+    2nd algorithm
+        - Used for getting sentiment of 1 document only
+        - No disambiguation
+        - With negation
+        - Only displays in cosole the sentiment score
+    */
     public static void getSentimentofWholeDocumentWithNegation(String string){
         
+        /*Removing unnecessary text from evaluation*/
         String noQuestions = TextFilePreProcess.removeQuestions(string);
         noQuestions = TextFilePreProcess.removeCarets(noQuestions);
         noQuestions = TextFilePreProcess.convertAllCAPSTolowerCase(noQuestions);
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
-//        write(noQuestions);
         
+        /*
+        Sum of Positive score and negative score,
+        and counted words that were used in calculation of sentiment 
+        of entire document
+        */
         double positive = 0;
         double negative = 0;
         double wordCount = 0;
@@ -158,19 +177,28 @@ public class SummarizeText {
         
         write("Calculating sentiment...");
         try{
+            /*Connect to SentiWordNet database*/
             Connection connect = DriverManager.getConnection(host,user,password);
             Statement stmt = connect.createStatement();
             ResultSet results;
         
             for(Sentence sent : docu.sentences()){
-    //            write(sent.parse());
-                write(sent.text());
+             /*
+                Positive and Negative scores of the sentence
+                */
                 double sentPos = 0;
                 double sentNeg = 0;
-                List <String> tags = sent.posTags();
-            
+                /*
+                Getting the part-of-speech tag of the words in the sentence
+                Getting the root form of the word in the sentence
+                */
+                List <String> tags = sent.posTags();            
                 List <String> words =  sent.lemmas();
             
+                /*
+                Calculating sentiment using different combinations of
+                nouns(NN), verbs(VB), adjectives(JJ) and adverbs(RB)
+                */
                 int index = 0;
                 for(;index < tags.size(); index++){
 //                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
@@ -179,38 +207,43 @@ public class SummarizeText {
 //                    if(tags.get(index).matches("JJ(R|S)?")){
 //                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         
+                        /*
+                        Loading the WordNet Dictionary for accessing
+                        */
                         IDictionary dictionary = WordNetAccess.loadDic();
                         dictionary.open();
-
                         IIndexWord indexWord = dictionary.getIndexWord(words.get(index), GetPOSTag(tags.get(index)));
                         if(indexWord != null){
                             wordCount++;
-                            double posScore = 0;
-                            double negScore = 0;    
-                            double senseCtr = 0;
+                            
+                            double posScore = 0;/*Sum of positive scores for all word meanings or senses*/
+                            double negScore = 0;/*Sum of negative scores for all word meanings or senses*/    
+                            double senseCtr = 0;/*Counts the number of sense/ meaning of the word*/
+                            /*
+                            Get all the wordIDs for each word meaning
+                            but only use the first word sense or wordID
+                            */
                             List<IWordID> wordIDs = indexWord.getWordIDs();
                             IWord word = dictionary.getWord(wordIDs.get(0));
-//                            write(word.getLemma());
-//                            write("ID of word: " + wordIDDisected[1]);
                             String sqlStmtwordID = "SELECT * FROM dict WHERE (SynsetTerms LIKE '%"+ word.getLemma() +"#%' OR SynsetTerms LIKE '%"+ word.getLemma() +"#%') AND (PosScore > 0 AND NegScore > 0)";
-//                                write(sqlStmtwordID);
                             results = stmt.executeQuery(sqlStmtwordID);
                             while(results.next()){
-//                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                 posScore += results.getFloat("PosScore");
                                 negScore += results.getFloat("NegScore");
                                 senseCtr++;
                             }
-//                            write("Sense Count: " + senseCtr++);
+                            /*
+                            For Negation, checking if there is adverb before adjectives and verbs
+                            If there is, combine the adverb score with the adjective or vebr score
+                            */
                             if((tags.get(index).matches("JJ(R|S)?") || tags.get(index).matches("VB(D|G|N|P|Z)?")) && (index > 0 && tags.get(index-1).matches("RB(S|R)?"))){
                                 wordCount++;
                                 indexWord = dictionary.getIndexWord(words.get(index-1), GetPOSTag(tags.get(index-1)));
                                 wordIDs = indexWord.getWordIDs();
                                 word = dictionary.getWord(wordIDs.get(0));
                                 write(word.getLemma());
-    //                            write("ID of word: " + wordIDDisected[1]);
+
                                 sqlStmtwordID = "SELECT * FROM dict WHERE (SynsetTerms LIKE '%"+ word.getLemma() +"#%' OR SynsetTerms LIKE '%"+ word.getLemma() +"#%') AND (PosScore > 0 AND NegScore > 0)";
-    //                                write(sqlStmtwordID);
                                 results = stmt.executeQuery(sqlStmtwordID);
                                 double advPosScore = 0;
                                 double advNegScore = 0;
@@ -241,6 +274,9 @@ public class SummarizeText {
                                     negScore = temp;
                                 }
                             }
+                            /*
+                            Add the average score of all the senses/meaning of the word
+                            */
                             positive += posScore/senseCtr;
                             negative += negScore/senseCtr;
                             sentPos += posScore/senseCtr;
@@ -267,6 +303,13 @@ public class SummarizeText {
         write("Word Count: " + wordCount);
     }
     
+    /*
+    3rd algorithm
+        - Used for getting sentiment of 1 document only
+        - With disambiguation
+        - With negation
+        - Only displays in console the sentiment score
+    */
     public static void getSentimentofWholeDocumentWithNegationWithDisambiguation(String string){
         
         String noQuestions = TextFilePreProcess.removeQuestions(string);
@@ -275,25 +318,25 @@ public class SummarizeText {
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
 //        noQuestions = TextFilePreProcess.correctPeriodsPutSpaceAfter(noQuestions);
         
-//        write(noQuestions);
-
-        double positive = 0;
-        double negative = 0;
-        double wordCount = 0;
+        double positive = 0;/*Total positive score of document*/
+        double negative = 0;/*Total negative score of document*/
+        double wordCount = 0;/*Counter for the number of words that was included in sentiment calculation*/
         
         Document docu = new Document(noQuestions);
         
         write("Calculating sentiment...");
         try{
-            
+            /*Put into a file the sentiment score for each sentence*/
             PrintWriter pw = new PrintWriter(new File("sentenceScores.csv"));
             StringBuilder sb = new StringBuilder();
             
+            /*Put into a file the tex that has no unnecessart text*/
             PrintWriter cleanText = new PrintWriter(new File("cleanText.txt"));
             StringBuilder sbCleanText = new StringBuilder();
             
             sb.append("Sentence,Positive,Negative\n");
         
+            /*Connectint to SentiWordNet Database*/
             Connection connect = DriverManager.getConnection(host,user,password);
             Statement stmt = connect.createStatement();
             ResultSet results;
@@ -305,49 +348,52 @@ public class SummarizeText {
                 write(sentences.get(sentCtr).parse());
                 sbCleanText.append(sentences.get(sentCtr).text());
                 sbCleanText.append(" ");
-                double sentPos = 0;
-                double sentNeg = 0;
-                List <String> tags = sentences.get(sentCtr).posTags();
+                double sentPos = 0;/*Positive score for each sentence*/
+                double sentNeg = 0;/*Negative score for each sentence*/
+                List <String> tags = sentences.get(sentCtr).posTags();/*Get part-of-speech tags for each word*/           
+                List <String> words =  sentences.get(sentCtr).lemmas();/*Get root form of each word*/
             
-                List <String> words =  sentences.get(sentCtr).lemmas();
-            
+                /*
+                Calculating sentiment using different combinations of
+                nouns(NN), verbs(VB), adjectives(JJ) and adverbs(RB)
+                */
                 int lemmaTagIndex = 0;
                 for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
-//                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
-//                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
                     if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
-//                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         
-                        IDictionary dictionary = WordNetAccess.loadDic();
+                        IDictionary dictionary = WordNetAccess.loadDic();/*Load WordNet dictionary for accessing*/
                         dictionary.open();
 
                         IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
-                            double posScore = 0;
-                            double negScore = 0;
-                            List<IWordID> wordIDs = indexWord.getWordIDs();
+                            double posScore = 0;/*Positive score for each word*/
+                            double negScore = 0;/*Negative score for each word*/
+                            List<IWordID> wordIDs = indexWord.getWordIDs();/*Get all the wordIDs that represent all the senses/meaning of each word*/
+                            
+                            /*If there are many senses Disambiguate*/
                             int indexForSense = 0;
                             if(wordIDs.size() > 1){
                                 indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex);
                             }
-                            IWord word= dictionary.getWord(wordIDs.get(indexForSense));
-//                            write(word.getLemma());
+                            /*
+                            Extract the wordID that taken from
+                            WordNet so that it will be useful
+                            in SentiWordNet Database search
+                            */
                             String[] wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
-                            
-//                            write("ID of word: " + wordIDDisected[1]);
                             String sqlStmtwordID = "SELECT * FROM dict WHERE ID = "+ wordIDDisected[1];
-//                            write(sqlStmtwordID);
                             results = stmt.executeQuery(sqlStmtwordID);
                             if(results.next()){
-//                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                 posScore += results.getFloat("PosScore");
                                 negScore += results.getFloat("NegScore");
                             }
-//                            write("Sense Count: " + senseCtr++);
-//                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+                            /*
+                            Check verbs and adjectives if they have adverbs before them
+                            If there is, combine the adverb score to the verb or adjective
+                            */
                             String adverb = "";
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
@@ -359,16 +405,16 @@ public class SummarizeText {
                                     if(wordIDs.size() > 1){
                                         indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex-1);;
                                     }
+                                    /*
+                                    Extract the wordID that was taken from WordNet
+                                    so that it will be useful in the SentiWordNet database search
+                                    */
                                     wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
-//                                    write("ID of word: " + wordIDDisected[1]);
                                     sqlStmtwordID = "SELECT * FROM dict WHERE ID = "+ wordIDDisected[1];
-//                                    write("ID of word: " + wordIDDisected[1]);
-//                                    write(sqlStmtwordID);
                                     results = stmt.executeQuery(sqlStmtwordID);
                                     double advPosScore = 0;
                                     double advNegScore = 0;
                                     if(results.next()){
-//                                        write("Result: \t" + results.getInt("ID") + "\t |" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                         advPosScore = results.getFloat("PosScore");
                                         advNegScore = results.getFloat("NegScore");
                                     }
@@ -402,11 +448,10 @@ public class SummarizeText {
                                 
                             }
                             
-                            positive += posScore;
-                            negative += negScore;
-                            sentPos += posScore;
-                            sentNeg += negScore;
-//                            write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
+                            positive += posScore;/*Add positive score of word to total positive score of document*/
+                            negative += negScore;/*Add negative score of word to total negative score of document*/
+                            sentPos += posScore;/*Add positive score of word to total positive score of sentence*/
+                            sentNeg += negScore;/*Add negative score of word to total negative score of sentence*/
                             posScore = 0;
                             negScore = 0;
                         }
@@ -440,11 +485,15 @@ public class SummarizeText {
         write("Positive: " + positive/wordCount);
         write("Negtive: " + negative/wordCount);
         write("Word Count: " + wordCount);
-//        write("Positive: " + positive);
-//        write("Negtive: " + negative);
-//        write("Word Count: " + wordCount);
     }
     
+    /*
+    4th algorithm
+        - Used for getting sentiment of 1 document only
+        - With disambiguation
+        - With negation
+        - Returns as string the sentiment score of document
+    */
     public static String getSentimentofWholeDocumentWithNegationWithDisambiguationReturnString(String string){
         
         String noQuestions = TextFilePreProcess.removeQuestions(string);
@@ -453,79 +502,83 @@ public class SummarizeText {
         noQuestions = TextFilePreProcess.putPeriodsForNoPeriod(noQuestions);
 //        noQuestions = TextFilePreProcess.correctPeriodsPutSpaceAfter(noQuestions);
         
-//        write(noQuestions);
-
-        double positive = 0;
-        double negative = 0;
-        double wordCount = 0;
+        double positive = 0;/*Total positive score of document*/
+        double negative = 0;/*Total negative score of document*/
+        double wordCount = 0;/*Counter for the words that was included in the calculation*/
         
         Document docu = new Document(noQuestions);
         
         write("Calculating sentiment...");
         try{
-            
+            /*Output into a file the sentiment scores for each sentence*/
             PrintWriter pw = new PrintWriter(new File("sentenceScores.csv"));
             StringBuilder sb = new StringBuilder();
             
+            /*Output into a file the cleaned text*/
             PrintWriter cleanText = new PrintWriter(new File("cleanText.txt"));
             StringBuilder sbCleanText = new StringBuilder();
             
             sb.append("Sentence,Positive,Negative\n");
         
+            /*Connecting to the SentiWordNet Database*/
             Connection connect = DriverManager.getConnection(host,user,password);
             Statement stmt = connect.createStatement();
             ResultSet results;
             
             List<Sentence> sentences = docu.sentences();
-            for(int sentCtr = 0; sentCtr < sentences.size(); sentCtr++){
-                
+            for(int sentCtr = 0; sentCtr < sentences.size(); sentCtr++){                
                 write(sentences.get(sentCtr).text());
                 write(sentences.get(sentCtr).parse());
                 sbCleanText.append(sentences.get(sentCtr).text());
                 sbCleanText.append(" ");
-                double sentPos = 0;
-                double sentNeg = 0;
-                List <String> tags = sentences.get(sentCtr).posTags();
+                double sentPos = 0;/*Total positive score for each sentence*/
+                double sentNeg = 0;/*Total negative score for each sentence*/
+                
+                List <String> tags = sentences.get(sentCtr).posTags();/*Getting the part-of-speech tags for each word*/            
+                List <String> words =  sentences.get(sentCtr).lemmas();/*Getting the root form of each word*/
             
-                List <String> words =  sentences.get(sentCtr).lemmas();
-            
+                /*
+                Calculating sentiment using different combinations of
+                nouns(NN), verbs(VB), adjectives(JJ) and adverbs(RB)
+                */
                 int lemmaTagIndex = 0;
                 for(;lemmaTagIndex < tags.size(); lemmaTagIndex++){
-//                    if(tags.get(index).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?|RB(S|R)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|(NN)S?|VB(D|G|N|P|Z)?")){
-//                    if(tags.get(index).matches("JJ(R|S)?|VB(D|G|N|P|Z)?|RB(S|R)?")){
                     if(tags.get(lemmaTagIndex).matches("JJ(R|S)?|VB(D|G|N|P|Z)?")){
 //                    if(tags.get(lemmaTagIndex).matches("JJ(R|S)?")){
-//                    if(tags.get(index).matches("JJ(R|S)?|RB(S|R)?")){
                         
-                        IDictionary dictionary = WordNetAccess.loadDic();
+                        IDictionary dictionary = WordNetAccess.loadDic();/*Loading the WordNet dictionary for accessing*/
                         dictionary.open();
 
                         IIndexWord indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex), GetPOSTag(tags.get(lemmaTagIndex)));
                         if(indexWord != null){
                             wordCount++;
-                            double posScore = 0;
-                            double negScore = 0;
-                            List<IWordID> wordIDs = indexWord.getWordIDs();
+                            double posScore = 0;/*Positive score for each word*/
+                            double negScore = 0;/*Negative score for each word*/
+                            List<IWordID> wordIDs = indexWord.getWordIDs();/*Getting all wordIDs for all word senses/meanings*/
+                            /*If there are many word senses, disambiguate*/
                             int indexForSense = 0;
                             if(wordIDs.size() > 1){
                                 indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex);
                             }
-                            IWord word= dictionary.getWord(wordIDs.get(indexForSense));
-//                            write(word.getLemma());
+
+                            /*
+                            Extracint the wordID taken form WordNet
+                            so that the wordID will be used
+                            in accessing the SentiWordNet Database
+                            */
                             String[] wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
-                            
-//                            write("ID of word: " + wordIDDisected[1]);
                             String sqlStmtwordID = "SELECT * FROM dict WHERE ID = "+ wordIDDisected[1];
-//                            write(sqlStmtwordID);
                             results = stmt.executeQuery(sqlStmtwordID);
                             if(results.next()){
-//                                write("Result: \t" + results.getInt("ID") + "\t|" + results.getFloat("PosScore") + "\t|" + results.getFloat("NegScore"));
                                 posScore += results.getFloat("PosScore");
                                 negScore += results.getFloat("NegScore");
                             }
-//                            write("Sense Count: " + senseCtr++);
-//                            write((" "+ words.get(lemmaTagIndex)).trim() + "\nPosScore: " + posScore + " NegScore: " + negScore);  
+
+                            /*
+                            Checking if a verb or an adjective has an adverb before it
+                            If it has, the adverb score will be combined with the verb or adjective
+                            */
                             String adverb = "";
                             if((tags.get(lemmaTagIndex).matches("JJ(R|S)?") || tags.get(lemmaTagIndex).matches("VB(D|G|N|P|Z)?")) && (lemmaTagIndex > 0 && tags.get(lemmaTagIndex-1).matches("RB(S|R)?"))){
                                 wordCount++;
@@ -533,15 +586,20 @@ public class SummarizeText {
                                 indexWord = dictionary.getIndexWord(words.get(lemmaTagIndex-1), GetPOSTag(tags.get(lemmaTagIndex-1)));
                                 if(indexWord != null){
                                     wordIDs = indexWord.getWordIDs();
+                                    /*
+                                    If there are many word sense or meanings disambiguate
+                                    */
                                     indexForSense = 0;
                                     if(wordIDs.size() > 1){
                                         indexForSense = Disambiguate(indexWord, docu, sentCtr,lemmaTagIndex-1);;
                                     }
+                                    /*
+                                    Extract the wordID taken from WordNet
+                                    so that this extracteed wordID can be used
+                                    in searching the SentiWordNet database
+                                    */
                                     wordIDDisected = wordIDs.get(indexForSense).toString().split("-");
-//                                    write("ID of word: " + wordIDDisected[1]);
                                     sqlStmtwordID = "SELECT * FROM dict WHERE ID = "+ wordIDDisected[1];
-//                                    write("ID of word: " + wordIDDisected[1]);
-//                                    write(sqlStmtwordID);
                                     results = stmt.executeQuery(sqlStmtwordID);
                                     double advPosScore = 0;
                                     double advNegScore = 0;
@@ -580,11 +638,10 @@ public class SummarizeText {
                                 
                             }
                             
-                            positive += posScore;
-                            negative += negScore;
-                            sentPos += posScore;
-                            sentNeg += negScore;
-//                            write("Sent Pos: " + sentPos + " Sent Neg: " + sentNeg);
+                            positive += posScore;/*Add the positive score of the word to total score of the document*/
+                            negative += negScore;/*Add the negative score of the word to total score of the document*/
+                            sentPos += posScore;/*Add the positive score of the word to total score of the sentence*/
+                            sentNeg += negScore;/*Add the negative score of the word to total score of the sentence*/
                             posScore = 0;
                             negScore = 0;
                         }
@@ -620,17 +677,15 @@ public class SummarizeText {
         write("Word Count: " + wordCount);  
         
         return "Positive: " + positive/wordCount + "\n" + "Negtive: " + negative/wordCount + "\n" + "Word Count: " + wordCount;
-        
-//        write("Positive: " + positive);
-//        write("Negtive: " + negative);
-//        write("Word Count: " + wordCount);
     }
     
-    public static void getSentimentFromCleanfile(String string, JTextArea resultsArea){
-        resultsArea.setText("");
-        resultsArea.setText(getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanText(string));
-    }
-    
+    /*
+    5th algorithm
+        - Used for getting sentiment of 1 document only
+        - With disambiguation
+        - With negation
+        - Returns as string the sentiment score of document
+    */
     public static String getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanText(String string){
 
         double positive = 0;
@@ -1570,12 +1625,6 @@ public class SummarizeText {
             exc.getMessage();
         }
            
-        
-        
-//        return "Positive: " + positive/wordCount + "\n" + "Negtive: " + negative/wordCount + "\n" + "Word Count: " + wordCount;
-//        write("Positive: " + positive);
-//        write("Negtive: " + negative);
-//        write("Word Count: " + wordCount);
     }    
     
     public static void getSentimentofWholeDocumentWithNegationWithDisambiguationForCleanTextRecordInAFileSix(String fileName, String string, PrintWriter pw, StringBuilder  sb){

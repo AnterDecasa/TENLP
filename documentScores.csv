@@ -1,11 +1,95 @@
 FileName,Positive,Negative
-C:\Users\user\Desktop\Working IMDB Files\train\pos\0_9.txt,0.140625,0.203125
-C:\Users\user\Desktop\Working IMDB Files\train\pos\1_7.txt,0.16666666666666666,0.10416666666666667
-C:\Users\user\Desktop\Working IMDB Files\train\pos\2_9.txt,0.203125,0.1796875
-C:\Users\user\Desktop\Working IMDB Files\train\pos\3_10.txt,0.28125,0.0
-C:\Users\user\Desktop\Working IMDB Files\train\pos\4_8.txt,0.16666666666666666,0.20238095238095238
-C:\Users\user\Desktop\Working IMDB Files\train\pos\5_10.txt,0.21875,0.11875
-C:\Users\user\Desktop\Working IMDB Files\train\pos\6_10.txt,0.275,0.1125
-C:\Users\user\Desktop\Working IMDB Files\train\pos\7_7.txt,0.2,0.0375
-C:\Users\user\Desktop\Working IMDB Files\train\pos\8_7.txt,0.16666666666666666,0.25
-C:\Users\user\Desktop\Working IMDB Files\train\pos\9_7.txt,0.1625,0.225
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Cantara_1 (IT1101_1).txt,0.26685393258426965,0.09691011235955056
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Cantara_2 (IT121_1).txt,0.252212389380531,0.07632743362831858
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Cantara_3 (IT121_2).txt,0.24772727272727274,0.08863636363636364
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Cantara_4 (150_1).txt,0.32211538461538464,0.0673076923076923
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Cipriano_1 (ICT111_1).txt,0.23863636363636365,0.08181818181818182
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Cipriano_2 (ICT131_1).txt,0.3076923076923077,0.038461538461538464
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Cipriano_3 (ICT136_1).txt,0.24107142857142858,0.044642857142857144
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Maderazo_1 (CS190_1).txt,0.16588888896836174,0.1084166665871938
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Maderazo_2 (CS133_1).txt,0.3148148148148148,0.08564814814814815
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Maderazo_3 (CS138_1).txt,0.41935483870967744,0.04032258064516129
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Pepito_1 (CS130_1).txt,0.21785714285714286,0.060714285714285714
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Pepito_2 (ICT131_1).txt,0.18346774193548387,0.11895161290322581
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Pepito_3 (ICT146_1).txt,0.15625,0.15625
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Pepito_4 (ICT201N_1).txt,0.25,0.020833333333333332
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Pepito_5 (IT130_1).txt,0.2916666666666667,0.013888888888888888
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Pepito_6 (IT135_1).txt,0.2907608695652174,0.08695652173913043
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Polinar_1 (ICT110_1).txt,0.310126582278481,0.10284810126582279
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Polinar_2 (ICT110_2).txt,0.4765625,0.046875
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Polinar_3 (IT1101_1).txt,0.2871287128712871,0.12004950495049505
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Polinar_4 (IT1101_2).txt,0.26515151515151514,0.14393939393939395
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Polinar_5 (ICT142_1).txt,0.7142857142857143,0.05357142857142857
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Ranolo_1 (COMP1-A_1).txt,0.3025,0.09
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Ranolo_2 (COMP1-A_2).txt,0.275,0.075
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabang_1 (ICT121_1).txt,0.34456521739130436,0.07717391304347826
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabang_2 (ICT121_2).txt,0.2727272727272727,0.07575757575757576
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabang_3 (ICT121_3).txt,0.44285714285714284,0.039285714285714285
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabang_4 (ICT122_1).txt,0.363013698630137,0.06164383561643835
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabang_5 (ICT122_2).txt,0.46,0.035
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabang_6 (ICT142_1).txt,0.625,0.0625
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabellano_1 (CS143_1).txt,0.36160714285714285,0.10267857142857142
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabellano_2 (CS144_1).txt,0.484375,0.078125
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sabellano_3 (ICT142_1).txt,0.328125,0.015625
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sarmiento_1 (CS10N_1).txt,0.1,0.0
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sarmiento_2 (CS1101_1).txt,0.27898550724637683,0.10326086956521739
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sarmiento_3 (CS131_1).txt,0.3506944444444444,0.052083333333333336
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sarmiento_4 (CS140_1).txt,0.27812820520156467,0.08084615377279428
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sarmiento_5 (CS142_1).txt,0.23610526323318481,0.09942105255628887
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sarmiento_6 (ICT110_1).txt,0.5681818181818182,0.045454545454545456
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Sarmiento_7 (IT140_1).txt,0.4444444444444444,0.0625
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Tero_1 (ICT123_1).txt,0.37213302752293576,0.06995412844036697
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Tero_2 (ICT123_2).txt,0.3645833333333333,0.06901041666666667
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Tero_3 (ICT123_3).txt,0.3880597014925373,0.06529850746268656
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Tero_4 (ICT123_4).txt,0.36160714285714285,0.07589285714285714
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Tero_5 (ICT142_1).txt,0.375,0.08928571428571429
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Tero_6 (NSTP1_1).txt,0.3267543859649123,0.12828947368421054
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\1Tero_7 (NSTP1_2).txt,0.40625,0.1125
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Cantara_1 (IT1201_1).txt,0.14473684210526316,0.14144736842105263
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Cantara_2 (IT121_1).txt,0.3577586206896552,0.1336206896551724
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Cantara_3 (IT126_1).txt,0.21785714285714286,0.09642857142857143
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Cantara_4 (IT188_1).txt,0.15625,0.1388888888888889
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Cipriano_1 (ICT136_1).txt,0.3633720930232558,0.10465116279069768
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Cipriano_2 (ICT136_2).txt,0.23026315789473684,0.10526315789473684
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Cipriano_3 (ICT173_1).txt,0.16666666666666666,0.041666666666666664
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Maderazo_1 (CS148_1).txt,0.1875,0.06875
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Maderazo_2 (CS148A_1).txt,0.2647058823529412,0.10294117647058823
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Maderazo_3 (CS161_1).txt,0.27232142857142855,0.05357142857142857
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Maderazo_4 (CS170_1).txt,0.2534722222222222,0.09722222222222222
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Maderazo_5 (IT160_1).txt,0.20833333333333334,0.0625
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Maderazo_6 (IT166_1).txt,0.5125,0.075
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Maderazo_7 (ICT209_1).txt,0.34375,0.15625
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Pepito_1 (CS134_1).txt,0.3269230769230769,0.09615384615384616
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Pepito_2 (CS185_1).txt,0.40625,0.09895833333333333
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Pepito_3 (ICT131_1).txt,0.390625,0.026041666666666668
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Pepito_4 (ICT136_1).txt,0.30603448275862066,0.0603448275862069
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Pepito_5 (IT136_1).txt,0.4125,0.0375
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Pepito_6 (IT187_1).txt,0.35714285714285715,0.17857142857142858
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Polinar_1 (CS146_1).txt,0.2916666666666667,0.041666666666666664
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Polinar_2 (IT1201_1).txt,0.21219277094645672,0.12063855435474809
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Polinar_3 (IT1201_2).txt,0.296875,0.171875
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Polinar_4 (IT146_1).txt,0.234375,0.078125
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Polinar_5 (ICT116_1).txt,0.25,0.1375
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Ranolo_1 (CS11_1).txt,0.41898148148148145,0.05092592592592592
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Ranolo_2 (CS11_2).txt,0.30833333333333335,0.041666666666666664
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Ranolo_3 (ICT127_1).txt,0.34444444444444444,0.06666666666666667
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Ranolo_4 (ICT127_2).txt,0.345,0.065
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sabang_1 (CS1201_1).txt,0.234375,0.08159722222222222
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sabang_2 (CS1201_2).txt,0.22083333333333333,0.12083333333333333
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sabang_3 (ICT116_1).txt,0.3338235294117647,0.0661764705882353
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sabang_4 (ICT116_2).txt,0.2375,0.075
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sabang_5 (ICT126_1).txt,0.6111111111111112,0.04861111111111111
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sabellano_1 (CS137_1).txt,0.2777777777777778,0.041666666666666664
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sabellano_2 (IT184_1).txt,0.25,0.2109375
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sarmiento_1 (CS145_1).txt,0.25862068965517243,0.05603448275862069
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sarmiento_2 (IT134_1).txt,NaN,NaN
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sarmiento_3 (IT140_1).txt,0.14772727272727273,0.11363636363636363
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sarmiento_4 (IT145_1).txt,0.3625,0.05625
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sarmiento_5 (ICT209_1).txt,0.859375,0.0
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Sarmiento_6 (LIS17N_1).txt,0.6875,0.0
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Tero_1 (CS147_1).txt,0.2708333333333333,0.0625
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Tero_2 (ICT128_1).txt,0.26136363636363635,0.06818181818181818
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Tero_3 (ICT146_1).txt,0.5694444444444444,0.125
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Tero_4 (ICT146_2).txt,NaN,NaN
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Tero_5 (NSTP2_1).txt,0.3581730769230769,0.11298076923076923
+C:\Users\user\Google Drive\Current Thesis\Resources\Text Files\text files for each teacher (for each section)\2Tero_6 (NSTP2_2).txt,0.33163265306122447,0.15051020408163265
